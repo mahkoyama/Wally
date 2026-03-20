@@ -1,56 +1,7 @@
-<!DOCTYPE .html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<script>
-(function() {
-  var SENHA = "wally2026";
-  var CHAVE = "wally_auth";
-  var auth = sessionStorage.getItem(CHAVE);
-  if (auth === SENHA) return;
-
-  document.addEventListener("DOMContentLoaded", function() {
-    document.body.style.display = "none";
-  });
-
-  window.addEventListener("load", function() {
-    var overlay = document.createElement("div");
-    overlay.id = "login-overlay";
-    overlay.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;background:#0F172A;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:'DM Sans',system-ui,sans-serif;";
-    overlay.innerHTML = `
-      <div style="background:#1E293B;border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:48px 40px;width:100%;max-width:380px;text-align:center;box-shadow:0 25px 60px rgba(0,0,0,0.5);">
-        <div style="width:56px;height:56px;background:linear-gradient(135deg,#6366F1,#4F46E5);border-radius:16px;margin:0 auto 24px;display:flex;align-items:center;justify-content:center;font-size:24px;">🔒</div>
-        <h1 style="color:#F8FAFC;font-size:22px;font-weight:600;margin-bottom:6px;">Wally</h1>
-        <p style="color:#64748B;font-size:14px;margin-bottom:32px;">Digite a senha para acessar</p>
-        <input id="senha-input" type="password" placeholder="••••••••" style="width:100%;padding:14px 16px;background:#0F172A;border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#F8FAFC;font-size:16px;outline:none;margin-bottom:12px;text-align:center;letter-spacing:4px;" />
-        <div id="erro-msg" style="color:#F87171;font-size:13px;min-height:20px;margin-bottom:12px;"></div>
-        <button id="entrar-btn" style="width:100%;padding:14px;background:linear-gradient(135deg,#6366F1,#4F46E5);border:none;border-radius:10px;color:white;font-size:15px;font-weight:600;cursor:pointer;">Entrar</button>
-      </div>
-    `;
-    document.body.appendChild(overlay);
-    document.body.style.display = "";
-
-    var input = document.getElementById("senha-input");
-    var btn = document.getElementById("entrar-btn");
-    var erro = document.getElementById("erro-msg");
-
-    function verificar() {
-      if (input.value === SENHA) {
-        sessionStorage.setItem(CHAVE, SENHA);
-        overlay.remove();
-      } else {
-        erro.textContent = "Senha incorreta. Tente novamente.";
-        input.value = "";
-        input.style.borderColor = "#F87171";
-        setTimeout(function(){ input.style.borderColor = "rgba(255,255,255,0.1)"; erro.textContent = ""; }, 2000);
-      }
-    }
-
-    btn.addEventListener("click", verificar);
-    input.addEventListener("keydown", function(e){ if(e.key === "Enter") verificar(); });
-    input.focus();
-  });
-})();
-</script>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Conselho Clínico — Wally Marvin Garam | 17/03/2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">

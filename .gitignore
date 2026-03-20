@@ -1,0 +1,15 @@
+# Dados pessoais e médicos
+Arquivos de Entrada/
+data/
+debate/
+tasks/
+agents/
+
+# Configurações
+.claude/
+CLAUDE.md
+SKILL*.md
+
+# Arquivos de sistema
+*.md
+!README.md
