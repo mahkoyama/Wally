@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wally — Dashboard de Saúde</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <style>
+    /* ===== VARIABLES ===== */
+    :root {
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F8FAFC;
+      --bg-card: #FFFFFF;
+      --bg-card-hover: #F1F5F9;
+      --bg-input: #F1F5F9;
+      --border: rgba(0,0,0,0.08);
+      --border-hover: rgba(0,0,0,0.15);
+      --text-primary: #0F172A;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      --accent: #6366F1;
+      --accent-dim: rgba(99,102,241,0.08);
+      --accent-hover: #4F46E5;
+      --success: #059669;
+      --success-dim: rgba(5,150,105,0.08);
+      --warning: #D97706;
+      --warning-dim: rgba(217,119,6,0.08);
+      --danger: #DC2626;
+      --danger-dim: rgba(220,38,38,0.08);
+      --info: #2563EB;
+      --info-dim: rgba(37,99,235,0.08);
+      --radius: 12px;
+      --radius-lg: 16px;
+      --radius-sm: 8px;
+      --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    button { font-family: var(--font); cursor: pointer; border: none; background: none; color: var(--text-primary); }
+
+    /* ===== LAYOUT ===== */
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: rgba(255,255,255,0.85);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 0;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-left { display: flex; align-items: center; gap: 20px; }
+    .pet-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #818CF8);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; font-weight: 700; color: #fff;
+    }
+    .pet-info h1 { font-size: 1.35rem; font-weight: 700; line-height: 1.2; }
+    .pet-meta { display: flex; gap: 16px; font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px; }
+    .pet-meta span { display: flex; align-items: center; gap: 4px; }
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 20px;
+      font-size: 0.8rem; font-weight: 600;
+    }
+    .status-badge.atencao {
+      background: var(--warning-dim);
+      color: var(--warning);
+      border: 1px solid rgba(245,158,11,0.2);
+    }
+    .status-badge::before {
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: currentColor; animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+    }
+
+    /* ===== NAVIGATION ===== */
+    .nav {
+      border-bottom: 1px solid var(--border);
+      padding: 0;
+      position: sticky;
+      top: 97px;
+      z-index: 40;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .nav-inner { display: flex; gap: 4px; padding: 8px 0; }
+    .nav-tab {
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+    }
+    .nav-tab:hover { color: var(--text-primary); background: rgba(0,0,0,0.03); }
+    .nav-tab.active { color: var(--accent); background: var(--accent-dim); }
+
+    /* ===== VIEWS ===== */
+    .view { display: none; padding: 32px 0 64px; }
+    .view.active { display: block; animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .section-title {
+      font-size: 1.1rem; font-weight: 600;
+      color: var(--text-primary); margin-bottom: 16px;
+    }
+    .section-subtitle {
+      font-size: 0.8rem; color: var(--text-muted);
+      margin-top: -12px; margin-bottom: 16px;
+    }
+    .section { margin-bottom: 40px; }
+
+    /* ===== STAT CARDS ===== */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      transition: all 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .stat-card:hover { border-color: var(--border-hover); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .stat-value { font-size: 2rem; font-weight: 700; line-height: 1; margin-bottom: 4px; font-family: var(--mono); }
+    .stat-label { font-size: 0.8rem; color: var(--text-secondary); }
+    .stat-card.danger .stat-value { color: var(--danger); }
+    .stat-card.warning .stat-value { color: var(--warning); }
+    .stat-card.accent .stat-value { color: var(--accent); }
+    .stat-card.success .stat-value { color: var(--success); }
+
+    /* ===== CONDITION CARDS ===== */
+    .conditions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .condition-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .condition-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(99,102,241,0.12);
+    }
+    .condition-card::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px;
+    }
+    .condition-card.sev-alta::before { background: var(--danger); }
+    .condition-card.sev-moderada::before { background: var(--warning); }
+    .condition-card.sev-leve::before { background: var(--info); }
+    .condition-name { font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; padding-right: 20px; }
+    .condition-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em;
+    }
+    .badge-ativa { background: var(--danger-dim); color: var(--danger); }
+    .badge-cronica { background: var(--warning-dim); color: var(--warning); }
+    .badge-nova { background: rgba(251,146,60,0.12); color: #FB923C; }
+    .badge-suspeita { background: var(--info-dim); color: var(--info); }
+    .badge-category { background: rgba(255,255,255,0.06); color: var(--text-secondary); }
+    .condition-desc { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 12px; }
+    .condition-trend { font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+    .condition-trend .arrow { font-family: var(--mono); }
+    .condition-cta {
+      font-size: 0.75rem; color: var(--accent); font-weight: 500;
+      display: flex; align-items: center; gap: 4px; margin-top: 12px;
+    }
+    .condition-cta::after { content: '\2192'; transition: transform 0.2s; }
+    .condition-card:hover .condition-cta::after { transform: translateX(3px); }
+
+    /* ===== SPECIALIST PLAN ===== */
+    .sp-tier { margin-bottom: 32px; }
+    .sp-tier-header {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 16px; padding-bottom: 8px;
+      border-bottom: 2px solid var(--border);
+    }
+    .sp-tier-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 14px; border-radius: 20px;
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .sp-tier-badge.danger { background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(220,38,38,0.2); }
+    .sp-tier-badge.warning { background: var(--warning-dim); color: var(--warning); border: 1px solid rgba(217,119,6,0.2); }
+    .sp-tier-badge.info { background: var(--info-dim); color: var(--info); border: 1px solid rgba(37,99,235,0.2); }
+    .sp-tier-label {
+      font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .sp-cards { display: flex; flex-direction: column; gap: 12px; }
+    .sp-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+    .sp-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .sp-card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px;
+      cursor: pointer;
+    }
+    .sp-card-header-left { display: flex; align-items: center; gap: 12px; }
+    .sp-card-number {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .sp-card-number.danger { background: var(--danger); }
+    .sp-card-number.warning { background: var(--warning); }
+    .sp-card-number.info { background: var(--info); }
+    .sp-card-specialty { font-size: 0.95rem; font-weight: 600; }
+    .sp-card-who { font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px; }
+    .sp-gap-badge {
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 4px; letter-spacing: 0.05em;
+      background: var(--danger-dim); color: var(--danger); border: 1px solid rgba(220,38,38,0.15);
+    }
+    .sp-card-chevron {
+      font-size: 0.8rem; color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+    .sp-card.open .sp-card-chevron { transform: rotate(180deg); }
+    .sp-card-body {
+      display: none; padding: 0 20px 20px;
+      border-top: 1px solid var(--border);
+    }
+    .sp-card.open .sp-card-body { display: block; padding-top: 16px; }
+    .sp-why {
+      font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;
+      margin-bottom: 16px; padding: 10px 14px;
+      background: var(--bg-secondary); border-radius: var(--radius-sm);
+    }
+    .sp-briefing {
+      margin-bottom: 20px; padding: 16px 18px;
+      background: linear-gradient(135deg, rgba(99,102,241,0.04), rgba(99,102,241,0.08));
+      border: 1px solid rgba(99,102,241,0.15);
+      border-radius: var(--radius-sm);
+      position: relative;
+    }
+    .sp-briefing-label {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--accent); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .sp-briefing-text {
+      font-size: 0.85rem; color: var(--text-primary); line-height: 1.7;
+      font-style: italic;
+    }
+    .sp-briefing-text::before { content: '\u201C'; font-size: 1.2rem; color: var(--accent); font-weight: 700; }
+    .sp-briefing-text::after { content: '\u201D'; font-size: 1.2rem; color: var(--accent); font-weight: 700; }
+    .sp-section-label {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 8px;
+    }
+    .sp-section-label:not(:first-child) { margin-top: 14px; }
+    .sp-list { list-style: none; padding: 0; margin: 0; }
+    .sp-list li {
+      font-size: 0.82rem; line-height: 1.6; padding: 4px 0 4px 18px;
+      position: relative; color: var(--text-primary);
+    }
+    .sp-list.exams li::before {
+      content: ''; position: absolute; left: 0; top: 11px;
+      width: 8px; height: 8px; border-radius: 2px;
+      background: var(--accent-dim); border: 1.5px solid var(--accent);
+    }
+    .sp-list.questions li::before {
+      content: '?'; position: absolute; left: 2px; top: 4px;
+      font-size: 0.7rem; font-weight: 700; color: var(--warning);
+    }
+
+    /* ===== RECOMMENDATIONS ===== */
+    .rec-group { margin-bottom: 28px; }
+    .rec-group-title {
+      font-size: 0.85rem; font-weight: 600; color: var(--text-secondary);
+      margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .rec-list { display: flex; flex-direction: column; gap: 8px; }
+    .rec-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .rec-item:hover { border-color: var(--border-hover); }
+    .rec-item.p-urgente { border-left-color: var(--danger); }
+    .rec-item.p-critico { border-left-color: #DC2626; }
+    .rec-item.p-importante { border-left-color: var(--warning); }
+    .rec-item.p-moderado { border-left-color: var(--info); }
+    .rec-item.p-rotina { border-left-color: var(--text-muted); }
+    .rec-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      margin-top: 6px; flex-shrink: 0;
+    }
+    .rec-dot.urgente { background: var(--danger); }
+    .rec-dot.critico { background: #DC2626; }
+    .rec-dot.importante { background: var(--warning); }
+    .rec-dot.moderado { background: var(--info); }
+    .rec-dot.rotina { background: var(--text-muted); }
+    .rec-text { font-size: 0.85rem; color: var(--text-primary); line-height: 1.5; }
+    .rec-source { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
+    .rec-prohibited { color: var(--danger); font-weight: 600; }
+
+    /* ===== EXAM TABS ===== */
+    .exam-tabs { display: flex; gap: 4px; margin-bottom: 24px; flex-wrap: wrap; }
+    .exam-tab {
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem; font-weight: 500;
+      color: var(--text-secondary);
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    .exam-tab:hover { color: var(--text-primary); background: rgba(0,0,0,0.03); }
+    .exam-tab.active { color: var(--accent); background: var(--accent-dim); border-color: rgba(129,140,248,0.15); }
+
+    /* ===== CHART CARDS ===== */
+    .charts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .chart-title { font-size: 0.85rem; font-weight: 600; }
+    .chart-current { font-family: var(--mono); font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    .chart-current .unit { font-size: 0.7rem; color: var(--text-muted); font-weight: 400; }
+    .chart-ref { font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; }
+    .chart-canvas-wrap { position: relative; height: 180px; }
+
+    /* ===== IMAGING TABLE ===== */
+    .table-wrap { overflow-x: auto; }
+    table.data-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.8rem;
+    }
+    table.data-table th {
+      text-align: left;
+      padding: 10px 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+    table.data-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+    table.data-table tr:last-child td { border-bottom: none; }
+    td .cell-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 500;
+    }
+    .cell-normal { background: var(--success-dim); color: var(--success); }
+    .cell-atencao { background: var(--warning-dim); color: var(--warning); }
+    .cell-alterado { background: var(--danger-dim); color: var(--danger); }
+
+    /* ===== DIET SECTION ===== */
+    .diet-grid { display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: start; }
+    .diet-table { width: 100%; }
+    .diet-table th { text-align: left; padding: 8px 12px; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; border-bottom: 1px solid var(--border); }
+    .diet-table td { padding: 8px 12px; font-size: 0.8rem; border-bottom: 1px solid var(--border); }
+    .diet-table tr:last-child td { border-bottom: none; font-weight: 600; }
+    .calorie-bar-wrap { margin-top: 20px; }
+    .calorie-bar {
+      position: relative; height: 32px;
+      background: var(--bg-input);
+      border-radius: 6px; overflow: hidden;
+    }
+    .calorie-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #818CF8);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 600; color: #fff;
+    }
+    .calorie-markers { position: relative; height: 24px; margin-top: 4px; }
+    .calorie-marker {
+      position: absolute;
+      font-size: 0.65rem; color: var(--text-muted);
+      transform: translateX(-50%);
+    }
+    .calorie-marker::before {
+      content: '';
+      position: absolute; top: -8px; left: 50%;
+      width: 1px; height: 6px;
+      background: var(--text-muted);
+    }
+    .problem-food {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+    }
+    .food-name { font-size: 0.85rem; font-weight: 600; }
+    .food-status { font-size: 0.72rem; }
+
+    /* ===== VET CARDS ===== */
+    .vet-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .vet-avatar {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; font-weight: 700; color: #fff;
+      margin-bottom: 12px;
+    }
+    .vet-name { font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; }
+    .vet-specialty { font-size: 0.75rem; color: var(--accent); margin-bottom: 4px; }
+    .vet-detail { font-size: 0.75rem; color: var(--text-muted); }
+    .gap-alert {
+      background: var(--danger-dim);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      font-size: 0.85rem;
+      color: var(--danger);
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 24px;
+    }
+    .comm-item {
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+    }
+    .comm-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .comm-vet { font-size: 0.85rem; font-weight: 600; }
+    .comm-date { font-size: 0.72rem; color: var(--text-muted); }
+    .comm-body { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; }
+    .comm-eval { margin-top: 8px; }
+    .eval-item { font-size: 0.75rem; margin-bottom: 4px; display: flex; align-items: flex-start; gap: 6px; }
+    .eval-flag { flex-shrink: 0; }
+
+    /* ===== CONSISTENCY TABLE ===== */
+    .consistency-table { font-size: 0.75rem; }
+    .consistency-table th { font-size: 0.68rem; }
+    .consistency-table .conflict { color: var(--warning); font-weight: 500; }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      max-width: 960px; width: 92%;
+      max-height: 88vh; overflow-y: auto;
+      transform: translateY(16px);
+      transition: transform 0.3s ease;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+    .modal-overlay.active .modal-content { transform: translateY(0); }
+    .modal-content::-webkit-scrollbar { width: 6px; }
+    .modal-content::-webkit-scrollbar-track { background: transparent; }
+    .modal-content::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 3px; }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding: 28px 32px 20px;
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0;
+      background: var(--bg-card);
+      z-index: 2;
+    }
+    .modal-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+    .modal-close {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .modal-close:hover { background: rgba(0,0,0,0.05); color: var(--text-primary); }
+    .modal-body { padding: 24px 32px 32px; }
+    .modal-section { margin-bottom: 28px; }
+    .modal-section:last-child { margin-bottom: 0; }
+    .modal-section-title { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .modal-charts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .modal-chart-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+    }
+    .modal-chart-title { font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; }
+    .modal-chart-value { font-family: var(--mono); font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 12px; }
+    .modal-chart-wrap { height: 150px; position: relative; }
+    .evidence-source {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(129,140,248,0.15);
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem; color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .modal-analysis {
+      font-size: 0.85rem; color: var(--text-secondary);
+      line-height: 1.7; padding: 16px;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--accent);
+    }
+    .modal-rec-list, .modal-flag-list { list-style: none; }
+    .modal-rec-list li, .modal-flag-list li {
+      font-size: 0.8rem; padding: 6px 0;
+      color: var(--text-secondary);
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .modal-rec-list li::before { content: '\2192'; color: var(--accent); flex-shrink: 0; }
+    .modal-flag-list li::before { content: '\26A0'; flex-shrink: 0; }
+    .modal-flag-list li { color: var(--warning); }
+
+    /* ===== SUPPLEMENTS ===== */
+    .supp-card {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+    .supp-name { font-size: 0.85rem; font-weight: 600; }
+    .supp-dose { font-size: 0.75rem; color: var(--text-muted); }
+    .supp-essential {
+      font-size: 0.6rem; font-weight: 700;
+      padding: 2px 8px; border-radius: 10px;
+      background: var(--danger-dim); color: var(--danger);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      margin-left: auto;
+    }
+
+    /* ===== COLLAPSIBLE ===== */
+    .collapsible-header {
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 16px;
+    }
+    .collapsible-header .toggle { font-size: 0.75rem; color: var(--text-muted); transition: transform 0.2s; }
+    .collapsible-header.open .toggle { transform: rotate(180deg); }
+    .collapsible-body { display: none; }
+    .collapsible-body.open { display: block; animation: fadeIn 0.25s ease; }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0;
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .container { padding: 0 16px; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .charts-grid { grid-template-columns: 1fr; }
+      .diet-grid { grid-template-columns: 1fr; }
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .modal-content { width: 98%; max-height: 92vh; }
+      .modal-header, .modal-body { padding-left: 20px; padding-right: 20px; }
+    }
+    @media (max-width: 640px) {
+      .stats-row { grid-template-columns: 1fr; }
+      .header-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .nav-inner { overflow-x: auto; padding-bottom: 8px; }
+      .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.2); }
+  </style>
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="container header-inner">
+      <div class="header-left">
+        <div class="pet-avatar">W</div>
+        <div class="pet-info">
+          <h1>Wally</h1>
+          <div class="pet-meta">
+            <span>Shiba Inu</span>
+            <span>&#183; 7 anos 2 meses</span>
+            <span>&#183; 14 kg</span>
+            <span>&#183; Macho castrado</span>
+          </div>
+        </div>
+      </div>
+      <div class="status-badge atencao">Monitoramento Ativo</div>
+    </div>
+  </header>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <button class="nav-tab active" data-view="dashboard" onclick="switchView('dashboard')">Visão Geral</button>
+      <button class="nav-tab" data-view="exams" onclick="switchView('exams')">Exames</button>
+      <button class="nav-tab" data-view="profile" onclick="switchView('profile')">Perfil &amp; Dieta</button>
+      <button class="nav-tab" data-view="team" onclick="switchView('team')">Equipe Veterinária</button>
+    </div>
+  </nav>
+
+  <main class="container">
+
+    <!-- ===== VIEW: DASHBOARD ===== -->
+    <section id="view-dashboard" class="view active">
+
+      <!-- DEBATE ALERT BANNER -->
+      <div style="background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(129,140,248,0.06));border:1px solid rgba(99,102,241,0.2);border-radius:var(--radius);padding:20px 24px;margin-bottom:24px;display:flex;align-items:flex-start;gap:16px;">
+        <div style="font-size:1.4rem;flex-shrink:0;">&#128172;</div>
+        <div>
+          <div style="font-size:0.9rem;font-weight:700;color:var(--accent);margin-bottom:6px;">Debate Cl&#237;nico — 20/03/2026</div>
+          <div style="font-size:0.8rem;color:var(--text-secondary);line-height:1.6;">
+            5 agentes debateram as posi&#231;&#245;es da nutr&#243;loga Dra. Fernanda em 3 rounds.
+            <strong>Veredicto:</strong> Omega-3 de peixe &gt; &#243;leo de soja (5/5 concordaram) &#183;
+            Alergias frango/boi aceitas com ressalva (metodologia n&#227;o esclarecida) &#183;
+            Glutamina: manter (risco-benef&#237;cio favor&#225;vel).
+            <a href="debate/debate-synthesis-nutrologa-posicoes-2026-03-20.html" style="margin-left:4px;">Ver debate completo &#8594;</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card warning">
+          <div class="stat-value">6</div>
+          <div class="stat-label">Condi&#231;&#245;es ativas</div>
+        </div>
+        <div class="stat-card danger">
+          <div class="stat-value">4</div>
+          <div class="stat-label">Alertas urgentes</div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-value">7</div>
+          <div class="stat-label">Especialistas no plano</div>
+        </div>
+        <div class="stat-card success">
+          <div class="stat-value">3</div>
+          <div class="stat-label">Condi&#231;&#245;es resolvidas</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Condições Ativas</div>
+        <p class="section-subtitle">Clique em uma condição para ver a evidência diagnóstica e os exames associados</p>
+        <div class="conditions-grid" id="conditions-grid"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Plano de Ação — Especialistas por Prioridade</div>
+        <p class="section-subtitle">Clique em um especialista para ver exames e perguntas. Ordenado por urgência clínica.</p>
+        <div id="specialist-plan-container"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Recomendações — Alimentação & Rotina</div>
+        <div id="recommendations-container"></div>
+      </div>
+
+    </section>
+
+    <!-- ===== VIEW: EXAMS ===== -->
+    <section id="view-exams" class="view">
+
+      <div class="exam-tabs" id="exam-tabs"></div>
+      <div id="exam-content"></div>
+
+      <div class="section" id="imaging-section" style="display:none;">
+        <div class="section-title">Evolução por Imagem — Ultrassonografia</div>
+        <div class="chart-card">
+          <div class="table-wrap">
+            <table class="data-table" id="imaging-table"></table>
+          </div>
+        </div>
+        <div style="margin-top:24px;">
+          <div class="section-title">Cardiologia &amp; Radiografia</div>
+          <div class="grid-2" id="cardio-rx-container"></div>
+        </div>
+      </div>
+
+      <div class="section" style="margin-top: 40px;">
+        <div class="collapsible-header" onclick="toggleCollapsible(this)">
+          <span class="section-title" style="margin:0;">Índice Completo de Exames</span>
+          <span class="toggle">&#9660;</span>
+        </div>
+        <div class="collapsible-body">
+          <div class="chart-card">
+            <div class="table-wrap">
+              <table class="data-table" id="exam-index-table"></table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===== VIEW: PROFILE ===== -->
+    <section id="view-profile" class="view">
+
+      <div class="section">
+        <div class="section-title">Dieta Atual — Alimentação Natural (AN)</div>
+        <p class="section-subtitle">Dieta de eliminação — 1ª fase. Prescrita por Endoscopet Medicina Veterinária (desde Jan/2026)</p>
+        <div class="diet-grid">
+          <div>
+            <div class="chart-card">
+              <table class="diet-table">
+                <thead>
+                  <tr><th>Ingrediente</th><th>Qtd</th><th>Kcal</th><th>Obs</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Filé mignon suíno (assado)</td><td>180g</td><td>~270</td><td>Proteína principal</td></tr>
+                  <tr><td>Batata-doce ou mandioquinha</td><td>55g</td><td>~50</td><td>Carboidrato</td></tr>
+                  <tr><td>Chuchu (cozido)</td><td>80g</td><td>~15</td><td>Fibra + hidratação</td></tr>
+                  <tr><td>Fiber Mais</td><td>3g</td><td>—</td><td>Suplemento de fibras</td></tr>
+                  <tr><td>Nutroplus</td><td>3g</td><td>—</td><td>Vitaminas e minerais</td></tr>
+                  <tr><td>Glutamina</td><td>3ml</td><td>—</td><td>Proteção mucosa GI</td></tr>
+                  <tr><td><strong>TOTAL (3 refeições)</strong></td><td></td><td><strong>~335</strong></td><td></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="calorie-bar-wrap">
+              <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:8px;">Análise Calórica</div>
+              <div class="calorie-bar">
+                <div class="calorie-fill" style="width: 61%;">335 kcal/dia</div>
+              </div>
+              <div class="calorie-markers">
+                <div class="calorie-marker" style="left:57%;">Meta emag. (315)</div>
+                <div class="calorie-marker" style="left:100%;">Manutenção (550)</div>
+              </div>
+              <div style="margin-top:16px; font-size:0.75rem; color:var(--warning);">
+                Wally come 335 kcal (meta de emagrecimento) mas não perde peso — reforça suspeita de hipotireoidismo subclínico.
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-card" style="text-align:center;">
+            <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:12px;">Macronutrientes</div>
+            <div style="height:200px; position:relative;">
+              <canvas id="macro-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Alimentos Proibidos &amp; Sensibilidades</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;">
+          <div class="problem-food" style="border-left:3px solid var(--danger);">
+            <div>
+              <div class="food-name">Frango</div>
+              <div class="food-status" style="color:var(--danger);">PROIBIDO — Super al&#233;rgico</div>
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Info nutr&#243;loga 20/03 &#183; Metodologia a esclarecer</div>
+            </div>
+          </div>
+          <div class="problem-food" style="border-left:3px solid var(--danger);">
+            <div>
+              <div class="food-name">Boi</div>
+              <div class="food-status" style="color:var(--danger);">PROIBIDO — Super al&#233;rgico</div>
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Info nutr&#243;loga 20/03 &#183; Metodologia a esclarecer</div>
+            </div>
+          </div>
+          <div class="problem-food" style="border-left:3px solid var(--danger);">
+            <div>
+              <div class="food-name">&#211;leo de canola</div>
+              <div class="food-status" style="color:var(--danger);">PROIBIDO — Al&#233;rgeno confirmado</div>
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Causou dermatite axilar + perianal</div>
+            </div>
+          </div>
+          <div class="problem-food" style="border-left:3px solid var(--warning);">
+            <div>
+              <div class="food-name">&#211;leo de soja</div>
+              <div class="food-status" style="color:var(--warning);">EVITAR — Risco alerg&#234;nico</div>
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">15-25% de reatividade em c&#227;es com alergia m&#250;ltipla &#183; Debate 20/03</div>
+            </div>
+          </div>
+          <div class="problem-food" style="border-left:3px solid var(--warning);">
+            <div>
+              <div class="food-name">Sal (NaCl)</div>
+              <div class="food-status" style="color:var(--warning);">REMOVIDO — Sal light seguro</div>
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Debate: sal light pode ser reintroduzido isoladamente</div>
+            </div>
+          </div>
+          <div class="problem-food" style="border-left:3px solid var(--warning);">
+            <div>
+              <div class="food-name">Alimentos &#224; noite (prote&#237;na/fibra)</div>
+              <div class="food-status" style="color:var(--warning);">Causam n&#225;usea</div>
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">&#218;nico tolerado: arroz japon&#234;s</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Suplementos</div>
+        <div class="grid-3" style="gap:10px;">
+          <div class="supp-card">
+            <div><div class="supp-name">Glutamina</div><div class="supp-dose">3 ml/dia</div></div>
+            <span class="supp-essential" style="background:var(--warning-dim);color:var(--warning);">Prudente Manter</span>
+          </div>
+          <div class="supp-card">
+            <div><div class="supp-name">Fiber Mais</div><div class="supp-dose">3 g/dia</div></div>
+            <span class="supp-essential">Essencial</span>
+          </div>
+          <div class="supp-card">
+            <div><div class="supp-name">Nutroplus</div><div class="supp-dose">3 g/dia</div></div>
+            <span class="supp-essential">Essencial</span>
+          </div>
+          <div class="supp-card">
+            <div><div class="supp-name" style="color:var(--accent);">Omega-3 (&#243;leo de peixe)</div><div class="supp-dose">~700 mg EPA+DHA/dia</div></div>
+            <span class="supp-essential" style="background:var(--info-dim);color:var(--info);">A Introduzir</span>
+          </div>
+        </div>
+        <div style="margin-top:10px; padding:12px 16px; background:var(--warning-dim); border-radius:var(--radius-sm); font-size:0.8rem; color:var(--warning);">
+          <strong>Glutamina:</strong> Evid&#234;ncia limitada em c&#227;es (nutr&#243;loga correta), mas rela&#231;&#227;o risco-benef&#237;cio favorece manter (debate 20/03). Interrup&#231;&#227;o de 2 dias causou crise GI.
+        </div>
+        <div style="margin-top:8px; padding:12px 16px; background:var(--accent-dim); border-radius:var(--radius-sm); font-size:0.8rem; color:var(--accent);">
+          <strong>Omega-3:</strong> Debate recomenda &#243;leo de peixe ultrapurificado (molecularmente destilado). Beneficia 4 condi&#231;&#245;es simultaneamente. Aguardando resposta da Dra. Fernanda antes de iniciar.
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Rotina &amp; Estilo de Vida</div>
+        <div class="grid-2">
+          <div class="chart-card">
+            <div style="font-size:0.85rem; font-weight:600; margin-bottom:12px;">Rotina Diária</div>
+            <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.8;">
+              <div><strong>Creche:</strong> Bosque do Cão — 7h às 17h (seg-sex)</div>
+              <div><strong>Refeições:</strong> 3x/dia na creche (última ~16h)</div>
+              <div><strong>Natação:</strong> 1x/semana</div>
+              <div><strong>Passeios FDS:</strong> 2x/dia (manhã + tarde)</div>
+              <div><strong>Banho:</strong> Sexta-feira com Allermil (antialérgico)</div>
+              <div><strong>Antipulgas:</strong> Simparic mensal</div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div style="font-size:0.85rem; font-weight:600; margin-bottom:12px;">Problemas na Rotina</div>
+            <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.8;">
+              <div style="color:var(--danger);">
+                <strong>Jejum noturno de ~15h</strong><br>
+                Última refeição 16h, próxima 7h do dia seguinte
+              </div>
+              <div style="margin-top:8px;">
+                <strong>Tentativas noturnas que falharam:</strong><br>
+                Ovo + glutamina, filé mignon, mandioquinha, chuchu<br>
+                <span style="color:var(--success);">Arroz japonês: primeira opção tolerada (17/03/2026)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===== VIEW: TEAM ===== -->
+    <section id="view-team" class="view">
+
+      <div class="gap-alert">
+        <span style="font-size:1.2rem;">&#9888;</span>
+        <div>
+          <strong>GAP no time:</strong> Sem gastroenterologista — essencial para investigar náusea crônica e GERD.
+          Dra. Lylian (Ferogastro Vet) foi descontinuada.
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Equipe Veterinária</div>
+        <div class="grid-4" id="vet-cards-grid"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Comunicações Recentes</div>
+        <div id="comms-container"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Painel de Consistência entre Vets</div>
+        <div class="chart-card">
+          <div class="table-wrap">
+            <table class="data-table consistency-table">
+              <thead>
+                <tr>
+                  <th>Tema</th>
+                  <th>Endoscopet (Nutri)</th>
+                  <th>Dr. Otávio</th>
+                  <th>Dados clínicos</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>&#211;leo de canola como al&#233;rgeno</td>
+                  <td>"Dif&#237;cil o &#243;leo causar rea&#231;&#227;o"</td>
+                  <td>&#8212;</td>
+                  <td>Correla&#231;&#227;o temporal forte</td>
+                  <td class="conflict">Conflito</td>
+                </tr>
+                <tr style="background:var(--danger-dim);">
+                  <td><strong>Omega-3 vs &#211;leo de soja</strong></td>
+                  <td>"N&#227;o dar omega-3, dar &#243;leo de soja" (20/03)</td>
+                  <td>&#8212;</td>
+                  <td>Debate 5 agentes: omega-3 de peixe beneficia 4 condi&#231;&#245;es; soja pode piorar 2</td>
+                  <td class="conflict"><strong>Conflito forte</strong></td>
+                </tr>
+                <tr>
+                  <td>Glutamina como essencial</td>
+                  <td>"Sem evid&#234;ncia para cachorro" (16 e 20/03)</td>
+                  <td>&#8212;</td>
+                  <td>Risco-benef&#237;cio favorece manter (debate 20/03)</td>
+                  <td class="conflict">Parcial</td>
+                </tr>
+                <tr style="background:var(--warning-dim);">
+                  <td><strong>Alergias frango/boi</strong></td>
+                  <td>"Super al&#233;rgico" (20/03) &#8212; metodologia n&#227;o informada</td>
+                  <td>&#8212;</td>
+                  <td>IgE sorol&#243;gico tem 40-60% falsos positivos (Mueller 2016)</td>
+                  <td class="conflict">A esclarecer</td>
+                </tr>
+                <tr>
+                  <td>Corticoide para pele (curto prazo)</td>
+                  <td>Dose baixa 4 dias</td>
+                  <td>Dermotrat spray</td>
+                  <td>Adequado para crise aguda</td>
+                  <td style="color:var(--success);">Consenso</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Alertas Ativos de Comunica&#231;&#227;o</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="rec-item p-urgente" style="background:var(--accent-dim);border-color:rgba(99,102,241,0.2);">
+            <div class="rec-dot urgente" style="background:var(--accent);"></div>
+            <div>
+              <div class="rec-text" style="color:var(--accent);font-weight:600;">PERGUNTAR &#224; Dra. Fernanda (debate 20/03):</div>
+              <div class="rec-source" style="color:var(--text-secondary);font-size:0.8rem;line-height:1.6;">
+                1. "Como voc&#234; concluiu que o Wally &#233; super al&#233;rgico a frango e boi? Foi teste de sangue ou observa&#231;&#227;o cl&#237;nica?"<br>
+                2. "Por que &#243;leo de soja e n&#227;o omega-3 de &#243;leo de peixe nesta fase?"<br>
+                <em>Essas respostas resolvem ~80% das d&#250;vidas do debate.</em>
+              </div>
+            </div>
+          </div>
+          <div class="rec-item p-urgente">
+            <div class="rec-dot urgente"></div>
+            <div>
+              <div class="rec-text">Informar Endoscopet sobre troca canola/soja e rea&#231;&#227;o al&#233;rgica</div>
+              <div class="rec-source">&#211;leo prescrito era soja &#8212; Mayra usou canola por engano</div>
+            </div>
+          </div>
+          <div class="rec-item p-importante">
+            <div class="rec-dot importante"></div>
+            <div>
+              <div class="rec-text">Pendente: resposta da Dra. Fernanda sobre protetor g&#225;strico</div>
+              <div class="rec-source">Mensagem enviada em 17/03/2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ===== MODAL ===== -->
+  <div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal-content" id="modal-content"></div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      &#218;ltima atualiza&#231;&#227;o: 20/03/2026 (debate cl&#237;nico nutr&#243;loga) &nbsp;&#183;&nbsp; Dashboard gerado com Claude Code
+    </div>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // DATA
+    // =========================================================================
+
+    const MARKERS = {
+      eritrograma: {
+        eritrocitos: { name: 'Eritrócitos', unit: 'M/\u00B5L', refMin: 5.5, refMax: 8.5, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [6.3, 10.48, 11.40, 9.93], trend: '\u2191\u2191 cr\u00F4nico desde 2024' },
+        hemoglobina: { name: 'Hemoglobina', unit: 'g/dL', refMin: 12, refMax: 18, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [12.3, 19.50, 20.2, 19.5], trend: '\u2191\u2191 cr\u00F4nico' },
+        hematocrito: { name: 'Hemat\u00F3crito', unit: '%', refMin: 37, refMax: 55, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [40, 56.10, 60, 55.6], trend: '\u2191\u2191 cr\u00F4nico' },
+        vcm: { name: 'VCM', unit: 'fL', refMin: 60, refMax: 77, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [63.5, 53.53, 65, 56.0], trend: '\u2195 vari\u00E1vel (microcitose)' },
+        hcm: { name: 'HCM', unit: 'pg', refMin: 19.5, refMax: 24.5, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [19.5, 18.60, 20, 19.6], trend: '\u2195 vari\u00E1vel' },
+        chcm: { name: 'CHCM', unit: 'g/dL', refMin: 31, refMax: 37, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [30.8, 34.75, 30, 35.1], trend: '\u2192 est\u00E1vel' },
+        rdw: { name: 'RDW', unit: '%', refMin: 12, refMax: 15, dates: ['Jan/2024','Ago/2024','Dez/2025'], values: [18.40, 15.4, 18.6], trend: '\u2195 vari\u00E1vel' }
+      },
+      leucograma: {
+        leucocitos: { name: 'Leuc\u00F3citos', unit: 'mil/\u00B5L', refMin: 5.5, refMax: 16.9, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [6.9, 8.22, 7.93, 10.3], trend: '\u2192 est\u00E1vel' },
+        eosinofilos: { name: 'Eosin\u00F3filos', unit: '/\u00B5L', refMin: 100, refMax: 1400, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [0, 247, 468, 0], trend: '\u2195 zerados com DAC ativa' },
+        linfocitos: { name: 'Linf\u00F3citos', unit: '/\u00B5L', refMin: 1000, refMax: 4800, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [2070, 2302, 1776, 2060], trend: '\u2192 est\u00E1vel' },
+        monocitos: { name: 'Mon\u00F3citos', unit: '/\u00B5L', refMin: 150, refMax: 2000, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [414, 329, 222, 824], trend: '\u2192 est\u00E1vel' },
+        plaquetas: { name: 'Plaquetas', unit: 'mil/\u00B5L', refMin: 175, refMax: 500, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [260, 289, 567, 166], trend: '\u2195 567\u2192166 queda brusca' }
+      },
+      bioquimica: {
+        alt: { name: 'ALT', unit: 'U/L', refMin: 10, refMax: 125, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [17, 30, 23, 22], trend: '\u2192 est\u00E1vel, normal' },
+        fa: { name: 'Fosfatase Alcalina', unit: 'U/L', refMin: 23, refMax: 212, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [200, 23.6, 23, 41], trend: '\u2193 normalizou (FA filhote)' },
+        ureia: { name: 'Ureia', unit: 'mg/dL', refMin: 7, refMax: 27, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [29, 29.4, 38, 43], trend: '\u2191 subindo' },
+        creatinina: { name: 'Creatinina', unit: 'mg/dL', refMin: 0.5, refMax: 1.8, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [0.8, 1.41, 1.2, 1.10], trend: '\u2192 est\u00E1vel' },
+        albumina: { name: 'Albumina', unit: 'g/dL', refMin: 2.3, refMax: 4.0, dates: ['Ago/2024','Jun/2025','Dez/2025'], values: [3.6, 3.77, 4.2], trend: '\u2191 subindo' },
+        triglicerideos: { name: 'Triglicer\u00EDdeos', unit: 'mg/dL', refMin: 50, refMax: 150, dates: ['Ago/2024','Dez/2025'], values: [127, 250], trend: '\u2191\u2191 dobrou em 16 meses' },
+        colesterol: { name: 'Colesterol', unit: 'mg/dL', refMin: 110, refMax: 320, dates: ['Ago/2024','Dez/2025'], values: [184, 144], trend: '\u2192 est\u00E1vel' },
+        glicose: { name: 'Glicose', unit: 'mg/dL', refMin: 74, refMax: 143, dates: ['Ago/2024','Dez/2025'], values: [64, 88], trend: '\u2191 normalizou' },
+        ferro: { name: 'Ferro', unit: '\u00B5g/dL', refMin: 84, refMax: 223, dates: ['Ago/2024'], values: [90], trend: 'Lim\u00EDtrofe baixo' },
+        calcio: { name: 'C\u00E1lcio Total', unit: 'mg/dL', refMin: 8.0, refMax: 12.0, dates: ['Ago/2024','Jun/2025','Dez/2025'], values: [10.4, 10.0, 10.7], trend: '\u2192 est\u00E1vel' }
+      },
+      endocrino: {
+        t4livre: { name: 'T4 Livre (di\u00E1lise)', unit: 'ng/dL', refMin: 0.7, refMax: 2.0, dates: ['Ago/2024','Jun/2025'], values: [1.40, 1.03], trend: '\u2193 caiu \u2014 ter\u00E7o inferior' },
+        tsh: { name: 'TSH', unit: 'ng/mL', refMin: 0.03, refMax: 0.5, dates: ['Ago/2024','Jun/2025'], values: [0.212, 0.22], trend: '\u2192 est\u00E1vel' },
+        b12: { name: 'Vitamina B12', unit: 'pg/mL', refMin: 175, refMax: 800, dates: ['Jun/2025'], values: [304], trend: 'Ter\u00E7o inferior' }
+      }
+    };
+
+    const CONDITIONS = [
+      {
+        id: 'policitemia',
+        name: 'Policitemia Microc\u00EDtica Cr\u00F4nica',
+        status: 'ativa',
+        severity: 'moderada',
+        category: 'Hematol\u00F3gica',
+        firstDetected: 'Jan/2024',
+        trend: '\u2192 Est\u00E1vel-alta',
+        trendClass: 'warning',
+        description: 'Eritr\u00F3citos, hemoglobina e hemat\u00F3crito persistentemente elevados com microcitose (VCM baixo). Ferro lim\u00EDtrofe.',
+        markers: ['eritrocitos','hemoglobina','hematocrito','vcm'],
+        markerCategory: 'eritrograma',
+        source: 'Hemograma \u2014 detectado desde Jan/2024. Ausente em Mai/2019 (filhote).',
+        analysis: 'Policitemia ausente aos 3 meses (Mai/2019). Surgiu entre 2019 e 2024. Padr\u00E3o: policitemia microc\u00EDtica com ferro lim\u00EDtrofe baixo. Hemat\u00F3crito atingiu 60% em Ago/2024 (limite de interven\u00E7\u00E3o). Eco de contraste espl\u00EAnico (Out/2025) sugere hiperviscosidade. EPO s\u00E9rica e gasometria ainda pendentes para diferenciar etiologia.',
+        recommendations: ['Investigar com EPO s\u00E9rica + gasometria', 'Monitorar hemat\u00F3crito \u2014 flebotomia se > 60%', 'Omega-3 como antiagregante plaquetario leve', 'D-d\u00EDmero + Fibrinog\u00EAnio se plaquetas continuarem caindo'],
+        redFlags: ['Hemat\u00F3crito > 60% \u2192 flebotomia imediata', 'Sinais neurol\u00F3gicos (ataxia, convuls\u00E3o) \u2192 emerg\u00EAncia', 'Mucosas congestas + taquipneia \u2192 emerg\u00EAncia']
+      },
+      {
+        id: 'dermatite',
+        name: 'Dermatite At\u00F3pica Canina',
+        status: 'cronica',
+        severity: 'moderada',
+        category: 'Dermatol\u00F3gica',
+        firstDetected: '~2025',
+        trend: '\u2192 Cr\u00F4nica controlada',
+        trendClass: 'warning',
+        description: 'Les\u00F5es em \u00E1reas t\u00EDpicas (barriga, axilas, inguinal, perianal). Gatilho alimentar confirmado: \u00F3leo de canola. Alergias a frango e boi (info nutr\u00F3loga 20/03 \u2014 metodologia a esclarecer).',
+        markers: ['eosinofilos'],
+        markerCategory: 'leucograma',
+        source: 'Observa\u00E7\u00E3o cl\u00EDnica + predisposi\u00E7\u00E3o racial (Shiba Inu = preval\u00EAncia muito alta de DAC).',
+        analysis: 'Shiba Inu tem preval\u00EAncia muito alta de dermatite at\u00F3pica. Gatilho alimentar confirmado: \u00F3leo de canola. Nutr\u00F3loga informou alergias a frango e boi (20/03/2026) \u2014 metodologia do diagn\u00F3stico a esclarecer (IgE sorol\u00F3gico tem 40-60% de falsos positivos). Eosin\u00F3filos paradoxalmente zerados. Debate cl\u00EDnico (20/03): omega-3 de peixe ultrapurificado \u00E9 superior a \u00F3leo de soja para DAC.',
+        recommendations: ['NUNCA reintroduzir \u00F3leo de canola', 'EVITAR \u00F3leo de soja (risco al\u00E9rgico 15-25% em c\u00E3es com hipersensibilidade m\u00FAltipla)', 'Omega-3 de \u00F3leo de PEIXE ultrapurificado (anti-inflamat\u00F3rio \u2014 debate 20/03)', 'Esclarecer metodologia das alergias a frango/boi com nutr\u00F3loga', 'Manter Allermil semanal; aumentar em surtos', 'Considerar teste al\u00E9rgico intrad\u00E9rmico para aeroal\u00E9rgenios', 'Considerar imunoterapia (ASIT)', 'Descartar Cushing antes de imunossupressor'],
+        redFlags: ['Pioderma profundo \u2192 antibi\u00F3tico + citologia urgente', 'Otite bilateral recorrente \u2192 cultura', 'Les\u00F5es proliferativas ou ulceradas \u2192 bi\u00F3psia']
+      },
+      {
+        id: 'esteatose',
+        name: 'Esteatose Hep\u00E1tica',
+        status: 'nova',
+        severity: 'moderada',
+        category: 'Hep\u00E1tica',
+        firstDetected: 'Dez/2025',
+        trend: '\u2191 Detectada recentemente',
+        trendClass: 'danger',
+        description: 'Eco hep\u00E1tico sutil aumentado no ultrassom (Dez/2025). Correla\u00E7\u00E3o com triglicer\u00EDdeos 2x o limite.',
+        markers: ['triglicerideos','alt','fa'],
+        markerCategory: 'bioquimica',
+        source: 'Ultrassom abdominal (Dez/2025, Provet/Munhoz). F\u00EDgado normal em todos os US anteriores.',
+        analysis: 'Esteatose surgiu em Dez/2025, coincidindo com triglicer\u00EDdeos em 250 mg/dL (dobro do limite). Enzimas hep\u00E1ticas (ALT 22, FA 41) normais \u2014 sem dano hepatocelular ativo. Jejum noturno de 15h contribui para mobiliza\u00E7\u00E3o lip\u00EDdica excessiva. Prov\u00E1vel conex\u00E3o com hipotireoidismo subcl\u00EDnico.',
+        recommendations: ['Monitorar com US hep\u00E1tico em 3-6 meses', 'Reduzir triglicer\u00EDdeos: omega-3 + dieta', 'Tratar hipotireoidismo se confirmado', 'Considerar SAMe (18-20 mg/kg/dia)', 'Reduzir jejum noturno (arroz japon\u00EAs)'],
+        redFlags: ['ALT ou AST > 3\u00D7 limite \u2192 hepatite ativa', 'Icter\u00EDcia \u2192 emerg\u00EAncia', 'Ascite ao US \u2192 progress\u00E3o para cirrose']
+      },
+      {
+        id: 'hipertrigliceridemia',
+        name: 'Hipertrigliceridemia',
+        status: 'ativa',
+        severity: 'moderada',
+        category: 'Metab\u00F3lica',
+        firstDetected: 'Dez/2025',
+        trend: '\u2191 Piorando',
+        trendClass: 'danger',
+        description: 'Triglicer\u00EDdeos dobraram em 16 meses: 127 \u2192 250 mg/dL. Associada a esteatose e suspeita de hipotireoidismo.',
+        markers: ['triglicerideos','colesterol'],
+        markerCategory: 'bioquimica',
+        source: 'Perfil lip\u00EDdico \u2014 Triglicer\u00EDdeos 127 mg/dL (Ago/2024) \u2192 250 mg/dL (Dez/2025).',
+        analysis: 'Triglicer\u00EDdeos normais em Ago/2024 (127), saltaram para 250 em Dez/2025 (2\u00D7 limite). O aumento r\u00E1pido associado a esteatose hep\u00E1tica nova e peso resistente \u00E0 dieta sugere dislipidemia secund\u00E1ria a hipotireoidismo. Dra. Fernanda solicitou repeti\u00E7\u00E3o.',
+        recommendations: ['Repetir triglicer\u00EDdeos + colesterol (Dra. Fernanda)', 'Adicionar omega-3 de \u00F3leo de peixe', 'Investigar e tratar hipotireoidismo', 'Manter dieta hipocal\u00F3rica atual'],
+        redFlags: ['Triglicer\u00EDdeos > 500 mg/dL \u2192 risco pancreatite', 'Lipemia vis\u00EDvel no soro \u2192 alerta pancreatite']
+      },
+      {
+        id: 'hipotireoidismo',
+        name: 'Hipotireoidismo Subcl\u00EDnico',
+        status: 'suspeita',
+        severity: 'leve',
+        category: 'End\u00F3crina',
+        firstDetected: 'Jun/2025',
+        trend: '\u2193 T4L caindo',
+        trendClass: 'info',
+        description: 'T4 Livre caiu de 1.40 para 1.03 ng/dL (ter\u00E7o inferior). TSH normal. Peso n\u00E3o responde \u00E0 dieta.',
+        markers: ['t4livre','tsh'],
+        markerCategory: 'endocrino',
+        source: 'Painel end\u00F3crino (Ago/2024 e Jun/2025) + avalia\u00E7\u00E3o cl\u00EDnica (peso resistente, triglicer\u00EDdeos \u2191, B12 \u2193).',
+        analysis: 'T4L caiu 26% em 10 meses (1.40\u21921.03 ng/dL) \u2014 ter\u00E7o inferior da faixa 0.7-2.0. TSH est\u00E1vel (0.22). Por\u00E9m 13-38% dos hipotireoideos t\u00EAm TSH normal. Peso de 14 kg n\u00E3o cai com 335 kcal/dia. Shiba Inu tem predisposi\u00E7\u00E3o. Sinais compat\u00EDveis: sobrepeso, triglicer\u00EDdeos \u2191, hipomotilidade GI, B12 no ter\u00E7o inferior. TgAA pendente.',
+        recommendations: ['Reavaliar T4L + TSH + TgAA antes de Jun/2026', 'Se T4L continuar caindo \u2192 trial com levotiroxina', 'Correlacionar com triglicer\u00EDdeos e esteatose', 'Se levotiroxina: dar em jejum, 2-4h de intervalo do Fiber Mais'],
+        redFlags: ['Triglicer\u00EDdeos > 500 (risco pancreatite)', 'Bradicardia + hipotermia \u2192 hipotireoidismo severo', 'Mixedema (edema facial) \u2192 emerg\u00EAncia']
+      },
+      {
+        id: 'alergia-alimentar',
+        name: 'Hipersensibilidade Alimentar M\u00FAltipla',
+        status: 'nova',
+        severity: 'moderada',
+        category: 'Alergol\u00F3gica',
+        firstDetected: 'Mar/2026',
+        trend: '\u2191 Al\u00E9rgenos identificados',
+        trendClass: 'warning',
+        description: 'Alergias a frango, boi e \u00F3leo de canola. Nutr\u00F3loga informou frango/boi em 20/03/2026 \u2014 metodologia a esclarecer.',
+        markers: ['eosinofilos'],
+        markerCategory: 'leucograma',
+        source: 'Nutr\u00F3loga Dra. Fernanda Yamamoto Tavares (20/03/2026). \u00D3leo de canola por observa\u00E7\u00E3o cl\u00EDnica direta.',
+        analysis: 'Tr\u00EAs al\u00E9rgenos alimentares: frango, boi (info nutr\u00F3loga) e \u00F3leo de canola (correla\u00E7\u00E3o cl\u00EDnica). Debate cl\u00EDnico (20/03) alertou: testes sorol\u00F3gicos de IgE alimentar t\u00EAm especificidade de 40-60% (Mueller, Vet Dermatol, 2016). Padr\u00E3o-ouro \u00E9 dieta de elimina\u00E7\u00E3o com provoca\u00E7\u00E3o controlada. C\u00E3es com hipersensibilidade m\u00FAltipla t\u00EAm 15-25% de chance de reagir a soja (Muller, BMC Vet Res, 2016). A dieta de elimina\u00E7\u00E3o com su\u00EDno est\u00E1 correta.',
+        recommendations: ['Perguntar \u00E0 nutr\u00F3loga: teste de sangue ou observa\u00E7\u00E3o cl\u00EDnica?', 'Se sorol\u00F3gico: considerar provoca\u00E7\u00E3o controlada para confirmar', 'Manter su\u00EDno como prote\u00EDna principal', 'EVITAR soja (al\u00E9rgeno em 15-25% dos c\u00E3es com hipersensibilidade m\u00FAltipla)', 'Omega-3 de \u00F3leo de peixe PURIFICADO (<1 ppm prote\u00EDna) \u00E9 seguro', 'Considerar teste al\u00E9rgico intrad\u00E9rmico para aeroal\u00E9rgenios'],
+        redFlags: ['Anafilaxia ap\u00F3s novo alimento \u2192 emerg\u00EAncia', 'Pioderma profundo ap\u00F3s contato \u2192 antibio\u0301tico + dermatologista urgente', 'Edema facial/labial \u2192 emerg\u00EAncia']
+      }
+    ];
+
+    const SPECIALIST_PLAN = [
+      {
+        priority: 1,
+        label: 'URGENTE \u2014 Esta semana',
+        color: 'danger',
+        specialists: [
+          {
+            specialty: 'Hematologista',
+            who: 'Dra. Camila Thomazini \u2014 HAMA (centrohama.com.br)',
+            why: 'CIVD subcl\u00EDnica: plaquetas ca\u00EDram 567\u2192166 mil em 2 anos. Policitemia microcit\u00E1ria cr\u00F4nica.',
+            briefing: 'Doutora, meu cachorro Wally \u00E9 um Shiba Inu de 7 anos. Ele tem um problema no sangue desde 2024: o sangue dele \u00E9 muito grosso (hemat\u00F3crito acima de 55%) e agora descobrimos que as plaquetas ca\u00EDram bastante \u2014 eram 567 mil em 2024 e agora est\u00E3o em 166 mil. Al\u00E9m disso, ele tem dermatite at\u00F3pica, gordura no f\u00EDgado e a tireoide no limite baixo. Viemos porque precisamos entender por que as plaquetas est\u00E3o caindo e investigar essa policitemia.',
+            exams: ['D-d\u00EDmero', 'Fibrinog\u00EAnio', 'EPO s\u00E9rica', 'Hemograma manual (citrato)', 'Ferritina', 'TIBC', 'Gasometria arterial'],
+            questions: ['As plaquetas ca\u00EDram de 567 pra 166 mil em 2 anos \u2014 isso \u00E9 preocupante? Pode ser algum problema de coagula\u00E7\u00E3o?', 'O sangue dele \u00E9 muito grosso \u2014 precisa fazer algo pra aliviar, tipo tirar sangue?', 'Ele n\u00E3o toma nenhum rem\u00E9dio de sangue. Precisa come\u00E7ar algum?'],
+            gap: true
+          },
+          {
+            specialty: 'Gastroenterologista',
+            who: 'GAP \u2014 buscar especialista para endoscopia digestiva',
+            why: 'N\u00E1usea matinal cr\u00F4nica patol\u00F3gica. 4 tentativas de alimenta\u00E7\u00E3o noturna falharam.',
+            briefing: 'Doutor(a), meu cachorro tem n\u00E1usea toda manh\u00E3 h\u00E1 meses. Ele acorda com \u00E2nsia e \u00E0s vezes sai bile amarela. J\u00E1 tentamos dar comida de noite \u2014 ovo, fil\u00E9, mandioquinha, chuchu \u2014 e todas as vezes deu n\u00E1usea na manh\u00E3 seguinte. A \u00FAnica coisa que funcionou foi arroz japon\u00EAs \u00E0s 22h. Ele est\u00E1 em dieta de elimina\u00E7\u00E3o por alergias alimentares: s\u00F3 come fil\u00E9 mignon su\u00EDno + batata-doce ou mandioquinha + suplementos. A nutr\u00F3loga dele \u00E9 do Endoscopet.',
+            exams: ['Endoscopia digestiva alta + bi\u00F3psias (SEM omeprazol pr\u00E9vio)', 'Avalia\u00E7\u00E3o de gl\u00E2ndulas anais (sacculite nunca descartada)'],
+            questions: ['A n\u00E1usea \u00E9 todo dia de manh\u00E3, mesmo quando come \u00E0 noite. O que pode estar causando?', 'Tem como dar algum protetor de est\u00F4mago enquanto esperamos a endoscopia?', 'Ele tamb\u00E9m se co\u00E7a muito no \u00E2nus \u2014 pode ter algum problema nas gl\u00E2ndulas anais?'],
+            gap: true
+          }
+        ]
+      },
+      {
+        priority: 2,
+        label: 'IMPORTANTE \u2014 Este m\u00EAs',
+        color: 'warning',
+        specialists: [
+          {
+            specialty: 'Endocrinologista',
+            who: 'Dra. Raquel Fukumori \u2014 CVAL Alto da Lapa',
+            why: 'T4L caindo + eosin\u00F3filos zerados com DAC ativa = suspeita de Cushing/hipotireoidismo.',
+            briefing: 'Doutora, meu cachorro tem 7 anos e est\u00E1 acima do peso \u2014 pesa 14 kg e deveria pesar uns 10-11 kg. Mesmo com dieta controlada (come pouco, s\u00F3 335 kcal por dia), o peso n\u00E3o cai. Nos \u00FAltimos exames, o T4 livre caiu de 1.40 pra 1.03 em 10 meses. Os triglicer\u00EDdeos dobraram (de 127 pra 250). Ele tem gordura no f\u00EDgado e dermatite at\u00F3pica. E um dado que preocupou: os eosin\u00F3filos dele est\u00E3o zerados, mesmo tendo alergia \u2014 me disseram que pode ser sinal de Cushing.',
+            exams: ['T4L por di\u00E1lise de equil\u00EDbrio', 'TSH canino', 'TgAA (anticorpos antitireoglobulina)', 'Cortisol basal + ACTH'],
+            questions: ['A tireoide dele pode estar falhando? O T4 livre caiu bastante em pouco tempo.', 'Os eosin\u00F3filos zerados com alergia ativa \u2014 pode ser Cushing? Precisa investigar?', 'Se ele precisar tomar rem\u00E9dio pra tireoide, preciso dar em hor\u00E1rio separado dos suplementos?'],
+            gap: true
+          },
+          {
+            specialty: 'Nutr\u00F3loga \u2014 Dra. Fernanda Yamamoto',
+            who: 'Dra. Fernanda Yamamoto Tavares (CRMV-SP 57.169)',
+            why: '2 d\u00FAvidas pendentes que mudam a conduta do Wally.',
+            briefing: 'Dra. Fernanda, queria entender melhor duas coisas que conversamos. Fiquei pesquisando e queria tirar umas d\u00FAvidas antes de seguir com o tratamento.',
+            exams: ['Repetir triglicer\u00EDdeos + colesterol (j\u00E1 solicitado pela Dra.)', 'Informar que usei \u00F3leo de canola no lugar do \u00F3leo de soja que foi prescrito'],
+            questions: ['Como a senhora concluiu que o Wally \u00E9 super al\u00E9rgico a frango e boi? Foi teste de sangue ou pela observa\u00E7\u00E3o dele?', 'Sobre o \u00F3leo de soja no lugar do omega-3: li que omega-3 de peixe poderia ajudar na pele, no colesterol e na inflama\u00E7\u00E3o do Wally. Tem algum motivo espec\u00EDfico pra n\u00E3o usar?'],
+            gap: false
+          },
+          {
+            specialty: 'Hepatologista',
+            who: 'Dr. Luiz Flaquer \u2014 Covet SP ou HOVET-USP',
+            why: 'Esteatose hep\u00E1tica (Dez/2025) + triglicer\u00EDdeos 2x limite.',
+            briefing: 'Doutor, meu cachorro fez ultrassom em dezembro de 2025 e apareceu gordura no f\u00EDgado pela primeira vez \u2014 antes sempre dava normal. Os triglicer\u00EDdeos est\u00E3o em 250, que \u00E9 o dobro do limite. As enzimas do f\u00EDgado (ALT e FA) ainda est\u00E3o normais. Ele tamb\u00E9m pode ter problema de tireoide \u2014 o T4 livre est\u00E1 caindo. Quero saber se precisa de tratamento espec\u00EDfico pro f\u00EDgado.',
+            exams: ['US hep\u00E1tica de controle (3-6 meses ap\u00F3s dez/2025)', 'Perfil lip\u00EDdico completo'],
+            questions: ['A gordura no f\u00EDgado pode ser por causa da tireoide? Se tratar a tireoide, o f\u00EDgado melhora sozinho?', 'Precisa tomar algum suplemento pro f\u00EDgado?', 'Quando preciso repetir o ultrassom?'],
+            gap: true
+          }
+        ]
+      },
+      {
+        priority: 3,
+        label: 'MONITORAMENTO \u2014 Pr\u00F3ximos 90 dias',
+        color: 'info',
+        specialists: [
+          {
+            specialty: 'Dermatologista \u2014 Dra. Karina Cantagallo',
+            who: 'Dra. Karina Louren\u00E7o Cantagallo (CRMV 22558) \u2014 Ortoderm',
+            why: 'DAC ativa + alergias m\u00FAltiplas + eosin\u00F3filos zerados.',
+            briefing: 'Dra. Karina, tenho novidades. A nutr\u00F3loga do Wally disse que ele \u00E9 super al\u00E9rgico a frango e boi, al\u00E9m da canola que j\u00E1 sab\u00EDamos. Ele continua na dieta de elimina\u00E7\u00E3o com su\u00EDno. O que me preocupa \u00E9 que fizemos uma avalia\u00E7\u00E3o completa e os eosin\u00F3filos dele est\u00E3o zerados, o que \u00E9 estranho pra quem tem alergia. Me alertaram que pode ser Cushing e que seria melhor descartar isso antes de come\u00E7ar rem\u00E9dio pra alergia.',
+            exams: ['Teste al\u00E9rgico intrad\u00E9rmico (pra saber exatamente ao que ele reage)', 'Provoca\u00E7\u00E3o oral controlada pra confirmar frango e boi'],
+            questions: ['Esses eosin\u00F3filos zerados com a dermatite dele \u2014 \u00E9 preocupante? Precisa investigar alguma coisa antes de tratar a alergia?', 'Seria bom fazer aquele teste na pele pra saber exatamente o que causa a alergia dele?', 'Posso dar omega-3 de \u00F3leo de peixe pra ajudar na pele? Ou com tantas alergias \u00E9 arriscado?'],
+            gap: false
+          },
+          {
+            specialty: 'Cardiologista \u2014 Dra. Amanda Faria',
+            who: 'Dra. Amanda Rodrigues de Faria (CRMV 37128) \u2014 VetCardia',
+            why: 'Controle card\u00EDaco + risco por policitemia.',
+            briefing: 'Dra. Amanda, estamos investigando v\u00E1rias coisas com o Wally. Ele tem policitemia \u2014 o sangue muito grosso \u2014 e as plaquetas ca\u00EDram bastante. J\u00E1 estamos indo na hematologista. Queremos fazer um eco de controle porque o \u00FAltimo foi em junho de 2025, e tamb\u00E9m saber se a taquicardia que apareceu no eletro era s\u00F3 de estresse.',
+            exams: ['Ecocardiograma de controle (\u00FAltimo: Jun/2025)', 'Holter 24h (confirmar se taquicardia \u00E9 de estresse)', 'Press\u00E3o arterial (risco por policitemia)'],
+            questions: ['Precisa repetir o eco? O \u00FAltimo foi em junho do ano passado.', 'A taquicardia no eletro era de estresse, n\u00E9? Precisa fazer Holter pra confirmar?', 'Com o sangue grosso que ele tem, precisa medir a press\u00E3o?'],
+            gap: false
+          }
+        ]
+      }
+    ];
+
+    const RECOMMENDATIONS = {
+      alimentacao: {
+        title: 'Alimenta\u00E7\u00E3o',
+        items: [
+          { text: 'Omega-3 de \u00F3leo de peixe ULTRAPURIFICADO (50 mg/kg EPA+DHA/dia \u2014 ~700 mg/dia)', priority: 'urgente', source: 'Debate 20/03: 5/5 agentes concordam. Beneficia 4 condi\u00E7\u00F5es. Aguardar resposta da Dra. Fernanda.' },
+          { text: 'PROIBIDO: frango e boi \u2014 super al\u00E9rgico', priority: 'critico', source: 'Nutr\u00F3loga Dra. Fernanda (20/03) \u2014 metodologia a esclarecer' },
+          { text: 'PROIBIDO: \u00F3leo de canola \u2014 al\u00E9rgeno confirmado', priority: 'critico', source: 'Desencadeou dermatite axilar + perianal' },
+          { text: 'EVITAR: \u00F3leo de soja \u2014 risco al\u00E9rgico em c\u00E3es com hipersensibilidade m\u00FAltipla (15-25%)', priority: 'importante', source: 'Debate 20/03 \u2014 Nakamura (Muller, BMC Vet Res, 2016)' },
+          { text: 'Sal light: pode ser reintroduzido isoladamente (teste de 2 semanas)', priority: 'moderado', source: 'Debate 20/03: sem contraindica\u00E7\u00E3o cl\u00EDnica (pot\u00E1ssio normal)' },
+          { text: 'Arroz japon\u00EAs \u00E0 noite como tamp\u00E3o g\u00E1strico', priority: 'importante', source: '\u00DAnica op\u00E7\u00E3o tolerada (17/03/2026)' },
+          { text: 'Manter su\u00EDno como prote\u00EDna principal (dieta de elimina\u00E7\u00E3o correta)', priority: 'rotina', source: 'Validado pelo debate \u2014 frango e boi proibidos' }
+        ]
+      },
+      rotina: {
+        title: 'Rotina & Cuidados',
+        items: [
+          { text: 'Manter glutamina (prudente manter \u2014 evid\u00EAncia limitada em c\u00E3es mas risco-benef\u00EDcio favor\u00E1vel)', priority: 'importante', source: 'Debate 20/03: nutr\u00F3loga correta na ci\u00EAncia, errada na pr\u00E1tica para este paciente' },
+          { text: 'NUNCA interromper Fiber Mais + Nutroplus', priority: 'critico', source: 'Interrup\u00E7\u00E3o causou crise GI. Glutamina: manter sem interromper.' },
+          { text: 'Manter banho semanal com Allermil (sextas-feiras)', priority: 'rotina', source: 'Protocolo dermatol\u00F3gico' },
+          { text: 'Manter nata\u00E7\u00E3o 1x/semana', priority: 'rotina', source: 'Exerc\u00EDcio de baixo impacto + controle de peso' },
+          { text: 'Simparic mensal \u2014 antipulgas/carrapatos', priority: 'rotina', source: 'Protocolo antiparasit\u00E1rio cont\u00EDnuo' }
+        ]
+      }
+    };
+
+    const IMAGING = {
+      dates: ['Jan/2024', 'Jun/2025 (R)', 'Jun/2025 (M)', 'Out/2025', 'Dez/2025'],
+      organs: {
+        figado:   { name: 'F\u00EDgado',          findings: ['Normal','Normal','Normal','Normal','Esteatose'],         status: ['normal','normal','normal','normal','alterado'] },
+        vesicula: { name: 'Ves\u00EDcula Biliar',  findings: ['\u00CDnfima lama','Normal','Lama discreta','Lama discreta','Lama discreta'], status: ['atencao','normal','atencao','atencao','atencao'] },
+        baco:     { name: 'Ba\u00E7o',             findings: ['Normal','Esplenomegalia','Normal','Eco contraste','Normal'], status: ['normal','atencao','normal','alterado','normal'] },
+        duodeno:  { name: 'Duodeno',          findings: ['Normal','Duodenite 0.54cm','Normal','Normal','Normal'],   status: ['normal','alterado','normal','normal','normal'] },
+        pancreas: { name: 'P\u00E2ncreas',         findings: ['Normal','0.82cm','0.82cm','0.79cm','0.61cm'],             status: ['normal','normal','normal','normal','normal'] },
+        rins:     { name: 'Rins',             findings: ['RE 4.93 RD 4.47','RE 4.77 RD 4.69','RE 4.73 RD 4.76','RE 4.60 RD 4.51','RE 5.10 RD 4.96'], status: ['normal','normal','normal','normal','normal'] },
+        linfonodos: { name: 'Linfonodos',     findings: ['Normal','Normal','Normal','Linfonodomeg il\u00EDaca E','Normal'], status: ['normal','normal','normal','alterado','normal'] }
+      }
+    };
+
+    const VETS = [
+      { name: 'Dra. Karina Louren\u00E7o Cantagallo', specialty: 'Dermatologia', clinic: 'Ortoderm', crmv: 'CRMV 22558', color: '#818CF8' },
+      { name: 'Dra. Fernanda Yamamoto Tavares', specialty: 'Nutri\u00E7\u00E3o Cl\u00EDnica', clinic: 'Endoscopet', crmv: 'CRMV-SP 57.169', color: '#10B981' },
+      { name: 'Dra. Amanda Rodrigues de Faria', specialty: 'Cardiologia', clinic: 'VetCardia', crmv: 'CRMV 37128', color: '#F59E0B' },
+      { name: 'Dr. Franz Naoki Yoshitoshi', specialty: 'Nutricionista', clinic: 'Endoscopet', crmv: '', color: '#3B82F6' }
+    ];
+
+    const COMMS = [
+      {
+        vet: 'Dr. Ot\u00E1vio Kenji Iryo', date: '11/03/2026',
+        context: 'Mayra enviou fotos da axila e \u00E2nus com eritema.',
+        recommendation: 'Dermotrat spray 2x/dia.',
+        evals: [
+          { flag: '\u26A0\uFE0F', text: 'Tratamento sintom\u00E1tico correto, mas sem investiga\u00E7\u00E3o da causa' }
+        ]
+      },
+      {
+        vet: 'Dra. Fernanda (Endoscopet)', date: '16/03/2026',
+        context: 'Mayra relatou rea\u00E7\u00E3o al\u00E9rgica com canola, crise GI, tosse seca.',
+        recommendation: 'Suspender \u00F3leo; manter Nutroplus; repetir triglicer\u00EDdeos; corticoide curto se necess\u00E1rio.',
+        evals: [
+          { flag: '\u26A0\uFE0F', text: '"Dif\u00EDcil o \u00F3leo causar rea\u00E7\u00E3o" \u2014 conflita com correla\u00E7\u00E3o temporal forte' },
+          { flag: '\u274C', text: '"Glutamina sem evid\u00EAncia para cachorro" \u2014 crise ocorreu ap\u00F3s 2 dias sem' },
+          { flag: '\u2705', text: 'Corticoide dose baixa 4 dias \u2014 adequado para crise aguda' },
+          { flag: '\u2705', text: 'Solicitar repeti\u00E7\u00E3o de triglicer\u00EDdeos \u2014 essencial' }
+        ]
+      },
+      {
+        vet: 'Dra. Fernanda (Nutr\u00F3loga)', date: '20/03/2026',
+        context: '3 posi\u00E7\u00F5es da nutr\u00F3loga transmitidas por Mayra. Avaliadas em debate cl\u00EDnico com 5 agentes.',
+        recommendation: 'N\u00E3o dar omega-3, dar \u00F3leo de soja + sal light. Wally super al\u00E9rgico a frango e boi. Glutamina n\u00E3o funciona (estudos inconclusivos).',
+        evals: [
+          { flag: '\u274C', text: '\u00D3leo de soja vs omega-3: debate concluiu que omega-3 de peixe \u00E9 superior (beneficia 4 condi\u00E7\u00F5es)' },
+          { flag: '\u26A0\uFE0F', text: 'Alergias frango/boi: info valiosa, mas metodologia n\u00E3o esclarecida (IgE tem 40-60% falsos positivos)' },
+          { flag: '\u26A0\uFE0F', text: 'Glutamina: correta na ci\u00EAncia (evid\u00EAncia limitada), errada na pr\u00E1tica (risco-benef\u00EDcio favorece manter)' },
+          { flag: '\u2705', text: 'Sal light: pode ser reintroduzido com seguran\u00E7a (pot\u00E1ssio normal)' }
+        ]
+      }
+    ];
+
+    const EXAM_INDEX = [
+      { date: '25/03/2019', type: 'Copro + Gi\u00E1rdia', lab: 'LPCVet', vet: 'Tatiana Feuerwerker', obs: 'Gi\u00E1rdia REAGENTE' },
+      { date: '06/05/2019', type: 'Hemograma + Bioq', lab: 'LPCVet', vet: 'Tatiana Feuerwerker', obs: 'Filhote 3m, FA fisiol\u00F3gica' },
+      { date: '12/01/2024', type: 'Hemograma + Bioq + Urina', lab: 'TECSA', vet: 'Patryne Ibrahim', obs: '1\u00BA registro policitemia' },
+      { date: '12/01/2024', type: 'US abdominal', lab: 'Imagem.vet', vet: 'Patryne Ibrahim', obs: '\u00CDnfima lama biliar' },
+      { date: '01/08/2024', type: 'Hemograma + Bioq + End\u00F3crino', lab: 'Alchemypet', vet: 'Ana Carolina Bronchtein', obs: 'Painel 18 p\u00E1ginas' },
+      { date: '05/08/2024', type: 'RX coluna', lab: 'Stima', vet: 'Dra. Bruna', obs: 'Espondilose descartada' },
+      { date: '06/06/2025', type: 'ECG', lab: 'InPulse', vet: '\u2014', obs: 'Taquicardia sinusal (estresse)' },
+      { date: '07/06/2025', type: 'Sangue + Horm\u00F4nios', lab: 'IVI', vet: 'Karina Louren\u00E7o', obs: 'Amostra levemente hemolisada' },
+      { date: '07/06/2025', type: 'US abdominal', lab: 'IVI (Romano)', vet: 'Karina Louren\u00E7o', obs: 'Duodenite + esplenomegalia' },
+      { date: '07/06/2025', type: 'Ecocardiograma', lab: 'VetCardia', vet: 'Amanda Faria', obs: 'Normal. Escape mitral fisiol\u00F3gico' },
+      { date: '18/06/2025', type: 'US abdominal', lab: 'Provet (Munhoz)', vet: '\u2014', obs: 'Lama biliar discreta' },
+      { date: '18/10/2025', type: 'US abdominal', lab: 'Gold Lab Vet', vet: 'Thais Pereira', obs: 'Esplenomeg + eco contraste espl\u00EAnico' },
+      { date: '02-03/12/2025', type: 'Parasitol\u00F3gico 3 amostras', lab: 'Provet', vet: 'Lylian Sodr\u00E9', obs: 'Negativo (muco na 1\u00AA)' },
+      { date: '04/12/2025', type: 'Hemograma + Bioq', lab: 'Provet', vet: 'Lylian Sodr\u00E9', obs: 'Triglicer\u00EDdeos 2x limite' },
+      { date: '09/12/2025', type: 'US abdominal', lab: 'Provet (Munhoz)', vet: '\u2014', obs: 'Esteatose hep\u00E1tica' }
+    ];
+
+    // =========================================================================
+    // STATE
+    // =========================================================================
+    let currentExamCat = 'eritrograma';
+    let activeCharts = [];
+
+    // =========================================================================
+    // NAVIGATION
+    // =========================================================================
+    function switchView(viewId) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + viewId).classList.add('active');
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.nav-tab[data-view="${viewId}"]`).classList.add('active');
+      if (viewId === 'exams') renderExams();
+      if (viewId === 'profile') renderMacroChart();
+    }
+
+    // =========================================================================
+    // CHART UTILITY
+    // =========================================================================
+    function createMarkerChart(canvasId, markerKey, catKey) {
+      const cat = MARKERS[catKey];
+      if (!cat || !cat[markerKey]) return null;
+      const m = cat[markerKey];
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return null;
+
+      const refMinArr = m.values.map(() => m.refMin);
+      const refMaxArr = m.values.map(() => m.refMax);
+      const pointColors = m.values.map(v => {
+        if (v < m.refMin) return '#D97706';
+        if (v > m.refMax) return '#DC2626';
+        return '#059669';
+      });
+
+      return new Chart(canvas.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: m.dates,
+          datasets: [
+            {
+              label: 'Ref Max', data: refMaxArr,
+              borderColor: 'rgba(5,150,105,0.2)', borderWidth: 1, borderDash: [4,4],
+              pointRadius: 0,
+              fill: { target: '+1', above: 'rgba(5,150,105,0.07)', below: 'rgba(5,150,105,0.07)' },
+              order: 2
+            },
+            {
+              label: 'Ref Min', data: refMinArr,
+              borderColor: 'rgba(5,150,105,0.2)', borderWidth: 1, borderDash: [4,4],
+              pointRadius: 0, fill: false, order: 2
+            },
+            {
+              label: m.name, data: m.values,
+              borderColor: '#6366F1', borderWidth: 2.5,
+              pointBackgroundColor: pointColors, pointBorderColor: pointColors,
+              pointRadius: 5, pointHoverRadius: 7,
+              tension: 0.35, fill: false, order: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(15,23,42,0.9)',
+              titleColor: '#F8FAFC', bodyColor: '#CBD5E1',
+              borderColor: 'rgba(0,0,0,0.1)', borderWidth: 1,
+              cornerRadius: 8, padding: 12,
+              callbacks: {
+                label: function(item) {
+                  if (item.datasetIndex < 2) return null;
+                  const v = item.raw;
+                  let s = v < m.refMin ? ' \u2193 Abaixo' : v > m.refMax ? ' \u2191 Acima' : ' \u2713 Normal';
+                  return m.name + ': ' + v + ' ' + m.unit + s;
+                },
+                afterBody: function() { return ['Ref: ' + m.refMin + ' \u2013 ' + m.refMax + ' ' + m.unit]; }
+              }
+            }
+          },
+          scales: {
+            y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#94A3B8', font: { size: 11, family: "'JetBrains Mono'" } }, border: { display: false } },
+            x: { grid: { display: false }, ticks: { color: '#94A3B8', font: { size: 11 } }, border: { display: false } }
+          }
+        }
+      });
+    }
+
+    function destroyActiveCharts() {
+      activeCharts.forEach(c => { if (c) c.destroy(); });
+      activeCharts = [];
+    }
+
+    // =========================================================================
+    // RENDER: CONDITIONS
+    // =========================================================================
+    function renderConditions() {
+      const grid = document.getElementById('conditions-grid');
+      grid.innerHTML = CONDITIONS.map(c => {
+        const sc = c.status === 'ativa' ? 'badge-ativa' : c.status === 'cronica' ? 'badge-cronica' : c.status === 'nova' ? 'badge-nova' : 'badge-suspeita';
+        const sv = c.severity === 'alta' ? 'sev-alta' : c.severity === 'moderada' ? 'sev-moderada' : 'sev-leve';
+        return '<div class="condition-card ' + sv + '" onclick="openConditionModal(\'' + c.id + '\')">' +
+          '<div class="condition-name">' + c.name + '</div>' +
+          '<div class="condition-meta"><span class="badge ' + sc + '">' + c.status + '</span><span class="badge badge-category">' + c.category + '</span></div>' +
+          '<div class="condition-desc">' + c.description + '</div>' +
+          '<div class="condition-trend"><span class="arrow" style="color:var(--' + c.trendClass + ')">' + c.trend.charAt(0) + '</span><span>' + c.trend.substring(2) + '</span>&nbsp;\u00B7&nbsp; Desde ' + c.firstDetected + '</div>' +
+          '<div class="condition-cta">Ver evid\u00EAncia diagn\u00F3stica</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    // =========================================================================
+    // RENDER: RECOMMENDATIONS
+    // =========================================================================
+    function renderSpecialistPlan() {
+      const container = document.getElementById('specialist-plan-container');
+      let html = '';
+      let globalIdx = 1;
+      SPECIALIST_PLAN.forEach(tier => {
+        html += '<div class="sp-tier">';
+        html += '<div class="sp-tier-header"><span class="sp-tier-badge ' + tier.color + '">Prioridade ' + tier.priority + '</span><span class="sp-tier-label">' + tier.label + '</span></div>';
+        html += '<div class="sp-cards">';
+        tier.specialists.forEach(sp => {
+          const cardId = 'sp-card-' + globalIdx;
+          html += '<div class="sp-card" id="' + cardId + '">';
+          html += '<div class="sp-card-header" onclick="document.getElementById(\'' + cardId + '\').classList.toggle(\'open\')">';
+          html += '<div class="sp-card-header-left">';
+          html += '<div class="sp-card-number ' + tier.color + '">' + globalIdx + '</div>';
+          html += '<div><div class="sp-card-specialty">' + sp.specialty + '</div>';
+          html += '<div class="sp-card-who">' + sp.who + '</div></div></div>';
+          html += '<div style="display:flex;align-items:center;gap:8px;">';
+          if (sp.gap) html += '<span class="sp-gap-badge">GAP no time</span>';
+          html += '<span class="sp-card-chevron">\u25BC</span>';
+          html += '</div></div>';
+          html += '<div class="sp-card-body">';
+          html += '<div class="sp-why">' + sp.why + '</div>';
+          html += '<div class="sp-briefing"><div class="sp-briefing-label">\uD83D\uDDE3\uFE0F O que falar quando chegar</div><div class="sp-briefing-text">' + sp.briefing + '</div></div>';
+          html += '<div class="sp-section-label">Exames que precisa pedir</div>';
+          html += '<ul class="sp-list exams">';
+          sp.exams.forEach(e => { html += '<li>' + e + '</li>'; });
+          html += '</ul>';
+          html += '<div class="sp-section-label">O que perguntar</div>';
+          html += '<ul class="sp-list questions">';
+          sp.questions.forEach(q => { html += '<li>' + q + '</li>'; });
+          html += '</ul></div></div>';
+          globalIdx++;
+        });
+        html += '</div></div>';
+      });
+      container.innerHTML = html;
+    }
+
+    function renderRecommendations() {
+      const container = document.getElementById('recommendations-container');
+      let html = '';
+      for (const key of Object.keys(RECOMMENDATIONS)) {
+        const g = RECOMMENDATIONS[key];
+        html += '<div class="rec-group"><div class="rec-group-title">' + g.title + '</div><div class="rec-list">';
+        g.items.forEach(item => {
+          const prohibited = item.priority === 'critico' ? ' rec-prohibited' : '';
+          html += '<div class="rec-item p-' + item.priority + '"><div class="rec-dot ' + item.priority + '"></div><div><div class="rec-text' + prohibited + '">' + item.text + '</div><div class="rec-source">' + item.source + '</div></div></div>';
+        });
+        html += '</div></div>';
+      }
+      container.innerHTML = html;
+    }
+
+    // =========================================================================
+    // RENDER: EXAMS
+    // =========================================================================
+    function renderExamTabs() {
+      const tabs = document.getElementById('exam-tabs');
+      const cats = [
+        { key: 'eritrograma', label: 'Eritrograma' },
+        { key: 'leucograma', label: 'Leucograma' },
+        { key: 'bioquimica', label: 'Bioqu\u00EDmica' },
+        { key: 'endocrino', label: 'End\u00F3crino' },
+        { key: 'imagem', label: 'Imagem' }
+      ];
+      tabs.innerHTML = cats.map(c =>
+        '<button class="exam-tab' + (c.key === currentExamCat ? ' active' : '') + '" onclick="switchExamCategory(\'' + c.key + '\')">' + c.label + '</button>'
+      ).join('');
+    }
+
+    function switchExamCategory(cat) {
+      currentExamCat = cat;
+      renderExamTabs();
+      renderExams();
+    }
+
+    function renderExams() {
+      renderExamTabs();
+      destroyActiveCharts();
+      const content = document.getElementById('exam-content');
+      const imgSec = document.getElementById('imaging-section');
+
+      if (currentExamCat === 'imagem') {
+        content.innerHTML = '';
+        imgSec.style.display = 'block';
+        renderImagingTable();
+        renderCardioRx();
+        return;
+      }
+      imgSec.style.display = 'none';
+
+      const cat = MARKERS[currentExamCat];
+      if (!cat) { content.innerHTML = ''; return; }
+
+      let html = '<div class="charts-grid">';
+      for (const [key, m] of Object.entries(cat)) {
+        const last = m.values[m.values.length - 1];
+        const color = last > m.refMax ? 'var(--danger)' : last < m.refMin ? 'var(--warning)' : 'var(--success)';
+        html += '<div class="chart-card">' +
+          '<div class="chart-header"><div class="chart-title">' + m.name + '</div>' +
+          '<div class="chart-current" style="color:' + color + '">' + last + ' <span class="unit">' + m.unit + '</span></div></div>' +
+          '<div class="chart-canvas-wrap"><canvas id="exam-chart-' + key + '"></canvas></div>' +
+          '<div class="chart-ref">Ref: ' + m.refMin + ' \u2013 ' + m.refMax + ' ' + m.unit + ' \u00B7 ' + m.trend + '</div></div>';
+      }
+      html += '</div>';
+      content.innerHTML = html;
+
+      requestAnimationFrame(() => {
+        Object.keys(cat).forEach(key => {
+          const ch = createMarkerChart('exam-chart-' + key, key, currentExamCat);
+          if (ch) activeCharts.push(ch);
+        });
+      });
+
+      renderExamIndex();
+    }
+
+    // =========================================================================
+    // RENDER: IMAGING
+    // =========================================================================
+    function renderImagingTable() {
+      const t = document.getElementById('imaging-table');
+      const sm = { normal: 'cell-normal', atencao: 'cell-atencao', alterado: 'cell-alterado' };
+      let html = '<thead><tr><th>\u00D3rg\u00E3o</th>';
+      IMAGING.dates.forEach(d => { html += '<th>' + d + '</th>'; });
+      html += '</tr></thead><tbody>';
+      for (const org of Object.values(IMAGING.organs)) {
+        html += '<tr><td style="font-weight:600;position:sticky;left:0;background:var(--bg-card);">' + org.name + '</td>';
+        org.findings.forEach((f, i) => {
+          html += '<td><span class="cell-badge ' + sm[org.status[i]] + '">' + f + '</span></td>';
+        });
+        html += '</tr>';
+      }
+      html += '</tbody>';
+      t.innerHTML = html;
+    }
+
+    function renderCardioRx() {
+      document.getElementById('cardio-rx-container').innerHTML =
+        '<div class="chart-card"><div style="font-size:0.85rem;font-weight:600;margin-bottom:12px;">Ecocardiograma (Jun/2025)</div>' +
+        '<div style="font-size:0.8rem;color:var(--text-secondary);line-height:1.8;">' +
+        '<div>FC: 172 bpm (taquicardia por estresse)</div>' +
+        '<div>Fra\u00E7\u00E3o eje\u00E7\u00E3o: 65% / 56% <span style="color:var(--success)">Normal</span></div>' +
+        '<div>AE/Ao: 1.28 (&lt;1.6) <span style="color:var(--success)">Normal</span></div>' +
+        '<div>Mitral: Escape discreto <span style="color:var(--warning)">Monitorar</span></div>' +
+        '<div style="margin-top:8px;color:var(--success);font-weight:500;">Conclus\u00E3o: Exame normal</div></div></div>' +
+        '<div class="chart-card"><div style="font-size:0.85rem;font-weight:600;margin-bottom:12px;">Radiografia (Ago/2024)</div>' +
+        '<div style="font-size:0.8rem;color:var(--text-secondary);line-height:1.8;">' +
+        '<div>Coluna cervicotorácica: <span style="color:var(--success)">Normal</span></div>' +
+        '<div>Coluna lombosacra: <span style="color:var(--success)">Normal</span></div>' +
+        '<div>Espondilose descartada</div>' +
+        '<div style="margin-top:8px;">RX t\u00F3rax+abd\u00F4men (Jan/2024): <span style="color:var(--success)">Normal</span></div></div></div>';
+    }
+
+    // =========================================================================
+    // RENDER: EXAM INDEX
+    // =========================================================================
+    function renderExamIndex() {
+      const t = document.getElementById('exam-index-table');
+      let html = '<thead><tr><th>Data</th><th>Tipo</th><th>Laborat\u00F3rio</th><th>Vet</th><th>Obs</th></tr></thead><tbody>';
+      EXAM_INDEX.forEach(e => {
+        html += '<tr><td style="font-family:var(--mono);font-size:0.75rem;">' + e.date + '</td><td>' + e.type + '</td><td>' + e.lab + '</td><td>' + e.vet + '</td><td style="color:var(--text-secondary);">' + e.obs + '</td></tr>';
+      });
+      html += '</tbody>';
+      t.innerHTML = html;
+    }
+
+    // =========================================================================
+    // RENDER: VET TEAM
+    // =========================================================================
+    function renderVets() {
+      const grid = document.getElementById('vet-cards-grid');
+      grid.innerHTML = VETS.map(v => {
+        const parts = v.name.split(' ');
+        const initials = parts[0].replace('Dra.','D').replace('Dr.','D').charAt(0) + (parts[parts.length-1] || '').charAt(0);
+        return '<div class="vet-card"><div class="vet-avatar" style="background:' + v.color + ';">' + initials + '</div>' +
+          '<div class="vet-name">' + v.name + '</div>' +
+          '<div class="vet-specialty">' + v.specialty + '</div>' +
+          '<div class="vet-detail">' + v.clinic + '</div>' +
+          (v.crmv ? '<div class="vet-detail">' + v.crmv + '</div>' : '') + '</div>';
+      }).join('');
+    }
+
+    function renderComms() {
+      const container = document.getElementById('comms-container');
+      container.innerHTML = COMMS.map(c => {
+        let html = '<div class="comm-item"><div class="comm-header"><div class="comm-vet">' + c.vet + '</div><div class="comm-date">' + c.date + '</div></div>';
+        html += '<div class="comm-body"><strong>Contexto:</strong> ' + c.context + '<br><strong>Recomenda\u00E7\u00E3o:</strong> ' + c.recommendation + '</div>';
+        html += '<div class="comm-eval">';
+        c.evals.forEach(e => { html += '<div class="eval-item"><span class="eval-flag">' + e.flag + '</span><span>' + e.text + '</span></div>'; });
+        html += '</div></div>';
+        return html;
+      }).join('');
+    }
+
+    // =========================================================================
+    // RENDER: MACRO CHART
+    // =========================================================================
+    let macroChartInstance = null;
+    function renderMacroChart() {
+      if (macroChartInstance) return;
+      const canvas = document.getElementById('macro-chart');
+      if (!canvas) return;
+      requestAnimationFrame(() => {
+        macroChartInstance = new Chart(canvas.getContext('2d'), {
+          type: 'doughnut',
+          data: {
+            labels: ['Prote\u00EDna (57%)', 'Gordura (21%)', 'Carboidrato (18%)'],
+            datasets: [{ data: [57, 21, 18], backgroundColor: ['#6366F1', '#D97706', '#059669'], borderWidth: 0, hoverOffset: 4 }]
+          },
+          options: {
+            cutout: '68%', responsive: true, maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { color: '#64748B', padding: 12, font: { size: 11, family: "'DM Sans'" } } } }
+          }
+        });
+      });
+    }
+
+    // =========================================================================
+    // MODAL
+    // =========================================================================
+    function openConditionModal(conditionId) {
+      const c = CONDITIONS.find(x => x.id === conditionId);
+      if (!c) return;
+      destroyActiveCharts();
+
+      const sc = c.status === 'ativa' ? 'badge-ativa' : c.status === 'cronica' ? 'badge-cronica' : c.status === 'nova' ? 'badge-nova' : 'badge-suspeita';
+      let html = '<div class="modal-header"><div><div class="modal-title">' + c.name + '</div>' +
+        '<div style="display:flex;gap:8px;align-items:center;"><span class="badge ' + sc + '">' + c.status + '</span>' +
+        '<span class="badge badge-category">' + c.category + '</span>' +
+        '<span style="font-size:0.75rem;color:var(--text-muted);">Desde ' + c.firstDetected + '</span></div></div>' +
+        '<button class="modal-close" onclick="closeModal()">\u2715</button></div>';
+
+      html += '<div class="modal-body">';
+      html += '<div class="modal-section"><div class="modal-section-title">Evid\u00EAncia Diagn\u00F3stica</div><div class="evidence-source">' + c.source + '</div></div>';
+
+      if (c.markers.length > 0) {
+        html += '<div class="modal-section"><div class="modal-section-title">Marcadores Associados</div><div class="modal-charts-grid">';
+        c.markers.forEach((mk, i) => {
+          const md = MARKERS[c.markerCategory]?.[mk];
+          if (!md) return;
+          const lv = md.values[md.values.length - 1];
+          const col = lv > md.refMax ? 'var(--danger)' : lv < md.refMin ? 'var(--warning)' : 'var(--success)';
+          html += '<div class="modal-chart-card"><div class="modal-chart-title">' + md.name + '</div>' +
+            '<div class="modal-chart-value">Atual: <span style="color:' + col + ';font-weight:600;">' + lv + '</span> ' + md.unit + ' (ref: ' + md.refMin + '\u2013' + md.refMax + ')</div>' +
+            '<div class="modal-chart-wrap"><canvas id="modal-chart-' + i + '"></canvas></div></div>';
+        });
+        html += '</div></div>';
+      }
+
+      html += '<div class="modal-section"><div class="modal-section-title">An\u00E1lise</div><div class="modal-analysis">' + c.analysis + '</div></div>';
+      html += '<div class="modal-section"><div class="modal-section-title">Recomenda\u00E7\u00F5es</div><ul class="modal-rec-list">';
+      c.recommendations.forEach(r => { html += '<li>' + r + '</li>'; });
+      html += '</ul></div>';
+      html += '<div class="modal-section"><div class="modal-section-title">Red Flags \u2014 Quando Agir</div><ul class="modal-flag-list">';
+      c.redFlags.forEach(f => { html += '<li>' + f + '</li>'; });
+      html += '</ul></div></div>';
+
+      document.getElementById('modal-content').innerHTML = html;
+      document.getElementById('modal-overlay').classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      requestAnimationFrame(() => {
+        c.markers.forEach((mk, i) => {
+          const ch = createMarkerChart('modal-chart-' + i, mk, c.markerCategory);
+          if (ch) activeCharts.push(ch);
+        });
+      });
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('active');
+      document.body.style.overflow = '';
+      destroyActiveCharts();
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // =========================================================================
+    // COLLAPSIBLE
+    // =========================================================================
+    function toggleCollapsible(header) {
+      header.classList.toggle('open');
+      header.nextElementSibling.classList.toggle('open');
+    }
+
+    // =========================================================================
+    // INIT
+    // =========================================================================
+    document.addEventListener('DOMContentLoaded', function() {
+      renderConditions();
+      renderSpecialistPlan();
+      renderRecommendations();
+      renderExamTabs();
+      renderExamIndex();
+      renderVets();
+      renderComms();
+    });
+  </script>
+</body>
+</html>
