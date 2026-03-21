@@ -1233,11 +1233,11 @@
       {
         id: 'cushing',
         name: 'Hiperadrenocorticismo Subcl\u00EDnico (Cushing)',
-        status: 'suspeita',
+        status: 'ativa',
         severity: 'alta',
         category: 'End\u00F3crina',
         firstDetected: 'Mar/2026',
-        trend: '\u2191 Suspeita \u2014 FA normal enfraquece (debate)',
+        trend: '\u2191 Investigar URGENTE \u2014 LDDS divide caminho (debate 6/6)',
         trendClass: 'danger',
         description: 'Debate: Cushing explica mais achados (navalha de Occam), mas FA normal (41 U/L) enfraquece hip\u00F3tese (FA elevada em >90% dos Cushing cl\u00EDnicos). Cushing C\u00CDCLICO pode explicar eosinopenia intermitente (247\u2192468\u21920).',
         markers: ['eosinofilos'],
@@ -1340,6 +1340,15 @@
             exams: ['Endoscopia digestiva alta + bi\u00F3psias (SEM omeprazol pr\u00E9vio)', 'Avalia\u00E7\u00E3o de gl\u00E2ndulas anais (sacculite nunca descartada)'],
             questions: ['A n\u00E1usea \u00E9 todo dia de manh\u00E3, mesmo quando come \u00E0 noite. O que pode estar causando?', 'Tem como dar algum protetor de est\u00F4mago enquanto esperamos a endoscopia?', 'Ele tamb\u00E9m se co\u00E7a muito no \u00E2nus \u2014 pode ter algum problema nas gl\u00E2ndulas anais?'],
             gap: true
+          },
+          {
+            specialty: 'Endocrinologista \u2014 Cushing + Tireoide',
+            who: 'Dra. Raquel Fukumori \u2014 CVAL Alto da Lapa',
+            why: 'CUSHING: debate 6/6 \u2014 LDDS urgente (Cushing c\u00EDclico explic. eosinopenia intermitente). TIREOIDE: T4L caindo, motor da dislipidemia.',
+            briefing: 'Doutora, meu cachorro Shiba de 7 anos tem dois problemas que parecem independentes. (1) Sangue grosso h\u00E1 2 anos (hemat\u00F3crito 55-60%) \u2014 um debate m\u00E9dico com 6 especialistas concluiu que pode ser policitemia vera OU Cushing subcl\u00EDnico. A fosfatase alcalina est\u00E1 normal (41), o que \u00E9 incomum em Cushing, mas pode ser Cushing c\u00EDclico. Os eosin\u00F3filos variaram: 247\u2192468\u21920, compat\u00EDvel com secre\u00E7\u00E3o intermitente de cortisol. (2) T4 livre caiu de 1.40 pra 1.03, triglicer\u00EDdeos dobraram, gordura no f\u00EDgado \u2014 provavelmente hipotireoidismo subcl\u00EDnico. Os especialistas recomendam LDDS (mais sens\u00EDvel que cortisol basal pra Cushing c\u00EDclico) + T4L/TSH/TgAA na mesma coleta.',
+            exams: ['LDDS (dexametasona baixa dose) \u2014 mais sens\u00EDvel para Cushing c\u00EDclico', 'T4L por di\u00E1lise de equil\u00EDbrio', 'TSH canino', 'TgAA (anticorpos antitireoglobulina)', 'EPO s\u00E9rica (na mesma coleta \u2014 divide PV vs. secund\u00E1ria)'],
+            questions: ['Os eosin\u00F3filos variaram muito (247\u2192468\u21920) \u2014 pode ser Cushing c\u00EDclico? Por isso preferimos LDDS ao cortisol basal.', 'A tireoide pode explicar os triglicer\u00EDdeos e a gordura no f\u00EDgado, mas N\u00C3O a policitemia, correto?', 'Se confirmar hipotireoidismo + Cushing, qual tratar primeiro?', 'Podemos coletar LDDS + T4L/TSH/TgAA + EPO na mesma sess\u00E3o?'],
+            gap: true
           }
         ]
       },
@@ -1348,15 +1357,6 @@
         label: 'IMPORTANTE \u2014 Este m\u00EAs',
         color: 'warning',
         specialists: [
-          {
-            specialty: 'Endocrinologista',
-            who: 'Dra. Raquel Fukumori \u2014 CVAL Alto da Lapa',
-            why: 'Debate: duas condi\u00E7\u00F5es independentes (PV/Cushing + hipotireoidismo). LDDS + T4L/TSH/TgAA na mesma sess\u00E3o.',
-            briefing: 'Doutora, meu cachorro Shiba de 7 anos tem dois problemas que parecem independentes. (1) Sangue grosso h\u00E1 2 anos (hemat\u00F3crito 55-60%) \u2014 um debate m\u00E9dico com 6 especialistas concluiu que pode ser policitemia vera OU Cushing subcl\u00EDnico. A fosfatase alcalina est\u00E1 normal (41), o que \u00E9 incomum em Cushing, mas pode ser Cushing c\u00EDclico. Os eosin\u00F3filos variaram: 247\u2192468\u21920, compat\u00EDvel com secre\u00E7\u00E3o intermitente de cortisol. (2) T4 livre caiu de 1.40 pra 1.03, triglicer\u00EDdeos dobraram, gordura no f\u00EDgado \u2014 provavelmente hipotireoidismo subcl\u00EDnico. Os especialistas recomendam LDDS (mais sens\u00EDvel que cortisol basal pra Cushing c\u00EDclico) + T4L/TSH/TgAA na mesma coleta.',
-            exams: ['LDDS (dexametasona baixa dose) \u2014 mais sens\u00EDvel para Cushing c\u00EDclico', 'T4L por di\u00E1lise de equil\u00EDbrio', 'TSH canino', 'TgAA (anticorpos antitireoglobulina)', 'EPO s\u00E9rica (na mesma coleta \u2014 divide PV vs. secund\u00E1ria)'],
-            questions: ['Os eosin\u00F3filos variaram muito (247\u2192468\u21920) \u2014 pode ser Cushing c\u00EDclico? Por isso preferimos LDDS ao cortisol basal.', 'A tireoide pode explicar os triglicer\u00EDdeos e a gordura no f\u00EDgado, mas N\u00C3O a policitemia, correto?', 'Se confirmar hipotireoidismo + Cushing, qual tratar primeiro?', 'Podemos coletar LDDS + T4L/TSH/TgAA + EPO na mesma sess\u00E3o?'],
-            gap: true
-          },
           {
             specialty: 'Nutr\u00F3loga \u2014 Dra. Fernanda Yamamoto',
             who: 'Dra. Fernanda Yamamoto Tavares (CRMV-SP 57.169)',
