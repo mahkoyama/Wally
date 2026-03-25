@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conselho Clínico — Wally | 24/03/2026</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* ============================================
+           RESET & BASE
+           ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-card: #16213e;
+            --bg-card-alt: #1b2a4a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0b8;
+            --text-muted: #7a7a92;
+            --accent: #0f3460;
+            --highlight: #e94560;
+            --highlight-soft: rgba(233, 69, 96, 0.15);
+            --green: #4ecca3;
+            --green-soft: rgba(78, 204, 163, 0.15);
+            --yellow: #f0c040;
+            --yellow-soft: rgba(240, 192, 64, 0.15);
+            --red: #e94560;
+            --red-soft: rgba(233, 69, 96, 0.15);
+            --blue: #4a9ff5;
+            --blue-soft: rgba(74, 159, 245, 0.15);
+            --border: rgba(255, 255, 255, 0.06);
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ============================================
+           HEADER
+           ============================================ */
+        .header {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--accent) 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(233, 69, 96, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .header-title {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .header-title h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.3rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header-title .subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .patient-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 1rem;
+        }
+
+        .patient-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .patient-badge .icon {
+            font-size: 0.9rem;
+        }
+
+        /* Gauge */
+        .gauge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 160px;
+        }
+
+        .gauge-wrapper {
+            position: relative;
+            width: 140px;
+            height: 80px;
+            overflow: hidden;
+        }
+
+        .gauge-canvas {
+            width: 140px;
+            height: 140px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .gauge-value {
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--highlight);
+        }
+
+        .gauge-value span {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .gauge-label {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--highlight);
+            margin-top: 0.3rem;
+            font-weight: 600;
+            max-width: 180px;
+            line-height: 1.3;
+        }
+
+        .header-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 1.2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .meta-item {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .meta-item strong {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* ============================================
+           TABS
+           ============================================ */
+        .tabs-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .tab-nav {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid var(--border);
+            margin-top: 1.5rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            flex-shrink: 0;
+            background: none;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .tab-btn.active {
+            color: var(--highlight);
+            font-weight: 600;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--highlight);
+            border-radius: 2px 2px 0 0;
+        }
+
+        .tab-panel {
+            display: none;
+            padding: 1.5rem 0 3rem;
+            animation: fadeIn 0.35s ease;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================
+           CARDS & SECTIONS
+           ============================================ */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title .badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-red { background: var(--red-soft); color: var(--red); }
+        .badge-yellow { background: var(--yellow-soft); color: var(--yellow); }
+        .badge-green { background: var(--green-soft); color: var(--green); }
+        .badge-blue { background: var(--blue-soft); color: var(--blue); }
+
+        h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.2rem 0 0.6rem;
+        }
+
+        h3:first-child {
+            margin-top: 0;
+        }
+
+        p, li {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 1.2rem;
+            margin-bottom: 0.4rem;
+        }
+
+        ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.55em;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--highlight);
+        }
+
+        .highlight-text {
+            color: var(--highlight);
+            font-weight: 600;
+        }
+
+        .accent-text {
+            color: var(--blue);
+            font-weight: 600;
+        }
+
+        .green-text {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        /* ============================================
+           TABLES
+           ============================================ */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            margin: 0.8rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.84rem;
+        }
+
+        thead th {
+            background: rgba(15, 52, 96, 0.4);
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 0.7rem 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        tbody td {
+            padding: 0.6rem 0.8rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .score-cell {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .score-high { color: var(--red); }
+        .score-med { color: var(--yellow); }
+        .score-low { color: var(--green); }
+
+        /* ============================================
+           COLLAPSIBLE
+           ============================================ */
+        .collapsible {
+            border: 1px solid rgba(233, 69, 96, 0.2);
+            border-radius: var(--radius-sm);
+            margin-top: 1.2rem;
+            overflow: hidden;
+        }
+
+        .collapsible-header {
+            background: rgba(233, 69, 96, 0.08);
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--highlight);
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .collapsible-header:hover {
+            background: rgba(233, 69, 96, 0.12);
+        }
+
+        .collapsible-arrow {
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .collapsible.open .collapsible-arrow {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .collapsible.open .collapsible-body {
+            max-height: 2000px;
+        }
+
+        .collapsible-content {
+            padding: 1.2rem;
+        }
+
+        /* ============================================
+           ACTION ITEMS
+           ============================================ */
+        .action-item {
+            display: flex;
+            gap: 0.8rem;
+            padding: 0.7rem 0.8rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
+            align-items: flex-start;
+        }
+
+        .action-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .action-number {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+            margin-top: 0.1rem;
+        }
+
+        .action-urgent .action-number {
+            background: var(--red-soft);
+            color: var(--red);
+        }
+
+        .action-important .action-number {
+            background: var(--yellow-soft);
+            color: var(--yellow);
+        }
+
+        .action-preventive .action-number {
+            background: var(--green-soft);
+            color: var(--green);
+        }
+
+        .action-text {
+            font-size: 0.86rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ============================================
+           PRESCRIPTIONS GRID
+           ============================================ */
+        .prescriptions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .prescription-card {
+            background: var(--bg-card-alt);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .prescription-card:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .prescription-card h4 {
+            font-size: 0.88rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .prescription-card ul li {
+            font-size: 0.82rem;
+            margin-bottom: 0.35rem;
+        }
+
+        /* ============================================
+           CHART CONTAINER
+           ============================================ */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 1.5rem auto;
+        }
+
+        /* ============================================
+           HYPOTHESIS BOX
+           ============================================ */
+        .hypothesis-box {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.08) 0%, rgba(15, 52, 96, 0.15) 100%);
+            border: 1px solid rgba(233, 69, 96, 0.2);
+            border-left: 3px solid var(--highlight);
+            border-radius: var(--radius-sm);
+            padding: 1.2rem 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .hypothesis-box h3 {
+            color: var(--highlight);
+            margin-top: 0;
+            margin-bottom: 0.6rem;
+            font-size: 0.92rem;
+        }
+
+        .hypothesis-box p {
+            font-size: 0.86rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ============================================
+           CONSENSUS LIST
+           ============================================ */
+        .consensus-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 0.6rem;
+            margin-top: 0.6rem;
+        }
+
+        .consensus-item {
+            background: rgba(78, 204, 163, 0.06);
+            border: 1px solid rgba(78, 204, 163, 0.15);
+            border-radius: var(--radius-sm);
+            padding: 0.6rem 0.9rem;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .consensus-check {
+            color: var(--green);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .footer p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1.2rem 1rem;
+            }
+
+            .header-top {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .header-title h1 {
+                font-size: 1.3rem;
+            }
+
+            .tabs-container {
+                padding: 0 0.8rem;
+            }
+
+            .tab-btn {
+                padding: 0.7rem 1rem;
+                font-size: 0.82rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .prescriptions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-meta {
+                justify-content: center;
+            }
+
+            .patient-info {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tab-btn {
+                padding: 0.6rem 0.7rem;
+                font-size: 0.78rem;
+            }
+
+            .consensus-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Eixo label */
+        .eixo-label {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        .eixo-1 { background: rgba(233, 69, 96, 0.12); color: var(--highlight); }
+        .eixo-2 { background: rgba(240, 192, 64, 0.12); color: var(--yellow); }
+        .eixo-3 { background: rgba(74, 159, 245, 0.12); color: var(--blue); }
+        .eixo-t { background: rgba(160, 160, 184, 0.12); color: var(--text-secondary); }
+    </style>
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-top">
+                <div class="header-title">
+                    <h1>Conselho Clinico Multidisciplinar</h1>
+                    <div class="subtitle">Wally | 24/03/2026</div>
+                    <div class="patient-info">
+                        <span class="patient-badge"><span class="icon">&#128054;</span> Wally</span>
+                        <span class="patient-badge">Shiba Inu</span>
+                        <span class="patient-badge">M castrado</span>
+                        <span class="patient-badge">7 anos 2 meses</span>
+                        <span class="patient-badge">14 kg</span>
+                    </div>
+                </div>
+                <div class="gauge-container">
+                    <div class="gauge-wrapper">
+                        <canvas id="gaugeChart" class="gauge-canvas"></canvas>
+                        <div class="gauge-value">3.8<span>/10</span></div>
+                    </div>
+                    <div class="gauge-label">Atencao Alta — Multiplas questoes ativas convergentes</div>
+                </div>
+            </div>
+            <div class="header-meta">
+                <div class="meta-item"><strong>7</strong> especialistas</div>
+                <div class="meta-item"><strong>1</strong> round</div>
+                <div class="meta-item"><strong>19</strong> condicoes avaliadas</div>
+                <div class="meta-item"><strong>Score:</strong> <span style="color:var(--highlight);font-weight:700">3.8/10</span></div>
+                <div class="meta-item"><strong>Proxima revisao:</strong> 14/04/2026</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== TABS ========== -->
+    <div class="tabs-container">
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="resumo">Resumo</button>
+            <button class="tab-btn" data-tab="mapa">Mapa de Condicoes</button>
+            <button class="tab-btn" data-tab="plano">Plano de Acao</button>
+            <button class="tab-btn" data-tab="prescricoes">Prescricoes</button>
+        </nav>
+
+        <!-- ========== ABA 1 — RESUMO ========== -->
+        <div class="tab-panel active" id="tab-resumo">
+
+            <!-- Eixo 1 -->
+            <div class="card">
+                <div class="card-title">
+                    <span class="eixo-label eixo-1">Eixo 1</span>
+                    Sindrome Metabolica
+                </div>
+                <ul>
+                    <li>Triglicerideos <span class="highlight-text">250 mg/dL</span> (3x o limite racial para Shiba Inu)</li>
+                    <li>Esteatose hepatica com <span class="highlight-text">GGT 5x acima</span> do limite superior</li>
+                    <li>Obesidade refrataria: 335 kcal/dia sem emagrecimento — incompativel com ingestao real</li>
+                    <li>T4 livre em queda progressiva: <span class="highlight-text">1.40 &rarr; 1.03 ng/dL</span> (tendencia de hipofuncao)</li>
+                </ul>
+            </div>
+
+            <!-- Eixo 2 -->
+            <div class="card">
+                <div class="card-title">
+                    <span class="eixo-label eixo-2">Eixo 2</span>
+                    Gastroentero-hepatico
+                </div>
+                <ul>
+                    <li>Nausea matinal cronica — hipotese de <span class="accent-text">GERD biliar com 75% de probabilidade</span></li>
+                    <li>BVS descartada: teste de alimentacao noturna falhou em 4/5 tentativas</li>
+                    <li>Arroz japones funciona como protetor: nao estimula secrecao de CCK, reduzindo contracoes biliares</li>
+                    <li>Lama biliar persistente em US seriadas</li>
+                    <li>B12 no <span class="highlight-text">terco inferior</span> da faixa de referencia — risco de deficiencia funcional</li>
+                </ul>
+            </div>
+
+            <!-- Eixo 3 -->
+            <div class="card">
+                <div class="card-title">
+                    <span class="eixo-label eixo-3">Eixo 3</span>
+                    Dermato-alergico
+                </div>
+                <ul>
+                    <li>DAC (Dermatite Atopica Canina) multifocal — <span class="accent-text">Favrot 5-6/8 criterios positivos</span></li>
+                    <li>Alergia a canola <span class="green-text">confirmada e controlada</span> (eliminada da dieta)</li>
+                    <li>Citologia cutanea <span class="highlight-text">nunca realizada</span> — essencial para descartar infeccao secundaria</li>
+                    <li>Farmacoterapia dermatologica <span class="highlight-text">ausente</span> — nenhum imunomodulador ou corticoide topico em uso</li>
+                </ul>
+            </div>
+
+            <!-- Transversal -->
+            <div class="card">
+                <div class="card-title">
+                    <span class="eixo-label eixo-t">Transversal</span>
+                    Hematologico
+                </div>
+                <ul>
+                    <li>Eritrocitose com <span class="accent-text">65% de probabilidade racial</span> (Shiba Inu — predisposicao documentada)</li>
+                    <li>EPO e gasometria <span class="highlight-text">pendentes</span> — necessarios para descartar causa patologica</li>
+                    <li>Risco trombotico classificado como <span class="highlight-text">moderado</span> ate exclusao de policitemia vera</li>
+                </ul>
+            </div>
+
+            <!-- Hipotese Central -->
+            <div class="hypothesis-box">
+                <h3>Hipotese Central Integradora</h3>
+                <p><strong>Hipotireoidismo subclinico como motor primario</strong> &rarr; obesidade refrataria &rarr; hipertrigliceridemia &rarr; esteatose hepatica &rarr; dismotilidade biliar &rarr; nausea cronica. Se confirmado por painel tireoidiano completo (T4L + TSH + T4T + TgAA) e tratado com levotiroxina, multiplas condicoes do quadro atual podem reverter em cadeia.</p>
+            </div>
+
+            <!-- Consensos -->
+            <div class="card">
+                <div class="card-title">
+                    Consensos do Conselho
+                    <span class="badge badge-green">Unanimidade ou Supermaioria</span>
+                </div>
+                <div class="consensus-grid">
+                    <div class="consensus-item"><span class="consensus-check">&#10003;</span> Omega-3 urgente (6/7 votos)</div>
+                    <div class="consensus-item"><span class="consensus-check">&#10003;</span> Painel tireoidiano e prioridade #1</div>
+                    <div class="consensus-item"><span class="consensus-check">&#10003;</span> Nausea e patologica, nao BVS</div>
+                    <div class="consensus-item"><span class="consensus-check">&#10003;</span> Arroz funciona por mecanismo CCK</div>
+                    <div class="consensus-item"><span class="consensus-check">&#10003;</span> Esteatose e reversivel com tratamento</div>
+                    <div class="consensus-item"><span class="consensus-check">&#10003;</span> Citologia obrigatoria pre-Apoquel</div>
+                    <div class="consensus-item"><span class="consensus-check">&#10003;</span> Eritrocitose racial (65% probabilidade)</div>
+                    <div class="consensus-item"><span class="consensus-check">&#10003;</span> 335 kcal sem perda = causa metabolica</div>
+                </div>
+            </div>
+
+            <!-- Desastre Total (collapsible) -->
+            <div class="collapsible" id="desastreCollapsible">
+                <div class="collapsible-header" onclick="toggleCollapsible('desastreCollapsible')">
+                    <span>&#9888; Desastre Total — Cenarios de Falha e Acoes de Ultimo Recurso</span>
+                    <span class="collapsible-arrow">&#9660;</span>
+                </div>
+                <div class="collapsible-body">
+                    <div class="collapsible-content">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Especialista</th>
+                                        <th>Cenario de Falha</th>
+                                        <th>Sinal Ignorado</th>
+                                        <th>Recomendacao Nuclear</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Endocrino</strong></td>
+                                        <td>T4L continua caindo sem diagnostico</td>
+                                        <td>Queda 1.40&rarr;1.03 em 6 meses</td>
+                                        <td>Teste terapeutico com levotiroxina 0.02mg/kg BID</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Gastro</strong></td>
+                                        <td>Nausea persiste apos omeprazol + sucralfato</td>
+                                        <td>Falha do teste BVS 4/5</td>
+                                        <td>Endoscopia digestiva alta + biopsia</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Hepato</strong></td>
+                                        <td>GGT nao normaliza em 60 dias</td>
+                                        <td>GGT 5x persistente</td>
+                                        <td>Biopsia hepatica guiada por US</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Dermato</strong></td>
+                                        <td>Lesoes progridem mesmo com Apoquel</td>
+                                        <td>Citologia nunca feita</td>
+                                        <td>Raspado cutaneo profundo + cultura fungica</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Hemato</strong></td>
+                                        <td>Eritrocitose com EPO elevada</td>
+                                        <td>Hematocrito persistentemente alto</td>
+                                        <td>US renal com Doppler + medula ossea</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Nefro</strong></td>
+                                        <td>Ureia continua subindo (29&rarr;43&rarr;?)</td>
+                                        <td>Progressao linear em 12 meses</td>
+                                        <td>SDMA + relacao proteina/creatinina urinaria</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Nutri</strong></td>
+                                        <td>Peso nao cede em 30 dias com omega-3 + tireoide</td>
+                                        <td>335 kcal = deficit real sem resultado</td>
+                                        <td>Quarentena alimentar total 7 dias (racao hidrolisada)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3 style="margin-top:1.2rem;color:var(--highlight);">Top 4 Acoes de Ultimo Recurso</h3>
+                        <div class="action-item action-urgent">
+                            <span class="action-number">1</span>
+                            <span class="action-text"><strong>Quarentena alimentar 7 dias</strong> — racao hidrolisada exclusiva, zero petiscos, zero suplementos orais. Objetivo: zerar variaveis alimentares.</span>
+                        </div>
+                        <div class="action-item action-urgent">
+                            <span class="action-number">2</span>
+                            <span class="action-text"><strong>Teste terapeutico com levotiroxina</strong> — 0.02 mg/kg BID por 8 semanas com monitoramento de T4L a cada 2 semanas. Resposta clinica confirma diagnostico.</span>
+                        </div>
+                        <div class="action-item action-urgent">
+                            <span class="action-number">3</span>
+                            <span class="action-text"><strong>TSDDB + estimulacao ACTH</strong> — descartar HAC definitivamente se cortisol basal ambiguo.</span>
+                        </div>
+                        <div class="action-item action-urgent">
+                            <span class="action-number">4</span>
+                            <span class="action-text"><strong>Raspado cutaneo profundo</strong> — descarte de Demodex e dermatofitose antes de imunossupressao.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== ABA 2 — MAPA DE CONDICOES ========== -->
+        <div class="tab-panel" id="tab-mapa">
+
+            <!-- Condicoes criticas -->
+            <div class="card">
+                <div class="card-title">
+                    Condicoes Criticas
+                    <span class="badge badge-red">G&ge;4 ou P&ge;4</span>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Condicao</th>
+                                <th style="text-align:center">Gravidade</th>
+                                <th style="text-align:center">Probabilidade</th>
+                                <th style="text-align:center">G&times;P</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Vomito biliar / Nausea cronica</td>
+                                <td style="text-align:center">4</td>
+                                <td style="text-align:center">5</td>
+                                <td style="text-align:center" class="score-cell score-high">20</td>
+                            </tr>
+                            <tr>
+                                <td>Hipertrigliceridemia (250 mg/dL)</td>
+                                <td style="text-align:center">4</td>
+                                <td style="text-align:center">5</td>
+                                <td style="text-align:center" class="score-cell score-high">20</td>
+                            </tr>
+                            <tr>
+                                <td>Esteatose hepatica + GGT 5x</td>
+                                <td style="text-align:center">3</td>
+                                <td style="text-align:center">5</td>
+                                <td style="text-align:center" class="score-cell score-high">15</td>
+                            </tr>
+                            <tr>
+                                <td>Obesidade refrataria</td>
+                                <td style="text-align:center">3</td>
+                                <td style="text-align:center">5</td>
+                                <td style="text-align:center" class="score-cell score-high">15</td>
+                            </tr>
+                            <tr>
+                                <td>DAC multifocal</td>
+                                <td style="text-align:center">3</td>
+                                <td style="text-align:center">5</td>
+                                <td style="text-align:center" class="score-cell score-high">15</td>
+                            </tr>
+                            <tr>
+                                <td>Hipotireoidismo subclinico</td>
+                                <td style="text-align:center">4</td>
+                                <td style="text-align:center">3</td>
+                                <td style="text-align:center" class="score-cell score-med">12</td>
+                            </tr>
+                            <tr>
+                                <td>Ureia progressiva (29&rarr;43)</td>
+                                <td style="text-align:center">3</td>
+                                <td style="text-align:center">4</td>
+                                <td style="text-align:center" class="score-cell score-med">12</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Condicoes em monitoramento -->
+            <div class="card">
+                <div class="card-title">
+                    Condicoes em Monitoramento
+                    <span class="badge badge-yellow">Atencao</span>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Condicao</th>
+                                <th style="text-align:center">G</th>
+                                <th style="text-align:center">P</th>
+                                <th style="text-align:center">G&times;P</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Lama biliar</td><td style="text-align:center">2</td><td style="text-align:center">4</td><td style="text-align:center" class="score-cell score-med">8</td></tr>
+                            <tr><td>B12 baixa</td><td style="text-align:center">2</td><td style="text-align:center">4</td><td style="text-align:center" class="score-cell score-med">8</td></tr>
+                            <tr><td>Eritrocitose</td><td style="text-align:center">3</td><td style="text-align:center">2</td><td style="text-align:center" class="score-cell score-med">6</td></tr>
+                            <tr><td>Esplenomegalia + ECE</td><td style="text-align:center">3</td><td style="text-align:center">2</td><td style="text-align:center" class="score-cell score-med">6</td></tr>
+                            <tr><td>T4L co-fator dermato</td><td style="text-align:center">2</td><td style="text-align:center">3</td><td style="text-align:center" class="score-cell score-med">6</td></tr>
+                            <tr><td>Alergia frango/boi</td><td style="text-align:center">2</td><td style="text-align:center">3</td><td style="text-align:center" class="score-cell score-med">6</td></tr>
+                            <tr><td>Linfadenopatia</td><td style="text-align:center">2</td><td style="text-align:center">2</td><td style="text-align:center" class="score-cell score-low">4</td></tr>
+                            <tr><td>Alergia anestesico</td><td style="text-align:center">2</td><td style="text-align:center">2</td><td style="text-align:center" class="score-cell score-low">4</td></tr>
+                            <tr><td>HAC (Hiperadrenocorticismo)</td><td style="text-align:center">4</td><td style="text-align:center">1</td><td style="text-align:center" class="score-cell score-low">4</td></tr>
+                            <tr><td>Pancreatite</td><td style="text-align:center">3</td><td style="text-align:center">1</td><td style="text-align:center" class="score-cell score-low">3</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Condicoes controladas -->
+            <div class="card">
+                <div class="card-title">
+                    Condicoes Controladas / Baixo Risco
+                    <span class="badge badge-green">Estavel</span>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Condicao</th>
+                                <th style="text-align:center">G</th>
+                                <th style="text-align:center">P</th>
+                                <th style="text-align:center">G&times;P</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Escape mitral <span class="green-text">(achado incidental)</span></td><td style="text-align:center">1</td><td style="text-align:center">5</td><td style="text-align:center" class="score-cell score-low">5</td></tr>
+                            <tr><td>Alergia canola <span class="green-text">(controlada)</span></td><td style="text-align:center">2</td><td style="text-align:center">5</td><td style="text-align:center" class="score-cell score-med">10</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Grafico Radar -->
+            <div class="card">
+                <div class="card-title">Radar por Eixo Clinico</div>
+                <div class="chart-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== ABA 3 — PLANO DE ACAO ========== -->
+        <div class="tab-panel" id="tab-plano">
+
+            <!-- Urgente -->
+            <div class="card">
+                <div class="card-title">
+                    <span style="font-size:1.1rem;">&#128308;</span> Urgente — Esta Semana
+                </div>
+                <div class="action-item action-urgent">
+                    <span class="action-number">1</span>
+                    <span class="action-text"><strong>Omega-3 1000-1500 mg EPA+DHA/dia</strong> — prioridade maxima (consenso 6/7). Alvo: triglicerideos, inflamacao hepatica e dermatologica.</span>
+                </div>
+                <div class="action-item action-urgent">
+                    <span class="action-number">2</span>
+                    <span class="action-text"><strong>Omeprazol 1 mg/kg SID noturno</strong> — teste terapeutico 14 dias para GERD biliar.</span>
+                </div>
+                <div class="action-item action-urgent">
+                    <span class="action-number">3</span>
+                    <span class="action-text"><strong>Sucralfato 500 mg BID</strong> — protecao mucosa gastrica sinergica com omeprazol.</span>
+                </div>
+                <div class="action-item action-urgent">
+                    <span class="action-number">4</span>
+                    <span class="action-text"><strong>SAMe 20 mg/kg/dia em jejum</strong> — hepatoprotetor direto para esteatose + GGT elevada.</span>
+                </div>
+                <div class="action-item action-urgent">
+                    <span class="action-number">5</span>
+                    <span class="action-text"><strong>Arroz japones noturno 25-30 g</strong> — manter como medida anti-nausea (mecanismo CCK validado).</span>
+                </div>
+                <div class="action-item action-urgent">
+                    <span class="action-number">6</span>
+                    <span class="action-text"><strong>Agendar coleta laboratorial:</strong> T4L + TSH + T4T + TgAA, cortisol/ACTH, SDMA, perfil lipidico jejum, EPO.</span>
+                </div>
+                <div class="action-item action-urgent">
+                    <span class="action-number">7</span>
+                    <span class="action-text"><strong>Confirmar petiscos da creche</strong> — verificar composicao e eliminar fontes ocultas de gordura/alergenos.</span>
+                </div>
+            </div>
+
+            <!-- Importante -->
+            <div class="card">
+                <div class="card-title">
+                    <span style="font-size:1.1rem;">&#128993;</span> Importante — Este Mes
+                </div>
+                <div class="action-item action-important">
+                    <span class="action-number">1</span>
+                    <span class="action-text"><strong>Citologia cutanea</strong> — pre-requisito obrigatorio antes de iniciar Apoquel ou qualquer imunossupressor.</span>
+                </div>
+                <div class="action-item action-important">
+                    <span class="action-number">2</span>
+                    <span class="action-text"><strong>Spec cPL</strong> — dosagem de lipase pancreatica especifica para descartar pancreatite subclinica.</span>
+                </div>
+                <div class="action-item action-important">
+                    <span class="action-number">3</span>
+                    <span class="action-text"><strong>B12 SC 250-500 mcg/semana &times; 6 semanas</strong> — reposicao subcutanea (absorcao oral comprometida em GI inflamatorio).</span>
+                </div>
+                <div class="action-item action-important">
+                    <span class="action-number">4</span>
+                    <span class="action-text"><strong>Oclacitinib (Apoquel)</strong> — iniciar apos resultado da citologia cutanea.</span>
+                </div>
+                <div class="action-item action-important">
+                    <span class="action-number">5</span>
+                    <span class="action-text"><strong>Obter protocolo anestesico</strong> da cirurgia dental 2025 — identificar agente causador da reacao alergica.</span>
+                </div>
+                <div class="action-item action-important">
+                    <span class="action-number">6</span>
+                    <span class="action-text"><strong>Endoscopia digestiva alta &lt; 30 dias</strong> — avaliacao direta de mucosa esofagogastrica + biopsia.</span>
+                </div>
+                <div class="action-item action-important">
+                    <span class="action-number">7</span>
+                    <span class="action-text"><strong>Gasometria + ferritina</strong> — complementar investigacao da eritrocitose.</span>
+                </div>
+                <div class="action-item action-important">
+                    <span class="action-number">8</span>
+                    <span class="action-text"><strong>Insulina jejum</strong> — avaliar resistencia insulinica como componente da sindrome metabolica.</span>
+                </div>
+            </div>
+
+            <!-- Preventivo -->
+            <div class="card">
+                <div class="card-title">
+                    <span style="font-size:1.1rem;">&#128994;</span> Preventivo — Trimestre
+                </div>
+                <div class="action-item action-preventive">
+                    <span class="action-number">1</span>
+                    <span class="action-text"><strong>UDCA (acido ursodesoxicolico)</strong> — condicional ao resultado de acidos biliares. Se confirmada colestase.</span>
+                </div>
+                <div class="action-item action-preventive">
+                    <span class="action-number">2</span>
+                    <span class="action-text"><strong>Reavaliacao cardiologica</strong> — controle do escape mitral (baixa gravidade atual, monitoramento preventivo).</span>
+                </div>
+                <div class="action-item action-preventive">
+                    <span class="action-number">3</span>
+                    <span class="action-text"><strong>US abdominal controle</strong> — acompanhamento de esteatose, lama biliar, esplenomegalia e linfadenopatia.</span>
+                </div>
+                <div class="action-item action-preventive">
+                    <span class="action-number">4</span>
+                    <span class="action-text"><strong>Perfil lipidico controle pos-omega-3</strong> — reavaliar triglicerideos apos 30-45 dias de suplementacao.</span>
+                </div>
+                <div class="action-item action-preventive">
+                    <span class="action-number">5</span>
+                    <span class="action-text"><strong>Dieta eliminacao 2a fase</strong> — introducao de proteina novel (ex: pato, coelho) apos estabilizacao GI.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== ABA 4 — PRESCRICOES ========== -->
+        <div class="tab-panel" id="tab-prescricoes">
+            <div class="prescriptions-grid">
+
+                <!-- Medicamentos -->
+                <div class="prescription-card">
+                    <h4><span style="color:var(--highlight);">&#9883;</span> Medicamentos</h4>
+                    <ul>
+                        <li><strong>Omeprazol</strong> — 1 mg/kg SID noturno (14 dias)</li>
+                        <li><strong>Sucralfato</strong> — 500 mg BID (protecao mucosa)</li>
+                        <li><strong>Oclacitinib (Apoquel)</strong> — iniciar pos-citologia (dose conforme peso)</li>
+                        <li><strong>Corticoide topico</strong> — lesoes focais DAC (uso localizado)</li>
+                        <li><strong>UDCA</strong> — condicional a acidos biliares (hepatoprotetor biliar)</li>
+                    </ul>
+                </div>
+
+                <!-- Suplementos -->
+                <div class="prescription-card">
+                    <h4><span style="color:var(--green);">&#9733;</span> Suplementos</h4>
+                    <ul>
+                        <li><strong>Omega-3</strong> — 1000-1500 mg EPA+DHA/dia (URGENTE)</li>
+                        <li><strong>SAMe</strong> — 20 mg/kg/dia em jejum (hepatoprotetor)</li>
+                        <li><strong>B12 SC</strong> — 250-500 mcg/semana &times; 6 semanas</li>
+                        <li><strong>Glutamina</strong> — manter dose atual</li>
+                        <li><strong>Fiber Mais</strong> — manter dose atual</li>
+                        <li><strong>Nutroplus</strong> — manter dose atual</li>
+                    </ul>
+                </div>
+
+                <!-- Dieta -->
+                <div class="prescription-card">
+                    <h4><span style="color:var(--yellow);">&#9878;</span> Dieta</h4>
+                    <ul>
+                        <li><strong>Manter</strong> dieta de eliminacao atual</li>
+                        <li><strong>Arroz japones noturno</strong> — 25-30 g (anti-nausea)</li>
+                        <li><strong>NAO soja</strong> — alergeno potencial</li>
+                        <li><strong>NAO canola</strong> — alergia confirmada</li>
+                        <li><strong>NAO sal light</strong> — potassio + risco renal</li>
+                        <li><strong>Investigar petiscos</strong> da creche (composicao)</li>
+                    </ul>
+                </div>
+
+                <!-- Encaminhamentos -->
+                <div class="prescription-card">
+                    <h4><span style="color:var(--blue);">&#10132;</span> Encaminhamentos</h4>
+                    <ul>
+                        <li><strong>Endocrinologista</strong> — <span class="highlight-text">URGENTE</span> (painel tireoidiano + cortisol)</li>
+                        <li><strong>Gastroenterologista</strong> — este mes (endoscopia + avaliacao biliar)</li>
+                        <li><strong>Dermatologista</strong> — este mes (citologia + plano DAC)</li>
+                        <li><strong>Cardiologista</strong> — trimestre (controle escape mitral)</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Resumo de posologias -->
+            <div class="card" style="margin-top:1.2rem;">
+                <div class="card-title">Resumo Posologico</div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Dose</th>
+                                <th>Frequencia</th>
+                                <th>Via</th>
+                                <th>Duracao</th>
+                                <th>Obs</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Omeprazol</td>
+                                <td>1 mg/kg (~14 mg)</td>
+                                <td>SID noturno</td>
+                                <td>VO</td>
+                                <td>14 dias</td>
+                                <td>Teste terapeutico</td>
+                            </tr>
+                            <tr>
+                                <td>Sucralfato</td>
+                                <td>500 mg</td>
+                                <td>BID</td>
+                                <td>VO</td>
+                                <td>14 dias</td>
+                                <td>30 min antes da refeicao</td>
+                            </tr>
+                            <tr>
+                                <td>Omega-3</td>
+                                <td>1000-1500 mg EPA+DHA</td>
+                                <td>SID</td>
+                                <td>VO</td>
+                                <td>Continuo</td>
+                                <td>Com refeicao</td>
+                            </tr>
+                            <tr>
+                                <td>SAMe</td>
+                                <td>20 mg/kg (~280 mg)</td>
+                                <td>SID</td>
+                                <td>VO</td>
+                                <td>60-90 dias</td>
+                                <td>Jejum (1h antes de comer)</td>
+                            </tr>
+                            <tr>
+                                <td>B12</td>
+                                <td>250-500 mcg</td>
+                                <td>1x/semana</td>
+                                <td>SC</td>
+                                <td>6 semanas</td>
+                                <td>Reavaliar apos ciclo</td>
+                            </tr>
+                            <tr>
+                                <td>Glutamina</td>
+                                <td>Dose atual</td>
+                                <td>SID</td>
+                                <td>VO</td>
+                                <td>Continuo</td>
+                                <td>Manter</td>
+                            </tr>
+                            <tr>
+                                <td>Fiber Mais</td>
+                                <td>Dose atual</td>
+                                <td>SID</td>
+                                <td>VO</td>
+                                <td>Continuo</td>
+                                <td>Manter</td>
+                            </tr>
+                            <tr>
+                                <td>Nutroplus</td>
+                                <td>Dose atual</td>
+                                <td>SID</td>
+                                <td>VO</td>
+                                <td>Continuo</td>
+                                <td>Manter</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p><strong>Conselho Clinico Multidisciplinar</strong> | 7 especialistas | 1 round | Score 3.8/10 | Gerado em 24/03/2026</p>
+        <p>Proxima revisao: <strong>14/04/2026</strong></p>
+    </footer>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script>
+        // ===== Tab Navigation =====
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // ===== Collapsible =====
+        function toggleCollapsible(id) {
+            document.getElementById(id).classList.toggle('open');
+        }
+
+        // ===== Gauge Chart =====
+        (function() {
+            const ctx = document.getElementById('gaugeChart').getContext('2d');
+            const score = 3.8;
+            const maxScore = 10;
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [score, maxScore - score],
+                        backgroundColor: [
+                            createGaugeGradient(ctx, score),
+                            'rgba(255, 255, 255, 0.05)'
+                        ],
+                        borderWidth: 0,
+                        circumference: 180,
+                        rotation: 270
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    }
+                }
+            });
+
+            function createGaugeGradient(ctx, score) {
+                if (score <= 3) return '#4ecca3';
+                if (score <= 5) return '#e94560';
+                if (score <= 7) return '#f0c040';
+                return '#ff4444';
+            }
+        })();
+
+        // ===== Radar Chart =====
+        (function() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        'Metabolico/\nEndocrino',
+                        'GI/Hepatico',
+                        'Dermatologico',
+                        'Hematologico',
+                        'Renal'
+                    ],
+                    datasets: [{
+                        label: 'Gravidade por Eixo',
+                        data: [4.5, 4.2, 3.0, 2.5, 3.0],
+                        backgroundColor: 'rgba(233, 69, 96, 0.15)',
+                        borderColor: '#e94560',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#e94560',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 1,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                stepSize: 1,
+                                color: '#7a7a92',
+                                backdropColor: 'transparent',
+                                font: { size: 11 }
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.06)',
+                                circular: true
+                            },
+                            angleLines: {
+                                color: 'rgba(255, 255, 255, 0.06)'
+                            },
+                            pointLabels: {
+                                color: '#a0a0b8',
+                                font: { size: 12, weight: '600' }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                color: '#a0a0b8',
+                                font: { size: 12 },
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#16213e',
+                            titleColor: '#e0e0e0',
+                            bodyColor: '#a0a0b8',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.r + '/5';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
+
+</body>
+</html>

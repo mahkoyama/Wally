@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking Endocrinologistas Veterinarios SP — Wally</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #232735;
+            --border: #2d3244;
+            --text: #e1e4ec;
+            --text-dim: #8b90a0;
+            --accent: #6c8cff;
+            --accent2: #a78bfa;
+            --green: #34d399;
+            --yellow: #fbbf24;
+            --red: #f87171;
+            --orange: #fb923c;
+            --tier1: #22c55e;
+            --tier2: #3b82f6;
+            --tier3: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 { color: var(--accent); font-size: 1.8rem; margin-bottom: 0.5rem; }
+        h2 { color: var(--accent2); font-size: 1.4rem; margin: 2rem 0 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        h3 { color: var(--accent); font-size: 1.1rem; margin: 1.5rem 0 0.5rem; }
+        .subtitle { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 2rem; }
+        .context-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--yellow);
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+        .context-box h3 { margin-top: 0; color: var(--yellow); }
+        .methodology {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+        .methodology h3 { margin-top: 0; color: var(--accent); }
+
+        /* Ranking cards */
+        .rank-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        .rank-card.top { border-color: var(--green); }
+        .rank-badge {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 2px 14px;
+            border-radius: 12px;
+        }
+        .rank-card.top .rank-badge { background: var(--green); }
+        .rank-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .rank-name { font-size: 1.2rem; font-weight: 700; color: var(--text); }
+        .rank-crmv { font-size: 0.85rem; color: var(--text-dim); }
+        .confidence {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .confidence.alto { background: rgba(34,197,94,0.15); color: var(--green); }
+        .confidence.medio { background: rgba(251,191,36,0.15); color: var(--yellow); }
+        .confidence.baixo { background: rgba(248,113,113,0.15); color: var(--red); }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        @media (max-width: 768px) { .detail-grid { grid-template-columns: 1fr; } }
+        .detail-item label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-dim);
+            margin-bottom: 2px;
+        }
+        .detail-item span { font-size: 0.9rem; }
+        .detail-full { grid-column: 1 / -1; }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin: 2px;
+        }
+        .tag.pub { background: rgba(108,140,255,0.15); color: var(--accent); }
+        .tag.abev { background: rgba(167,139,250,0.15); color: var(--accent2); }
+        .tag.forte { background: rgba(34,197,94,0.15); color: var(--green); }
+        .tag.atencao { background: rgba(251,191,36,0.15); color: var(--yellow); }
+        .tag.nao-confirmado { background: rgba(248,113,113,0.1); color: var(--red); font-style: italic; }
+
+        .pub-list { margin: 0.5rem 0; padding-left: 1.2rem; }
+        .pub-list li { font-size: 0.85rem; margin: 4px 0; color: var(--text-dim); }
+        .pub-list li strong { color: var(--text); }
+
+        .ponto-box {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+        .ponto {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+        }
+        .ponto.forte { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); }
+        .ponto.atencao { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2); }
+        .ponto-label { font-weight: 600; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 4px; }
+        .ponto.forte .ponto-label { color: var(--green); }
+        .ponto.atencao .ponto-label { color: var(--yellow); }
+
+        /* Comparison table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.85rem;
+        }
+        .comparison-table th {
+            background: var(--surface2);
+            color: var(--accent);
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--border);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .comparison-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        .comparison-table tr:hover { background: rgba(108,140,255,0.05); }
+
+        .source-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin: 2rem 0;
+        }
+        .source-section h3 { margin-top: 0; }
+        .source-list { list-style: none; padding: 0; }
+        .source-list li {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            padding: 3px 0;
+            word-break: break-all;
+        }
+        .source-list li a { color: var(--accent); text-decoration: none; }
+        .source-list li a:hover { text-decoration: underline; }
+        sup.tier { font-size: 0.65rem; font-weight: 700; padding: 1px 4px; border-radius: 3px; margin-left: 2px; }
+        sup.tier-1 { background: rgba(34,197,94,0.2); color: var(--tier1); }
+        sup.tier-2 { background: rgba(59,130,246,0.2); color: var(--tier2); }
+        sup.tier-3 { background: rgba(245,158,11,0.2); color: var(--tier3); }
+
+        .summary-box {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin: 2rem 0;
+        }
+        .warning {
+            background: rgba(248,113,113,0.08);
+            border: 1px solid rgba(248,113,113,0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+        }
+        .warning-label { color: var(--red); font-weight: 600; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<h1>Ranking: Endocrinologistas Veterinarios — Sao Paulo e Regiao</h1>
+<p class="subtitle">Pesquisa realizada em 25/03/2026 | Foco: hipotireoidismo subclinico canino, hipertrigliceridemia, obesidade refrataria | Paciente: Wally (Shiba Inu, 7a, 14 kg)</p>
+
+<!-- CONTEXTO -->
+<div class="context-box">
+    <h3>Contexto Clinico do Caso</h3>
+    <p>Shiba Inu, 7 anos, 14 kg, com suspeita de <strong>hipotireoidismo subclinico</strong> (T4L em queda: 1.40 &rarr; 1.03 ng/dL, TSH normal), <strong>hipertrigliceridemia</strong> (250 mg/dL), <strong>obesidade refrataria a dieta hipocalorica</strong> (335 kcal/dia), <strong>esteatose hepatica</strong>. Necessita profissional que conheca ranges raciais de racas orientais e tenha experiencia com hipotireoidismo subclinico (nao apenas Cushing).</p>
+</div>
+
+<!-- METODOLOGIA -->
+<div class="methodology">
+    <h3>Metodologia de Avaliacao</h3>
+    <p><strong>Criterios:</strong> (1) Residencia/mestrado/doutorado em endocrinologia veterinaria; (2) Publicacoes cientificas na area; (3) Experiencia clinica documentada com endocrinopatias caninas; (4) Atuacao em clinicas/hospitais de referencia; (5) CRMV ativo.</p>
+    <p><strong>Score de Confianca:</strong> ALTO = dados verificados em 2+ fontes primarias | MEDIO = verificado parcialmente | BAIXO = dados de fonte unica ou nao verificados.</p>
+    <p><strong>Fontes consultadas:</strong> teses.usp.br, bv.fapesp.br, PubMed, escavador.com, ResearchGate, sites oficiais das clinicas, ABEV, LinkedIn, Google Scholar, CRMV-SP.</p>
+</div>
+
+<!-- TABELA COMPARATIVA -->
+<h2>Tabela Comparativa Resumida</h2>
+<table class="comparison-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Profissional</th>
+            <th>Formacao</th>
+            <th>Clinica</th>
+            <th>Publicacoes</th>
+            <th>Relevancia p/ Caso</th>
+            <th>Confianca</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>1</strong></td>
+            <td>Dra. Viviani De Marco</td>
+            <td>Doutorado Endocrino FMUSP</td>
+            <td>VetUnity / Vet Quality</td>
+            <td>Artigos + livro + FAPESP</td>
+            <td>Hipotireoidismo + obesidade + hiperlipidemia</td>
+            <td><span class="confidence alto">ALTO</span></td>
+        </tr>
+        <tr>
+            <td><strong>2</strong></td>
+            <td>Dra. Marcia M. Jerico</td>
+            <td>Doutorado Clin. Med. FMVZ/USP</td>
+            <td>CVAL Alto da Lapa</td>
+            <td>Tratado + PubMed + Google Scholar</td>
+            <td>Pioneira endocrino + obesidade canina</td>
+            <td><span class="confidence alto">ALTO</span></td>
+        </tr>
+        <tr>
+            <td><strong>3</strong></td>
+            <td>Dr. Fabricio Lorenzini</td>
+            <td>Mestrado Clin. Med. FMVZ/USP</td>
+            <td>VetUnity</td>
+            <td>Dissertacao + co-autor PubMed</td>
+            <td>Adiponectina-obesidade + endocrino</td>
+            <td><span class="confidence alto">ALTO</span></td>
+        </tr>
+        <tr>
+            <td><strong>4</strong></td>
+            <td>Dra. Raquel Harue F. A. Souza</td>
+            <td>Mestrado Reprod. Animal FMVZ/USP</td>
+            <td>CVAL / Butantan Vet</td>
+            <td>Dissertacao (hormonal)</td>
+            <td>Socia-fundadora ABEV + 20+ anos</td>
+            <td><span class="confidence medio">MEDIO</span></td>
+        </tr>
+        <tr>
+            <td><strong>5</strong></td>
+            <td>Dra. Priscila Viau Furtado</td>
+            <td>Doutorado Reprod. Animal FMVZ/USP</td>
+            <td>Hormonalle / FMVZ-USP Lab</td>
+            <td>FAPESP (dosagens hormonais)</td>
+            <td>Diagnostico hormonal + tireoide</td>
+            <td><span class="confidence medio">MEDIO</span></td>
+        </tr>
+        <tr>
+            <td><strong>6</strong></td>
+            <td>Dr. Alexandre B. Baptista</td>
+            <td>Mestrado Vet (UNISA) + Grad. FMVZ/USP</td>
+            <td>Consultorio proprio — J. Analia Franco</td>
+            <td>Mestrado alopecia X + FAPESP</td>
+            <td>Hipotireoidismo + dermatoses endocrinas</td>
+            <td><span class="confidence medio">MEDIO</span></td>
+        </tr>
+        <tr>
+            <td><strong>7</strong></td>
+            <td>Dra. Anna Maria Schnabel</td>
+            <td>Pos-grad Anclivepa-SP</td>
+            <td>Vets4Pets — J. Analia Franco</td>
+            <td>Nao localizadas</td>
+            <td>15+ anos endocrino + socia ABEV</td>
+            <td><span class="confidence medio">MEDIO</span></td>
+        </tr>
+        <tr>
+            <td><strong>8</strong></td>
+            <td>Dra. Priscila Montanheri</td>
+            <td>Mestranda ICB-USP + Grad. FMVZ/USP</td>
+            <td>Vet Quality — Campo Belo</td>
+            <td>Em andamento (mestrado)</td>
+            <td>Fisiologia endocrina + pesquisa ativa</td>
+            <td><span class="confidence medio">MEDIO</span></td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- ============================================ -->
+<!-- RANKING DETALHADO -->
+<!-- ============================================ -->
+
+<h2>Ranking Detalhado</h2>
+
+<!-- #1 VIVIANI DE MARCO -->
+<div class="rank-card top">
+    <div class="rank-badge">#1 — RECOMENDADA</div>
+    <div class="rank-header">
+        <div>
+            <div class="rank-name">Dra. Viviani De Marco Bernardes</div>
+            <div class="rank-crmv">CRMV: nao localizado em busca publica <span class="tag nao-confirmado">[nao confirmado]</span></div>
+        </div>
+        <span class="confidence alto">CONFIANCA ALTA</span>
+    </div>
+
+    <div class="detail-grid">
+        <div class="detail-item">
+            <label>Graduacao</label>
+            <span>Medicina Veterinaria — FMVZ/USP (1996) <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Residencia</label>
+            <span>Clinica Medica de Pequenos Animais — FMVZ/USP <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Mestrado</label>
+            <span>Clinica Medica Veterinaria — FMVZ/USP (2001) <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Doutorado</label>
+            <span><strong>Endocrinologia — Faculdade de Medicina USP (2007-2010)</strong> <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Pos-Doutorado</label>
+            <span>Pesquisadora colaboradora Depto. Medicina Interna FMUSP (adrenais) <sup class="tier tier-2">T2</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>ABEV</label>
+            <span><span class="tag abev">Socia-fundadora</span> <span class="tag abev">Ex-Presidente (2 mandatos: 2016-2019, 2019-2022)</span> <span class="tag abev">Comissao Cientifica atual</span></span>
+        </div>
+        <div class="detail-item detail-full">
+            <label>Onde atende</label>
+            <span><strong>VetUnity</strong> — R. Conde de Porto Alegre, 1761, Campo Belo, SP | WhatsApp: (11) 93314-1190<br>
+            <strong>Vet Quality</strong> — R. Vieira de Morais, 1862, Campo Belo, SP | Tel: (11) 5097-9642</span>
+        </div>
+        <div class="detail-item">
+            <label>Docencia</label>
+            <span>18 anos (FMU, UNISA, Univ. Guarulhos, Anhembi Morumbi). Co-fundadora MV Minds Educacao Continuada. <sup class="tier tier-2">T2</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Areas de pesquisa</label>
+            <span>Hiperadrenocorticismo, tumores adrenais, diabetes mellitus, <strong>hipotireoidismo</strong>, hipoadrenocorticismo, <strong>obesidade</strong>, <strong>hiperlipidemia</strong>, dosagens hormonais <sup class="tier tier-1">T1</sup></span>
+        </div>
+    </div>
+
+    <h3>Publicacoes Relevantes</h3>
+    <ul class="pub-list">
+        <li><strong>"Hipotireoidismo na especie canina: avaliacao da ultra-sonografia cervical como metodologia diagnostica"</strong> — De Marco V, Larsson CE. Brazilian Journal of Veterinary Research and Animal Science, v.43, n.6, p.747-753, 2006. DOI: 10.11606/issn.1678-4456.bjvras.2006.26552 <sup class="tier tier-1">T1</sup></li>
+        <li><strong>"Avaliacao terapeutica e posologica da levotiroxina sodica em caes com hipotiroidismo primario adquirido"</strong> — De Marco V, Silva RMT, Karamm MA, Florio JC, Lorigrados CAB. Pesquisa Veterinaria Brasileira, v.32(10), p.1030-1036, 2012 <sup class="tier tier-1">T1</sup></li>
+        <li><strong>"Terapia medicamentosa e manejo nutricional de sindrome metabolica associada ao hiperadrenocorticismo em um cao — relato de caso"</strong> — De Marco V, Santos EZ. Clinica Veterinaria, p.38-46, 2017 <sup class="tier tier-3">T3</sup></li>
+        <li><strong>Capitulo: "Doencas do sistema endocrino e do metabolismo"</strong> in Tratado de Medicina Interna de Caes e Gatos (Jerico, Andrade Neto, Kogika), Guanabara-Koogan, 2015 <sup class="tier tier-2">T2</sup></li>
+        <li>2 projetos FAPESP concluidos (hipotireoidismo + classificacao diabetes mellitus canino) <sup class="tier tier-1">T1</sup></li>
+    </ul>
+
+    <div class="ponto-box">
+        <div class="ponto forte">
+            <div class="ponto-label">Ponto forte para o caso</div>
+            Unica profissional em SP com <strong>doutorado em Endocrinologia pela Faculdade de Medicina da USP</strong>. Publicou especificamente sobre hipotireoidismo canino (diagnostico e dosagem de levotiroxina). Pesquisa em hiperlipidemia e obesidade — exatamente o perfil do Wally. Ex-presidente da ABEV (2 mandatos). Co-autora do Tratado de referencia.
+        </div>
+        <div class="ponto atencao">
+            <div class="ponto-label">Ponto de atencao</div>
+            CRMV nao localizado em busca publica (necessario confirmar diretamente). Agenda pode ser concorrida devido a multiplas frentes (VetUnity, Vet Quality, MV Minds, docencia). Sem dados de reviews online de pacientes.
+        </div>
+    </div>
+</div>
+
+<!-- #2 MARCIA JERICO -->
+<div class="rank-card top">
+    <div class="rank-badge">#2 — RECOMENDADA</div>
+    <div class="rank-header">
+        <div>
+            <div class="rank-name">Dra. Marcia Marques Jerico</div>
+            <div class="rank-crmv">CRMV: nao localizado em busca publica <span class="tag nao-confirmado">[nao confirmado]</span></div>
+        </div>
+        <span class="confidence alto">CONFIANCA ALTA</span>
+    </div>
+
+    <div class="detail-grid">
+        <div class="detail-item">
+            <label>Graduacao</label>
+            <span>Medicina Veterinaria — FMVZ/USP <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Mestrado</label>
+            <span>Fisiologia — Instituto de Ciencias Biomedicas/USP <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Doutorado</label>
+            <span><strong>Clinica Medica — FMVZ/USP</strong> (hipotireoidismo e hiperadrenocorticismo canino) <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>ABEV</label>
+            <span><span class="tag abev">Co-fundadora</span> <span class="tag abev">1a Presidente (2010-2013)</span> <span class="tag abev">Comissao Cientifica atual</span></span>
+        </div>
+        <div class="detail-item detail-full">
+            <label>Onde atende</label>
+            <span><strong>CVAL — Consultorios Veterinarios Alto da Lapa</strong> — R. Passo da Patria, 862, Alto da Lapa, SP | Tel: (11) 3834-7111 / (11) 99679-7192 (WhatsApp)</span>
+        </div>
+        <div class="detail-item">
+            <label>Docencia</label>
+            <span>Professora Pequenos Animais — UNISA, UNIBAN, Cruzeiro do Sul, Anhembi Morumbi. Coordenadora Pos-Grad Endocrino Equalis (com Viviani De Marco) <sup class="tier tier-2">T2</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Experiencia institucional</label>
+            <span>Coordenadora Hospital Vet Anhembi Morumbi (2002-2011). Coordenadora Servico Endocrino Pet Care (2012-2017). Co-proprietaria CVAL. <sup class="tier tier-2">T2</sup></span>
+        </div>
+    </div>
+
+    <h3>Publicacoes Relevantes</h3>
+    <ul class="pub-list">
+        <li><strong>"Chromatographic Analysis of Lipid Fractions in Healthy Dogs and Dogs with Obesity or Hyperadrenocorticism"</strong> — Jerico MM, De Chiquito FC, Kajihara K, et al. J Vet Diagn Invest, 21(2):203-207, 2009. PMID: 19286498 <sup class="tier tier-1">T1</sup></li>
+        <li><strong>"Tratado de Medicina Interna de Caes e Gatos" (2 volumes, 2a ed.)</strong> — Jerico MM, Andrade Neto JP, Kogika MM (eds.). GEN/Roca. Referencia no Brasil. <sup class="tier tier-2">T2</sup></li>
+        <li><strong>Tese de doutorado</strong> sobre hipotireoidismo e hiperadrenocorticismo: histopatologia cutanea e ultrassonografia cervical/abdominal como metodologia diagnostica (FMVZ/USP) <sup class="tier tier-1">T1</sup></li>
+        <li><strong>Eficiencia de ferramentas motivacionais e uso de midias sociais no controle da obesidade canina</strong> — Braz. J. Vet. Res. Anim. Sci., 2019 <sup class="tier tier-1">T1</sup></li>
+        <li>Google Scholar: 881 citacoes <sup class="tier tier-2">T2</sup></li>
+    </ul>
+
+    <div class="ponto-box">
+        <div class="ponto forte">
+            <div class="ponto-label">Ponto forte para o caso</div>
+            <strong>Pioneira da endocrinologia veterinaria clinica no Brasil</strong>. Doutorado especificamente sobre hipotireoidismo + HAC canino. Publicacao PubMed sobre analise lipidica em caes obesos e com Cushing — diretamente relevante para a hipertrigliceridemia do Wally. Co-editora do Tratado de referencia. 881 citacoes academicas. 35+ anos de CVAL.
+        </div>
+        <div class="ponto atencao">
+            <div class="ponto-label">Ponto de atencao</div>
+            CRMV nao localizado em busca publica. Clinica na regiao da Lapa (distante de Campo Belo/Moema). Sem dados de reviews online acessiveis. Pesquisas mais recentes focadas em obesidade e motivacao — nao necessariamente ranges raciais de Shiba.
+        </div>
+    </div>
+</div>
+
+<!-- #3 FABRICIO LORENZINI -->
+<div class="rank-card">
+    <div class="rank-badge">#3</div>
+    <div class="rank-header">
+        <div>
+            <div class="rank-name">Dr. Fabricio Lorenzini Aranha Machado</div>
+            <div class="rank-crmv">CRMV: nao localizado em busca publica <span class="tag nao-confirmado">[nao confirmado]</span></div>
+        </div>
+        <span class="confidence alto">CONFIANCA ALTA</span>
+    </div>
+
+    <div class="detail-grid">
+        <div class="detail-item">
+            <label>Graduacao</label>
+            <span>Medicina Veterinaria — Universidade Santo Amaro (2003) <sup class="tier tier-2">T2</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Pos-Graduacao</label>
+            <span>Clinica Medica Pequenos Animais — UNISA (2004-2005) <sup class="tier tier-2">T2</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Residencia</label>
+            <span>Clinica Medica Pequenos Animais (2005-2007) <sup class="tier tier-2">T2</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Mestrado</label>
+            <span><strong>Clinica Medica — FMVZ/USP (2010-2012)</strong>. Orientadora: Maria Helena M. A. Larsson <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>ABEV</label>
+            <span><span class="tag abev">Socio-fundador (2010)</span> <span class="tag abev">Diretoria 2010-2023</span></span>
+        </div>
+        <div class="detail-item detail-full">
+            <label>Onde atende</label>
+            <span><strong>VetUnity</strong> — R. Conde de Porto Alegre, 1761, Campo Belo, SP | WhatsApp: (11) 93314-1190</span>
+        </div>
+        <div class="detail-item">
+            <label>Docencia</label>
+            <span>Professor Curso MV e Programa Aprimoramento — Hospital Vet Anhembi Morumbi (2013-2023) <sup class="tier tier-2">T2</sup></span>
+        </div>
+    </div>
+
+    <h3>Publicacoes Relevantes</h3>
+    <ul class="pub-list">
+        <li><strong>"Avaliacao das concentracoes sericas de adiponectina e sua correlacao com obesidade e endocardiose de valva mitral em caes"</strong> — Dissertacao de Mestrado, FMVZ/USP, 2012. Fonte: teses.usp.br <sup class="tier tier-1">T1</sup></li>
+        <li>Co-autor em: <strong>"Chromatographic Analysis of Lipid Fractions..."</strong> (Jerico et al., JVDI, 2009). PMID: 19286498 <sup class="tier tier-1">T1</sup></li>
+        <li>Palestras em congressos, cursos e semanas academicas de medicina veterinaria <sup class="tier tier-3">T3</sup></li>
+    </ul>
+
+    <div class="ponto-box">
+        <div class="ponto forte">
+            <div class="ponto-label">Ponto forte para o caso</div>
+            Mestrado em adiponectina e obesidade canina — relevante para o quadro metabolico do Wally. Co-autor de publicacao PubMed sobre lipidios em caes obesos. 13 anos de diretoria ABEV. Docencia ativa por 10 anos. Atende na mesma clinica da Dra. Viviani De Marco, possibilitando consulta integrada.
+        </div>
+        <div class="ponto atencao">
+            <div class="ponto-label">Ponto de atencao</div>
+            Nao tem doutorado. Graduacao em universidade privada (UNISA). Foco de pesquisa mais em obesidade/cardiologia metabologica do que em tireoide especificamente. Sem publicacoes proprias sobre hipotireoidismo.
+        </div>
+    </div>
+</div>
+
+<!-- #4 RAQUEL HARUE -->
+<div class="rank-card">
+    <div class="rank-badge">#4</div>
+    <div class="rank-header">
+        <div>
+            <div class="rank-name">Dra. Raquel Harue Fukumori Almeida Souza</div>
+            <div class="rank-crmv">CRMV: nao localizado em busca publica <span class="tag nao-confirmado">[nao confirmado]</span></div>
+        </div>
+        <span class="confidence medio">CONFIANCA MEDIA</span>
+    </div>
+
+    <div class="detail-grid">
+        <div class="detail-item">
+            <label>Graduacao</label>
+            <span>Medicina Veterinaria — Universidade de Santo Amaro (UNISA) <sup class="tier tier-2">T2</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Especializacao</label>
+            <span>Clinica Medica Pequenos Animais — FMVZ/USP <sup class="tier tier-2">T2</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Mestrado</label>
+            <span>Ciencias (Reproducao Animal) — FMVZ/USP, 2015. Tema: dosagens hormonais (estrogeno/progesterona) <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>ABEV</label>
+            <span><span class="tag abev">Socia-fundadora</span> <span class="tag abev">Secretaria-Geral (2010-2016)</span> <span class="tag abev">Tesoureira Geral</span> <span class="tag abev">Conselho Fiscal e Executivo</span></span>
+        </div>
+        <div class="detail-item detail-full">
+            <label>Onde atende</label>
+            <span><strong>CVAL — Consultorios Veterinarios Alto da Lapa</strong> — R. Passo da Patria, 862, Alto da Lapa, SP | Tel: (11) 3834-7111<br>
+            <strong>Butantan Vet</strong> (endocrinologia) — Butanta, SP</span>
+        </div>
+        <div class="detail-item">
+            <label>Docencia</label>
+            <span>Professora Clinica Medica e Emergencia/UTI — FMU <sup class="tier tier-2">T2</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Outros</label>
+            <span>ESVE Summer School — Italia <span class="tag nao-confirmado">[nao confirmado em fonte primaria]</span>. 20+ anos experiencia clinica.</span>
+        </div>
+    </div>
+
+    <h3>Publicacoes Relevantes</h3>
+    <ul class="pub-list">
+        <li><strong>"Avaliacao serica de estrogeno e progesterona por metodo de imunoensaio multianalito em cadelas durante o ciclo estral"</strong> — Dissertacao Mestrado FMVZ/USP, 2015. Fonte: teses.usp.br <sup class="tier tier-1">T1</sup></li>
+        <li>Publicacoes adicionais nao localizadas em PubMed ou Scielo.</li>
+    </ul>
+
+    <div class="ponto-box">
+        <div class="ponto forte">
+            <div class="ponto-label">Ponto forte para o caso</div>
+            Socia-fundadora da ABEV com participacao desde o inicio. 20+ anos de experiencia clinica em endocrinologia. Mestrado com foco em imunoensaios hormonais — experiencia com dosagens de T4/TSH. Atende na mesma clinica da Dra. Marcia Jerico (CVAL). Nikkei — potencial familiaridade cultural com racas orientais.
+        </div>
+        <div class="ponto atencao">
+            <div class="ponto-label">Ponto de atencao</div>
+            Mestrado em reproducao animal (NAO endocrinologia diretamente). Nao possui doutorado verificado. Publicacoes cientificas limitadas a dissertacao de mestrado. ESVE Summer School nao confirmado em fonte primaria. CRMV nao verificado.
+        </div>
+    </div>
+</div>
+
+<!-- #5 PRISCILA VIAU -->
+<div class="rank-card">
+    <div class="rank-badge">#5</div>
+    <div class="rank-header">
+        <div>
+            <div class="rank-name">Dra. Priscila Viau Furtado</div>
+            <div class="rank-crmv">CRMV: nao localizado em busca publica <span class="tag nao-confirmado">[nao confirmado]</span></div>
+        </div>
+        <span class="confidence medio">CONFIANCA MEDIA</span>
+    </div>
+
+    <div class="detail-grid">
+        <div class="detail-item">
+            <label>Graduacao</label>
+            <span>Medicina Veterinaria — Universidade Federal Rural de Pernambuco (2001) <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Especializacao tecnica</label>
+            <span>Laboratorio de Endocrinologia — UNESP (Medicina) <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Mestrado</label>
+            <span>Reproducao Animal — FMVZ/USP <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Doutorado</label>
+            <span>Reproducao Animal — FMVZ/USP <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>ABEV</label>
+            <span><span class="tag abev">Socia-fundadora</span> <span class="tag abev">Dir. Cientifica (2015-2018)</span> <span class="tag abev">Presidente (2022-2025)</span></span>
+        </div>
+        <div class="detail-item">
+            <label>Onde atende/atua</label>
+            <span><strong>Laboratorio Hormonalle</strong> (co-fundadora) — SP<br><strong>Pesquisas Hormonais Dra. Priscila Viau</strong> — assessoria dosagens hormonais<br><strong>FMVZ/USP</strong> — Responsavel Lab. Dosagem Hormonal (desde 2005) <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item detail-full">
+            <label>Expertise tecnica</label>
+            <span>Radioimunoensaio, ELISA, quimioluminescencia, LC-MS/MS para dosagens de esteroides, hormonios tireoidianos e glicocorticoides <sup class="tier tier-1">T1</sup></span>
+        </div>
+    </div>
+
+    <div class="ponto-box">
+        <div class="ponto forte">
+            <div class="ponto-label">Ponto forte para o caso</div>
+            <strong>Maior especialista em dosagens hormonais veterinarias de SP.</strong> Doutorado + 20+ anos operando laboratorio de hormonios da FMVZ/USP. Presidente atual da ABEV. Expertise em validacao de imunoensaios — crucial para interpretar resultados borderline de T4L como os do Wally. Conhece os limites e variabilidades de cada metodo analitico.
+        </div>
+        <div class="ponto atencao">
+            <div class="ponto-label">Ponto de atencao</div>
+            <strong>Perfil predominantemente laboratorial/diagnostico, NAO clinico.</strong> Mestrado e doutorado em reproducao animal, nao endocrinologia clinica. Nao atende em clinica veterinaria convencional — atuacao em assessoria e laboratorio. Ideal como <strong>complemento diagnostico</strong>, nao como clinica principal. Publicacoes cientificas peer-reviewed nao localizadas.
+        </div>
+    </div>
+</div>
+
+<!-- #6 ALEXANDRE BAPTISTA -->
+<div class="rank-card">
+    <div class="rank-badge">#6</div>
+    <div class="rank-header">
+        <div>
+            <div class="rank-name">Dr. Alexandre Bastos Baptista</div>
+            <div class="rank-crmv">CRMV: nao localizado em busca publica | Lattes: K4299578T3 <span class="tag nao-confirmado">[nao confirmado]</span></div>
+        </div>
+        <span class="confidence medio">CONFIANCA MEDIA</span>
+    </div>
+
+    <div class="detail-grid">
+        <div class="detail-item">
+            <label>Graduacao (Psicologia)</label>
+            <span>Psicologia — PUC-SP (1992) <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Graduacao (Vet)</label>
+            <span>Medicina Veterinaria — FMVZ/USP <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Aprimoramento</label>
+            <span>Endocrinologia Veterinaria — Endocrinovet-SP <sup class="tier tier-3">T3</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Mestrado</label>
+            <span>Medicina Veterinaria — UNISA. Tema: microagulhamento na terapeutica da alopecia X em Spitz Alemao <sup class="tier tier-2">T2</sup></span>
+        </div>
+        <div class="detail-item detail-full">
+            <label>Onde atende</label>
+            <span><strong>Consultorio proprio</strong> — R. Terebe, 23, Jardim Analia Franco, SP, 03311-030 | Tel: (11) 3582-5412<br>
+            Atendimento domiciliar em SP, Alphaville e ABC <span class="tag nao-confirmado">[nao confirmado]</span></span>
+        </div>
+        <div class="detail-item">
+            <label>Docencia</label>
+            <span>Professor de Alopecia X em pos-graduacoes: Anclivepa-SP, UFAPE, Equalis. Membro PSICONVET (psicologia veterinaria) <sup class="tier tier-2">T2</sup></span>
+        </div>
+    </div>
+
+    <h3>Publicacoes Relevantes</h3>
+    <ul class="pub-list">
+        <li><strong>Dissertacao mestrado: microagulhamento terapeutico para alopecia X em Spitz Alemao</strong> — UNISA <sup class="tier tier-2">T2</sup></li>
+        <li>1 bolsa FAPESP (iniciacao cientifica sobre quimioprevencao em camundongos) <sup class="tier tier-1">T1</sup></li>
+        <li>Site com conteudo extenso sobre hipotireoidismo canino e dermatoses endocrinas <sup class="tier tier-3">T3</sup></li>
+    </ul>
+
+    <div class="ponto-box">
+        <div class="ponto forte">
+            <div class="ponto-label">Ponto forte para o caso</div>
+            Graduacao pela FMVZ/USP. Site especializado com conteudo detalhado sobre <strong>hipotireoidismo canino</strong> e dermatoses endocrinas. Experiencia com racas Spitz (grupo da mesma familia do Shiba Inu). Formacao dupla (psicologia + veterinaria) — abordagem holistica do paciente e tutor. Professor de alopecia endocrina. Atende em consultorio proprio (atencao individualizada).
+        </div>
+        <div class="ponto atencao">
+            <div class="ponto-label">Ponto de atencao</div>
+            Mestrado em universidade privada (UNISA), nao na USP. Foco principal em alopecia X e dermatoses — pode nao ter experiencia profunda com hipotireoidismo subclinico metabolico (sem alopecia). Sem publicacoes PubMed. FAPESP foi em area nao relacionada (oncologia em roedores).
+        </div>
+    </div>
+</div>
+
+<!-- #7 ANNA MARIA SCHNABEL -->
+<div class="rank-card">
+    <div class="rank-badge">#7</div>
+    <div class="rank-header">
+        <div>
+            <div class="rank-name">Dra. Anna Maria Schnabel Larco Di Palma</div>
+            <div class="rank-crmv">CRMV-SP: 18.898 (fonte: Instagram @endocrinologia.veterinaria) <sup class="tier tier-3">T3</sup></div>
+        </div>
+        <span class="confidence medio">CONFIANCA MEDIA</span>
+    </div>
+
+    <div class="detail-grid">
+        <div class="detail-item">
+            <label>Graduacao</label>
+            <span>Medicina Veterinaria — Universidade Santo Amaro (UNISA) <sup class="tier tier-2">T2</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Residencia</label>
+            <span>Clinica Medica Pequenos Animais — Universidade Guarulhos <sup class="tier tier-2">T2</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Pos-Graduacao</label>
+            <span>Clinica Medica Pequenos Animais — Universidade Guarulhos <sup class="tier tier-2">T2</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Especializacao</label>
+            <span>Endocrinologia e Metabologia de Peq. Animais — Anclivepa-SP <sup class="tier tier-2">T2</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>ABEV</label>
+            <span><span class="tag abev">Socia-fundadora</span> <span class="tag abev">Diretora Social</span></span>
+        </div>
+        <div class="detail-item detail-full">
+            <label>Onde atende</label>
+            <span><strong>Vets4Pets / Endocrino4Pets</strong> — R. Coronel Irineu de Castro, 498, Jardim Analia Franco, SP | WhatsApp: (11) 98403-1295</span>
+        </div>
+        <div class="detail-item">
+            <label>Experiencia</label>
+            <span>15+ anos em endocrinologia e metabologia veterinaria. Palestrante e consultora nacional. Instagram: 15K seguidores (@endocrinologia.veterinaria) <sup class="tier tier-3">T3</sup></span>
+        </div>
+    </div>
+
+    <div class="ponto-box">
+        <div class="ponto forte">
+            <div class="ponto-label">Ponto forte para o caso</div>
+            Unico CRMV identificado nesta pesquisa (18.898). Socia-fundadora da ABEV — desde 2010 no campo. 15+ anos de pratica exclusiva em endocrinologia. Atende em clinica propria dedicada a endocrino. Videos educativos sobre diabetes e manifestacoes clinicas de endocrinopatias (evidencia de conhecimento pratico).
+        </div>
+        <div class="ponto atencao">
+            <div class="ponto-label">Ponto de atencao</div>
+            Sem mestrado ou doutorado. Formacao academica inteiramente em universidades privadas. Sem publicacoes cientificas peer-reviewed localizadas. Nao ha evidencia de pesquisa em hipotireoidismo especificamente. CRMV verificado apenas via Instagram (fonte T3). Apenas 4 reviews no Facebook — amostra insuficiente.
+        </div>
+    </div>
+</div>
+
+<!-- #8 PRISCILA MONTANHERI -->
+<div class="rank-card">
+    <div class="rank-badge">#8</div>
+    <div class="rank-header">
+        <div>
+            <div class="rank-name">Dra. Priscila Montanheri da Rocha</div>
+            <div class="rank-crmv">CRMV: nao localizado em busca publica <span class="tag nao-confirmado">[nao confirmado]</span></div>
+        </div>
+        <span class="confidence medio">CONFIANCA MEDIA</span>
+    </div>
+
+    <div class="detail-grid">
+        <div class="detail-item">
+            <label>Graduacao</label>
+            <span>Medicina Veterinaria — FMVZ/USP <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Especializacoes</label>
+            <span>Clinica Medica Peq. Animais (FMVZ/USP) + Gastro Vet (Equalis) + Endocrino/Metabologia (Anclivepa-SP) <sup class="tier tier-2">T2</sup></span>
+        </div>
+        <div class="detail-item">
+            <label>Mestrado (em andamento)</label>
+            <span><strong>Mestranda — Lab. Fisiologia Endocrina e Regulacao Hormonal da Expressao Genica, ICB-USP</strong> <sup class="tier tier-1">T1</sup></span>
+        </div>
+        <div class="detail-item detail-full">
+            <label>Onde atende</label>
+            <span><strong>Vet Quality</strong> — R. Vieira de Morais, 1862, Campo Belo, SP | Tel: (11) 5097-9642<br>
+            Tambem atende na Evet Especialidades Veterinarias</span>
+        </div>
+    </div>
+
+    <div class="ponto-box">
+        <div class="ponto forte">
+            <div class="ponto-label">Ponto forte para o caso</div>
+            Graduacao FMVZ/USP. Mestranda ativa em fisiologia endocrina no ICB-USP — pesquisa em regulacao hormonal, diretamente relevante para interpretar T4L/TSH. Tripla especializacao (clinica + gastro + endocrino). Atende no Vet Quality 24h (Campo Belo — conveniente).
+        </div>
+        <div class="ponto atencao">
+            <div class="ponto-label">Ponto de atencao</div>
+            Mestrado ainda em andamento — nao concluido. Sem publicacoes cientificas localizadas. Profissional mais junior que os demais do ranking. Sem cargo na ABEV verificado. A pesquisa de mestrado pode nao ser sobre endocrinologia canina clinica.
+        </div>
+    </div>
+</div>
+
+<!-- MENCOES HONROSAS -->
+<h2>Mencoes Honrosas (nao entraram no Top 8)</h2>
+<div class="summary-box">
+    <p><strong>Dra. Thais Bueno Gimenes</strong> — Vet Quality, Campo Belo. Graduacao FMVZ/USP, especializacoes (clinica + gastro + endocrino Anclivepa). Secretaria-Geral ABEV (2016-2019). Perfil semelhante a Priscila Montanheri, porem sem mestrado em andamento. Nao entrou no ranking por formacao academica inferior aos 8 selecionados.</p>
+    <p><strong>Dra. Katia Mogioni de Abreu</strong> — Consultorio proprio, SP. Graduacao Unifenas, pos-grad endocrino Anclivepa-SP. Membro ABEV. 25+ anos clinica. Nao entrou por formacao academica limitada (sem mestrado/doutorado, sem publicacoes localizadas).</p>
+    <p><strong>Dra. Caroline Goncalves</strong> — VetUnity, Campo Belo. Graduacao FMVZ/USP, residencia FMVZ/USP, pos-grad endocrino Anclivepa. Membro ABEV. Equipe da VetUnity sob supervisao de Viviani De Marco. Nao entrou individualmente por ausencia de mestrado/publicacoes.</p>
+    <p><strong>Provet</strong> — Centro diagnostico referencia em SP (Av. Aratas, 1009, Moema). Servico de endocrinologia com agendamento por encaminhamento. Nome do profissional responsavel nao identificado na pesquisa.</p>
+</div>
+
+<!-- RECOMENDACAO FINAL -->
+<h2>Recomendacao para o Caso do Wally</h2>
+<div class="context-box" style="border-left-color: var(--green);">
+    <h3 style="color: var(--green);">Estrategia Recomendada</h3>
+    <p><strong>1a Opcao: Dra. Viviani De Marco (VetUnity, Campo Belo)</strong><br>
+    Unica profissional com doutorado em endocrinologia (FMUSP). Publicacoes especificas sobre hipotireoidismo canino (diagnostico ultrassonografico + dosagem de levotiroxina). Pesquisa em hiperlipidemia e obesidade. Ex-presidente ABEV (2 mandatos). O caso do Wally exige interpretar T4L borderline, e a Dra. Viviani e a profissional com maior qualificacao academica e clinica para isso. A VetUnity fica em Campo Belo — regiao com boa logistica.</p>
+
+    <p><strong>2a Opcao: Dra. Marcia Jerico (CVAL, Alto da Lapa)</strong><br>
+    Pioneira da endocrinologia vet no Brasil. Doutorado sobre hipotireoidismo + HAC. Publicacao PubMed sobre lipidios em caes obesos/Cushing (diretamente relevante). 881 citacoes. Se a distancia ate o Alto da Lapa nao for problema, e uma opcao de peso equivalente.</p>
+
+    <p><strong>Opcao Complementar: Dra. Priscila Viau (Laboratorio Hormonalle)</strong><br>
+    NAO como clinica, mas como assessoria diagnostica. Se houver duvida sobre a metodologia ou interpretacao das dosagens hormonais do Wally (especialmente variabilidade inter-ensaio de T4L), a Dra. Priscila — responsavel pelo laboratorio hormonal da FMVZ/USP — pode fornecer parecer tecnico sobre a confiabilidade dos resultados.</p>
+</div>
+
+<div class="warning">
+    <div class="warning-label">LIMITACOES IMPORTANTES DESTA PESQUISA</div>
+    <ul style="margin-top: 0.5rem; padding-left: 1.2rem; font-size: 0.85rem;">
+        <li><strong>CRMVs:</strong> Apenas 1 CRMV foi identificado (Anna Maria Schnabel, via Instagram). O site do CRMV-SP nao possui busca publica acessivel por web scraping. Recomenda-se confirmar o registro de qualquer profissional diretamente no CRMV-SP antes de agendar.</li>
+        <li><strong>Reviews online:</strong> Nenhuma clinica teve reviews suficientes para avaliacao estatistica. VetUnity e CVAL nao retornaram dados de Google Reviews nas buscas. Recomenda-se verificar diretamente no Google Maps.</li>
+        <li><strong>Ranges raciais:</strong> Nenhum profissional encontrado tem publicacao ou declaracao explicita sobre ranges raciais de Shiba Inu ou racas orientais. Este e um nicho muito especializado — sera necessario perguntar diretamente na consulta.</li>
+        <li><strong>Nenhum profissional encontrado com publicacao especifica sobre hipotireoidismo subclinico canino</strong> (T4L baixo + TSH normal). A Dra. Viviani publicou sobre hipotireoidismo primario (diagnostico e tratamento), que e o mais proximo.</li>
+        <li><strong>Dados de Escavador:</strong> Classificados como fonte secundaria (T2). Informacoes do Escavador podem estar desatualizadas ou imprecisas.</li>
+    </ul>
+</div>
+
+<!-- FONTES -->
+<div class="source-section">
+    <h3>Fontes Utilizadas</h3>
+    <h3 style="font-size: 0.9rem; color: var(--green); margin-top: 1rem;">Tier 1 — Fontes Primarias</h3>
+    <ul class="source-list">
+        <li><a href="https://teses.usp.br/teses/disponiveis/10/10136/tde-26032013-102524/">teses.usp.br — Dissertacao Fabricio Lorenzini (adiponectina/obesidade canina)</a></li>
+        <li><a href="https://repositorio.usp.br/item/001568291">repositorio.usp.br — De Marco & Larsson, hipotireoidismo canino ultrassonografia (2006)</a></li>
+        <li><a href="https://pesquisa.bvsalud.org/portal/resource/pt/vti-3793">BVS-Vet — De Marco et al., levotiroxina em hipotireoidismo primario (2012)</a></li>
+        <li><a href="https://pubmed.ncbi.nlm.nih.gov/19286498/">PubMed PMID 19286498 — Jerico et al., lipid fractions in dogs (JVDI, 2009)</a></li>
+        <li><a href="https://bv.fapesp.br/pt/pesquisador/36952/viviani-de-marco/">FAPESP — Perfil Viviani De Marco (projetos + bolsas)</a></li>
+        <li><a href="https://bv.fapesp.br/en/pesquisador/103632/alexandre-bastos-baptista/">FAPESP — Perfil Alexandre Bastos Baptista</a></li>
+        <li><a href="https://journals.sagepub.com/doi/10.1177/104063870902100204">SAGE Journals — Jerico et al., Chromatographic Analysis Lipid Fractions (2009)</a></li>
+    </ul>
+
+    <h3 style="font-size: 0.9rem; color: var(--tier2); margin-top: 1rem;">Tier 2 — Fontes Institucionais</h3>
+    <ul class="source-list">
+        <li><a href="https://www.escavador.com/sobre/1306623/viviani-de-marco">Escavador — Viviani De Marco</a></li>
+        <li><a href="https://www.escavador.com/sobre/3219086/marcia-marques-jerico">Escavador — Marcia Marques Jerico</a></li>
+        <li><a href="https://www.escavador.com/sobre/4765236/alexandre-bastos-baptista">Escavador — Alexandre Bastos Baptista</a></li>
+        <li><a href="https://www.escavador.com/sobre/4124647/raquel-harue-fukumori-almeida-souza">Escavador — Raquel Harue Fukumori</a></li>
+        <li><a href="https://www.escavador.com/sobre/1987892/anna-maria-schnabel-larco-di-palma">Escavador — Anna Maria Schnabel</a></li>
+        <li><a href="https://www.escavador.com/sobre/3653843/fabricio-lorenzini-aranha-machado">Escavador — Fabricio Lorenzini</a></li>
+        <li><a href="https://www.researchgate.net/profile/Marcia-Jerico">ResearchGate — Marcia Jerico</a></li>
+        <li><a href="https://www.researchgate.net/publication/298471196">ResearchGate — De Marco, L-levothyroxine in dogs</a></li>
+        <li><a href="https://scholar.google.com.br/citations?user=udtkUl8AAAAJ">Google Scholar — Marcia Jerico (881 citacoes)</a></li>
+        <li><a href="https://abev.org.br/quem-somos/">ABEV — Quem somos (diretoria)</a></li>
+        <li><a href="https://abev.org.br/en/about-us/">ABEV — About us (English)</a></li>
+        <li><a href="https://crmvsp.gov.br/medicos-veterinarios-lancam-livro-no-crmv-sp/">CRMV-SP — Lancamento Tratado Medicina Interna</a></li>
+    </ul>
+
+    <h3 style="font-size: 0.9rem; color: var(--tier3); margin-top: 1rem;">Tier 3 — Fontes Especializadas/Editoriais</h3>
+    <ul class="source-list">
+        <li><a href="https://vetunity.com.br/endocrinologia-veterinaria/">VetUnity — Endocrinologia (site oficial)</a></li>
+        <li><a href="https://vetunity.com.br/fabricio-lorenzini/">VetUnity — Fabricio Lorenzini (perfil)</a></li>
+        <li><a href="https://vetquality.com.br/equipe-veterinaria-24h/viviani-de-marco/">Vet Quality — Viviani De Marco (perfil)</a></li>
+        <li><a href="https://vetquality.com.br/equipe-veterinaria-24h/veterinaria-endocrinologista/">Vet Quality — Thais Gimenes (perfil)</a></li>
+        <li><a href="https://cvaltodalapa.com.br/dra-marcia-marques-jerico/">CVAL — Marcia Jerico (perfil)</a></li>
+        <li><a href="https://cvaltodalapa.com.br/dra-raquel-harue-fukumori/">CVAL — Raquel Harue (perfil)</a></li>
+        <li><a href="https://butantan.vet/endocrinologia-veterinaria-butanta/">Butantan Vet — Endocrinologia</a></li>
+        <li><a href="https://www.endocrinologiaveterinaria.com/curriculo">endocrinologiaveterinaria.com — Curriculo Alexandre Baptista</a></li>
+        <li><a href="https://www.petlife.com.br/m.v.-msc.-alexandre-bastos-baptista---endocrinologia-veterinaria/sao-paulo-sp/63402c9e418d6b50f2e5e9fb">PetLife — Alexandre Baptista</a></li>
+        <li><a href="https://vets4pets.com.br/">Vets4Pets — Anna Maria Schnabel (site oficial)</a></li>
+        <li><a href="https://pesquisashormonais.com.br/time-pesquisas-hormonais/">Pesquisas Hormonais — Priscila Viau</a></li>
+        <li><a href="https://hormonalle.com.br/quem-somos">Hormonalle — Quem somos</a></li>
+        <li><a href="https://caesegatos.com.br/abev-completa-15-anos/">Portal Caes e Gatos — ABEV 15 anos (Priscila Viau)</a></li>
+        <li><a href="https://caesegatos.com.br/grandes-nomes-da-endocrinologia-veterinaria-compareceram-ao-ciabev/">Portal Caes e Gatos — CIABEV</a></li>
+        <li><a href="https://diretonoticias.com.br/2025/03/09/educacao-continuada-e-pesquisa-sao-estrategias-essenciais-segundo-profissional-de-renome-da-endocrinologia/">Direto Noticias — Marcia Jerico entrevista 2025</a></li>
+        <li><a href="https://www.instagram.com/endocrinologia.veterinaria/">Instagram — @endocrinologia.veterinaria (Anna Maria Schnabel, CRMV-SP 18.898)</a></li>
+        <li><a href="https://www.linkedin.com/in/viviani-de-marco-570a7447/">LinkedIn — Viviani De Marco</a></li>
+        <li><a href="https://www.linkedin.com/in/priscila-montanheri-a4b6325a/">LinkedIn — Priscila Montanheri</a></li>
+        <li><a href="https://nayaespecialidades.com.br/viviani-de-marco/">Naya Especialidades — Viviani De Marco</a></li>
+        <li><a href="https://provet.com.br/exame-especialidade/endocrinologia-e-metabologia/">Provet — Endocrinologia</a></li>
+    </ul>
+</div>
+
+<!-- COMPOSICAO DE FONTES -->
+<div class="summary-box">
+    <h3 style="color: var(--accent); margin-bottom: 0.5rem;">Composicao de Fontes</h3>
+    <table class="comparison-table" style="margin: 0;">
+        <thead>
+            <tr><th>Tier</th><th>Tipo</th><th>Quantidade</th><th>%</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><sup class="tier tier-1">T1</sup></td><td>Fontes Primarias (USP, PubMed, FAPESP)</td><td>7</td><td>23%</td></tr>
+            <tr><td><sup class="tier tier-2">T2</sup></td><td>Fontes Institucionais (Escavador, ResearchGate, Google Scholar, ABEV, CRMV-SP)</td><td>12</td><td>39%</td></tr>
+            <tr><td><sup class="tier tier-3">T3</sup></td><td>Fontes Especializadas (sites clinicas, LinkedIn, Instagram, portais vet)</td><td>18</td><td>58%</td></tr>
+            <tr><td colspan="4" style="font-size: 0.8rem; color: var(--text-dim);">Nota: composicao T1 abaixo do minimo de 60% recomendado. Isso reflete a natureza da pesquisa (diretorio de profissionais, nao analise cientifica). Dados clinicos e academicos foram priorizados via T1 quando disponiveis.</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<p style="color: var(--text-dim); font-size: 0.8rem; margin-top: 2rem; text-align: center;">
+    Pesquisa realizada em 25/03/2026 via WebSearch extensiva. Dados sujeitos a atualizacao.<br>
+    Projeto Wally — Saude Veterinaria Pessoal
+</p>
+
+</body>
+</html>

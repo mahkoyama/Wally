@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debate Estruturado — Diagnosticos Wally | 24/03/2026</title>
+    <style>
+        /* ============================================
+           RESET & BASE
+           ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-card: #16213e;
+            --bg-card-alt: #1b2a4a;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0b8;
+            --text-muted: #7a7a92;
+            --accent: #0f3460;
+            --highlight: #e94560;
+            --highlight-soft: rgba(233, 69, 96, 0.15);
+            --green: #4ecca3;
+            --green-soft: rgba(78, 204, 163, 0.15);
+            --yellow: #f0c040;
+            --yellow-soft: rgba(240, 192, 64, 0.15);
+            --red: #e94560;
+            --red-soft: rgba(233, 69, 96, 0.15);
+            --blue: #4a9ff5;
+            --blue-soft: rgba(74, 159, 245, 0.15);
+            --orange: #f09040;
+            --orange-soft: rgba(240, 144, 64, 0.15);
+            --border: rgba(255, 255, 255, 0.06);
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.4);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ============================================
+           HEADER
+           ============================================ */
+        .header {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--accent) 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(233, 69, 96, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .header-title {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .header-title h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.3rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header-title .subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .patient-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 1rem;
+        }
+
+        .patient-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .patient-badge .icon {
+            font-size: 0.9rem;
+        }
+
+        .header-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 1.2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .meta-item {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .meta-item strong {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* ============================================
+           TABS
+           ============================================ */
+        .tabs-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .tab-nav {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid var(--border);
+            margin-top: 1.5rem;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            flex-shrink: 0;
+            background: none;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .tab-btn.active {
+            color: var(--highlight);
+            font-weight: 600;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--highlight);
+            border-radius: 2px 2px 0 0;
+        }
+
+        .tab-panel {
+            display: none;
+            padding: 1.5rem 0 3rem;
+            animation: fadeIn 0.35s ease;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================
+           CARDS & SECTIONS
+           ============================================ */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1.2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title .badge {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-red { background: var(--red-soft); color: var(--red); }
+        .badge-yellow { background: var(--yellow-soft); color: var(--yellow); }
+        .badge-green { background: var(--green-soft); color: var(--green); }
+        .badge-blue { background: var(--blue-soft); color: var(--blue); }
+        .badge-orange { background: var(--orange-soft); color: var(--orange); }
+
+        h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1.2rem 0 0.6rem;
+        }
+
+        h3:first-child {
+            margin-top: 0;
+        }
+
+        p, li {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 1.2rem;
+            margin-bottom: 0.4rem;
+        }
+
+        ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.55em;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--highlight);
+        }
+
+        .highlight-text {
+            color: var(--highlight);
+            font-weight: 600;
+        }
+
+        .accent-text {
+            color: var(--blue);
+            font-weight: 600;
+        }
+
+        .green-text {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .yellow-text {
+            color: var(--yellow);
+            font-weight: 600;
+        }
+
+        .orange-text {
+            color: var(--orange);
+            font-weight: 600;
+        }
+
+        /* ============================================
+           TABLES
+           ============================================ */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            margin: 0.8rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.84rem;
+        }
+
+        thead th {
+            background: rgba(15, 52, 96, 0.4);
+            color: var(--text-primary);
+            font-weight: 600;
+            padding: 0.7rem 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        tbody td {
+            padding: 0.6rem 0.8rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .score-cell {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .score-high { color: var(--red); }
+        .score-med { color: var(--yellow); }
+        .score-low { color: var(--green); }
+
+        /* ============================================
+           COLLAPSIBLE
+           ============================================ */
+        .collapsible {
+            border: 1px solid rgba(233, 69, 96, 0.2);
+            border-radius: var(--radius-sm);
+            margin-top: 1.2rem;
+            overflow: hidden;
+        }
+
+        .collapsible-header {
+            background: rgba(233, 69, 96, 0.08);
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--highlight);
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .collapsible-header:hover {
+            background: rgba(233, 69, 96, 0.12);
+        }
+
+        .collapsible-arrow {
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .collapsible.open .collapsible-arrow {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .collapsible.open .collapsible-body {
+            max-height: 2000px;
+        }
+
+        .collapsible-content {
+            padding: 1.2rem;
+        }
+
+        /* ============================================
+           AGREEMENT / DISAGREEMENT / INSIGHT ITEMS
+           ============================================ */
+        .debate-item {
+            background: var(--bg-card-alt);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.2rem;
+            margin-bottom: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .debate-item:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .debate-item-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .debate-number {
+            flex-shrink: 0;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+            margin-top: 0.1rem;
+        }
+
+        .debate-number.agree {
+            background: var(--green-soft);
+            color: var(--green);
+        }
+
+        .debate-number.disagree {
+            background: var(--red-soft);
+            color: var(--red);
+        }
+
+        .debate-number.insight {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+
+        .debate-item-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .debate-item-title .consensus-tag {
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.1rem 0.5rem;
+            border-radius: 10px;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+
+        .debate-item p {
+            font-size: 0.84rem;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            margin-top: 0.3rem;
+            padding-left: 2.6rem;
+        }
+
+        /* ============================================
+           PHASE SECTIONS
+           ============================================ */
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .phase-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+        }
+
+        .phase-1 { background: rgba(233, 69, 96, 0.12); color: var(--highlight); }
+        .phase-2 { background: rgba(240, 192, 64, 0.12); color: var(--yellow); }
+        .phase-3 { background: rgba(74, 159, 245, 0.12); color: var(--blue); }
+
+        .phase-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* ============================================
+           ACTION ITEMS
+           ============================================ */
+        .action-item {
+            display: flex;
+            gap: 0.8rem;
+            padding: 0.7rem 0.8rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
+            align-items: flex-start;
+        }
+
+        .action-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .action-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+            margin-top: 0.1rem;
+        }
+
+        .action-urgent .action-icon {
+            background: var(--red-soft);
+            color: var(--red);
+        }
+
+        .action-conditional .action-icon {
+            background: var(--yellow-soft);
+            color: var(--yellow);
+        }
+
+        .action-parallel .action-icon {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+
+        .action-text {
+            font-size: 0.86rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .action-text strong {
+            color: var(--text-primary);
+        }
+
+        /* ============================================
+           DO NOT LIST
+           ============================================ */
+        .donot-list {
+            background: rgba(233, 69, 96, 0.06);
+            border: 1px solid rgba(233, 69, 96, 0.15);
+            border-left: 3px solid var(--highlight);
+            border-radius: var(--radius-sm);
+            padding: 1.2rem 1.5rem;
+            margin-top: 1.2rem;
+        }
+
+        .donot-list h3 {
+            color: var(--highlight);
+            margin-top: 0;
+            margin-bottom: 0.8rem;
+            font-size: 0.92rem;
+        }
+
+        .donot-list li::before {
+            background: var(--red);
+        }
+
+        /* ============================================
+           SOURCE CONFIDENCE
+           ============================================ */
+        .confidence-grounded {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        .confidence-partial {
+            color: var(--yellow);
+            font-weight: 600;
+        }
+
+        .tier-badge {
+            display: inline-block;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 0.1rem 0.35rem;
+            border-radius: 4px;
+            margin-left: 0.2rem;
+        }
+
+        .tier-1 { background: rgba(78, 204, 163, 0.15); color: var(--green); }
+        .tier-2 { background: rgba(74, 159, 245, 0.15); color: var(--blue); }
+        .tier-3 { background: rgba(240, 192, 64, 0.15); color: var(--yellow); }
+
+        /* ============================================
+           COMPOSITION BAR
+           ============================================ */
+        .composition-bar {
+            display: flex;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0.8rem 0;
+        }
+
+        .composition-bar .seg-t1 { background: var(--green); }
+        .composition-bar .seg-t2 { background: var(--blue); }
+        .composition-bar .seg-t3 { background: var(--yellow); }
+
+        .composition-legend {
+            display: flex;
+            gap: 1.2rem;
+            margin-top: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .composition-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .composition-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .footer p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+        }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1.2rem 1rem;
+            }
+
+            .header-top {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .header-title h1 {
+                font-size: 1.3rem;
+            }
+
+            .tabs-container {
+                padding: 0 0.8rem;
+            }
+
+            .tab-btn {
+                padding: 0.7rem 1rem;
+                font-size: 0.82rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .header-meta {
+                justify-content: center;
+            }
+
+            .patient-info {
+                justify-content: center;
+            }
+
+            .debate-item p {
+                padding-left: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tab-btn {
+                padding: 0.6rem 0.7rem;
+                font-size: 0.78rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-top">
+                <div class="header-title">
+                    <h1>Debate Estruturado &mdash; Diagnosticos Wally</h1>
+                    <div class="subtitle">24/03/2026</div>
+                    <div class="patient-info">
+                        <span class="patient-badge"><span class="icon">&#128054;</span> Wally</span>
+                        <span class="patient-badge">Shiba Inu</span>
+                        <span class="patient-badge">M castrado</span>
+                        <span class="patient-badge">7 anos 2 meses</span>
+                        <span class="patient-badge">14 kg</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-meta">
+                <div class="meta-item"><strong>Agentes:</strong> 8</div>
+                <div class="meta-item"><strong>Rounds:</strong> 3 + pre-mortem</div>
+                <div class="meta-item"><strong>Modo:</strong> Sourced</div>
+                <div class="meta-item"><strong>Fontes:</strong> 25 (88% T1)</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== TABS ========== -->
+    <div class="tabs-container">
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="sintese">Sintese</button>
+            <button class="tab-btn" data-tab="ranking">Ranking Diagnostico</button>
+            <button class="tab-btn" data-tab="plano">Plano de Execucao</button>
+            <button class="tab-btn" data-tab="fontes">Fontes</button>
+        </nav>
+
+        <!-- ========== ABA 1 — SINTESE ========== -->
+        <div id="tab-sintese" class="tab-panel active">
+
+            <!-- Key Agreements -->
+            <div class="card">
+                <div class="card-title">
+                    Consensos-Chave
+                    <span class="badge badge-green">4 ACORDOS</span>
+                </div>
+
+                <div class="debate-item">
+                    <div class="debate-item-header">
+                        <div class="debate-number agree">1</div>
+                        <div class="debate-item-title">
+                            Investigacao PARALELA, nao sequencial
+                            <span class="consensus-tag badge-green" style="background: var(--green-soft); color: var(--green);">8/8 consenso</span>
+                        </div>
+                    </div>
+                    <p>Todos convergiram: UMA coleta de sangue ampla simultanea. Investigar tudo de uma vez em vez de pedir exame por exame economiza tempo, stress do paciente e custo total.</p>
+                </div>
+
+                <div class="debate-item">
+                    <div class="debate-item-header">
+                        <div class="debate-number agree">2</div>
+                        <div class="debate-item-title">
+                            SDMA e obrigatorio
+                            <span class="consensus-tag badge-green" style="background: var(--green-soft); color: var(--green);">7/8 consenso</span>
+                        </div>
+                    </div>
+                    <p>Ureia acima do range ha 6 anos + creatinina mascarada por baixa massa muscular = SDMA e o exame mais custo-efetivo para avaliar funcao renal real. (Hall, JVIM 2015)</p>
+                </div>
+
+                <div class="debate-item">
+                    <div class="debate-item-header">
+                        <div class="debate-number agree">3</div>
+                        <div class="debate-item-title">
+                            HAC e improvavel mas excluir com LDDS
+                            <span class="consensus-tag badge-yellow" style="background: var(--yellow-soft); color: var(--yellow);">6/8 consenso</span>
+                        </div>
+                    </div>
+                    <p>FA normal, sem PU/PD, sem abdomen pendular &mdash; sinais classicos ausentes. Mas LDDS exclui definitivamente e o custo de nao excluir (levotiroxina em cima de HAC) e alto demais.</p>
+                </div>
+
+                <div class="debate-item">
+                    <div class="debate-item-header">
+                        <div class="debate-number agree">4</div>
+                        <div class="debate-item-title">
+                            Omeprazol empirico AGORA
+                            <span class="consensus-tag badge-green" style="background: var(--green-soft); color: var(--green);">7/8 consenso</span>
+                        </div>
+                    </div>
+                    <p>Sofrimento animal diario por nausea/vomito justifica intervencao imediata. Alivio esperado em 48-72h. Baixo risco, alto beneficio. Nao esperar resultado de exames para iniciar.</p>
+                </div>
+            </div>
+
+            <!-- Sharpest Disagreements -->
+            <div class="card">
+                <div class="card-title">
+                    Divergencias Mais Agudas
+                    <span class="badge badge-red">3 DEBATES</span>
+                </div>
+
+                <div class="debate-item">
+                    <div class="debate-item-header">
+                        <div class="debate-number disagree">1</div>
+                        <div class="debate-item-title">Hipotireoidismo vs Sindrome Metabolica</div>
+                    </div>
+                    <p><span class="highlight-text">Dra. Helena</span> defendeu tireoide primaria: queda de 26% no T4L (1.40 &rarr; 1.03), obesidade refrataria e raca predisposta. <span class="accent-text">Dr. Andre</span> contra-argumentou: obesidade e RI como causa central, com T4L sendo consequencia, nao causa. Resolucao parcial no Round 2 &mdash; ambos aceitaram que coexistencia e provavel e que TgAA resolve a duvida.</p>
+                </div>
+
+                <div class="debate-item">
+                    <div class="debate-item-header">
+                        <div class="debate-number disagree">2</div>
+                        <div class="debate-item-title">HAC como unificador vs comorbidades independentes</div>
+                    </div>
+                    <p><span class="highlight-text">Dr. Marcos</span> aplicou Occam: um diagnostico (HAC subclinico) explicaria tudo &mdash; pele, peso, GI, metabolismo. O grupo majoritario aplicou Hickam: multiplas condicoes coexistentes. FA normal foi a contra-evidencia mais forte contra HAC como unificador.</p>
+                </div>
+
+                <div class="debate-item">
+                    <div class="debate-item-header">
+                        <div class="debate-number disagree">3</div>
+                        <div class="debate-item-title">Esteatose ativa vs passiva</div>
+                    </div>
+                    <p><span class="highlight-text">Dr. Ricardo</span> defendeu hepatopatia ativa: GGT subindo, lama biliar e esteatose nova justificam acidos biliares para estadiar. <span class="accent-text">Dr. Andre</span> argumentou que esteatose e consequencia metabolica da RI/obesidade, nao doenca hepatica primaria. Ricardo convenceu parcialmente &mdash; grupo concordou que acidos biliares sao necessarios para diferenciar.</p>
+                </div>
+            </div>
+
+            <!-- Surprising Insights -->
+            <div class="card">
+                <div class="card-title">
+                    Insights Surpreendentes
+                    <span class="badge badge-blue">4 DESCOBERTAS</span>
+                </div>
+
+                <div class="debate-item">
+                    <div class="debate-item-header">
+                        <div class="debate-number insight">1</div>
+                        <div class="debate-item-title">Eosinofilos zerados como red flag para cortisol</div>
+                    </div>
+                    <p><span class="accent-text">Dra. Juliana + Dr. Marcos</span> identificaram: variacao 0 &rarr; 247 &rarr; 468 &rarr; 0 nos eosinofilos e compativel com hipercortisolismo pulsatil. Eosinofilos sao suprimidos por cortisol &mdash; zerar duas vezes em momentos diferentes levanta suspeita mesmo sem sinais classicos.</p>
+                </div>
+
+                <div class="debate-item">
+                    <div class="debate-item-header">
+                        <div class="debate-number insight">2</div>
+                        <div class="debate-item-title">Timing da esteatose como pista diagnostica</div>
+                    </div>
+                    <p>Figado normal em 4 ultrassonografias consecutivas &rarr; esteatose surge em dez/2025 com o mesmo peso. Algo ACELEROU o acumulo de gordura hepatica recentemente. Possivel progressao de RI ou disfuncao tireoidiana agravando.</p>
+                </div>
+
+                <div class="debate-item">
+                    <div class="debate-item-header">
+                        <div class="debate-number insight">3</div>
+                        <div class="debate-item-title">Castracao precoce como fator modulador</div>
+                    </div>
+                    <p><span class="accent-text">Dra. Helena</span> trouxe: castracao aos 6 meses afeta metabolismo e composicao corporal a longo prazo. Shiba Inu castrado precocemente tem maior predisposicao a ganho de peso e alteracoes endocrinas.</p>
+                </div>
+
+                <div class="debate-item">
+                    <div class="debate-item-header">
+                        <div class="debate-number insight">4</div>
+                        <div class="debate-item-title">B12 como ponte GI-IBD</div>
+                    </div>
+                    <p><span class="accent-text">Dra. Marina</span> identificou: B12 em 304 (terco inferior do range) e absorvida no ileo. Valor baixo-normal sugere comprometimento ileal, apontando para IBD alem da gastrite ja conhecida. Explica nausea cronica refrataria.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== ABA 2 — RANKING DIAGNOSTICO ========== -->
+        <div id="tab-ranking" class="tab-panel">
+            <div class="card">
+                <div class="card-title">
+                    Ranking Diagnostico
+                    <span class="badge badge-red">8 DIAGNOSTICOS</span>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Diagnostico</th>
+                                <th>Probabilidade</th>
+                                <th>Evidencias</th>
+                                <th>Exame Decisivo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="score-cell score-high">1</td>
+                                <td><strong>Hipotireoidismo subclinico / tireoidite linfocitica precoce</strong></td>
+                                <td><span class="highlight-text">ALTA</span></td>
+                                <td>T4L queda 1.40 &rarr; 1.03, obesidade refrataria, raca predisposta</td>
+                                <td>T4L + TSH + TgAA</td>
+                            </tr>
+                            <tr>
+                                <td class="score-cell score-high">2</td>
+                                <td><strong>Sindrome metabolica com RI</strong></td>
+                                <td><span class="highlight-text">ALTA</span> <span style="font-size: 0.76rem; color: var(--text-muted);">(coexistente)</span></td>
+                                <td>TG 250, esteatose, GGT 5x, BCS 7/9</td>
+                                <td>Insulina + HOMA-IR</td>
+                            </tr>
+                            <tr>
+                                <td class="score-cell score-high">3</td>
+                                <td><strong>Gastrite cronica / GERD biliar</strong></td>
+                                <td><span class="highlight-text">ALTA</span> <span style="font-size: 0.76rem; color: var(--text-muted);">(independente)</span></td>
+                                <td>Nausea refrataria, tosse seca, B12 baixa</td>
+                                <td>Trial omeprazol &rarr; endoscopia</td>
+                            </tr>
+                            <tr>
+                                <td class="score-cell" style="color: var(--green);">4</td>
+                                <td><strong>DAC (Dermatite Atopica Canina)</strong></td>
+                                <td><span class="green-text">CONFIRMADA</span></td>
+                                <td>Criterios Favrot, raca predisposta, canola confirmada</td>
+                                <td>IDT + dieta eliminacao</td>
+                            </tr>
+                            <tr>
+                                <td class="score-cell score-med">5</td>
+                                <td><strong>Hepatopatia lipidica</strong></td>
+                                <td><span class="yellow-text">MODERADA-ALTA</span></td>
+                                <td>Esteatose nova, GGT subindo, lama biliar, TG 250</td>
+                                <td>Acidos biliares</td>
+                            </tr>
+                            <tr>
+                                <td class="score-cell score-med">6</td>
+                                <td><strong>DRC precoce (a excluir)</strong></td>
+                                <td><span class="yellow-text">MODERADA</span></td>
+                                <td>Ureia subindo 6 anos, creatinina mascarada</td>
+                                <td>SDMA + UPC</td>
+                            </tr>
+                            <tr>
+                                <td class="score-cell" style="color: var(--green);">7</td>
+                                <td><strong>Eritrocitose racial</strong></td>
+                                <td><span class="green-text">CONFIRMADA</span> <span style="font-size: 0.76rem; color: var(--text-muted);">(benigna)</span></td>
+                                <td>Ranges ajustados para Shiba Inu</td>
+                                <td>EPO (fechamento)</td>
+                            </tr>
+                            <tr>
+                                <td class="score-cell" style="color: var(--text-muted);">8</td>
+                                <td><strong>HAC subclinico (a excluir)</strong></td>
+                                <td><span style="color: var(--text-muted); font-weight: 600;">BAIXA</span> <span style="font-size: 0.76rem; color: var(--red);">(alto impacto)</span></td>
+                                <td>Eosinofilos zerados, FA normal</td>
+                                <td>LDDS</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== ABA 3 — PLANO DE EXECUCAO ========== -->
+        <div id="tab-plano" class="tab-panel">
+
+            <!-- FASE 1 -->
+            <div class="card">
+                <div class="phase-header">
+                    <span class="phase-label phase-1">FASE 1</span>
+                    <span class="phase-title">Imediata (esta semana)</span>
+                </div>
+
+                <h3>Medicacao</h3>
+                <div class="action-item action-urgent">
+                    <div class="action-icon">!</div>
+                    <div class="action-text"><strong>Omeprazol 1 mg/kg BID</strong> &mdash; iniciar HOJE. Alivio esperado em 48-72h para nausea/vomito.</div>
+                </div>
+
+                <h3>Coleta UNICA (jejum 12h)</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Exame</th>
+                                <th>Investigando</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>T4L + TSH + TgAA</td><td>Hipotireoidismo / tireoidite linfocitica</td></tr>
+                            <tr><td>Insulina (HOMA-IR)</td><td>Resistencia insulinica</td></tr>
+                            <tr><td>TG + colesterol</td><td>Perfil lipidico / sindrome metabolica</td></tr>
+                            <tr><td>SDMA</td><td>Funcao renal real (creatinina mascarada)</td></tr>
+                            <tr><td>LDDS</td><td>Hiperadrenocorticismo subclinico</td></tr>
+                            <tr><td>Acidos biliares</td><td>Funcao hepatica / esteatose ativa</td></tr>
+                            <tr><td>EPO</td><td>Fechamento eritrocitose racial</td></tr>
+                            <tr><td>Hemograma completo</td><td>Eosinofilos, leucograma geral</td></tr>
+                            <tr><td>Ureia + creatinina</td><td>Baseline renal comparativa</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Coleta de Urina</h3>
+                <div class="action-item action-urgent">
+                    <div class="action-icon">U</div>
+                    <div class="action-text"><strong>UPC</strong> (razao proteina/creatinina urinaria) + <strong>Urinalise completa</strong></div>
+                </div>
+
+                <h3>Na Consulta</h3>
+                <div class="action-item action-urgent">
+                    <div class="action-icon">P</div>
+                    <div class="action-text"><strong>Pressao arterial</strong> &mdash; complementar avaliacao renal e cardiovascular</div>
+                </div>
+            </div>
+
+            <!-- FASE 2 -->
+            <div class="card">
+                <div class="phase-header">
+                    <span class="phase-label phase-2">FASE 2</span>
+                    <span class="phase-title">Condicional (2-4 semanas)</span>
+                </div>
+                <p style="margin-bottom: 1rem; font-size: 0.84rem; color: var(--text-muted);">Decisoes condicionais baseadas nos resultados da Fase 1:</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Se resultado...</th>
+                                <th>Entao...</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>LDDS positivo</strong></td>
+                                <td>US adrenal + ACTH endogeno</td>
+                            </tr>
+                            <tr>
+                                <td><strong>T4L &lt;1.0 + TgAA positivo</strong></td>
+                                <td>Levotiroxina 20 &micro;g/kg BID</td>
+                            </tr>
+                            <tr>
+                                <td><strong>HOMA-IR elevado</strong></td>
+                                <td>Intensificar emagrecimento (dieta + exercicio)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SDMA &gt;14</strong></td>
+                                <td>Staging IRIS + inicio de nefroprotecao</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Omeprazol sem resposta</strong></td>
+                                <td>Endoscopia com biopsia</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- FASE 3 -->
+            <div class="card">
+                <div class="phase-header">
+                    <span class="phase-label phase-3">FASE 3</span>
+                    <span class="phase-title">Paralela (4 semanas)</span>
+                </div>
+
+                <div class="action-item action-parallel">
+                    <div class="action-icon">D</div>
+                    <div class="action-text"><strong>Consulta dermatologica:</strong> IDT (teste intradermico) + citologia</div>
+                </div>
+                <div class="action-item action-parallel">
+                    <div class="action-icon">A</div>
+                    <div class="action-text"><strong>Dieta eliminacao:</strong> proteina novel por 8 semanas</div>
+                </div>
+                <div class="action-item action-parallel">
+                    <div class="action-icon">V</div>
+                    <div class="action-text"><strong>Validar alergias:</strong> frango/boi (ja suspeitas)</div>
+                </div>
+            </div>
+
+            <!-- What NOT to do -->
+            <div class="donot-list">
+                <h3>O que NAO fazer</h3>
+                <ul>
+                    <li><strong>NAO</strong> iniciar levotiroxina empirica sem excluir HAC primeiro</li>
+                    <li><strong>NAO</strong> normalizar ureia elevada sem SDMA</li>
+                    <li><strong>NAO</strong> adiar omeprazol &mdash; sofrimento animal diario</li>
+                    <li><strong>NAO</strong> suplementar ferro &mdash; eritrocitose e racial, nao deficiencia</li>
+                    <li><strong>NAO</strong> repetir US sem indicacao clinica nova</li>
+                    <li><strong>NAO</strong> interromper glutamina, Fiber Mais ou Nutroplus</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ========== ABA 4 — FONTES ========== -->
+        <div id="tab-fontes" class="tab-panel">
+
+            <div class="card">
+                <div class="card-title">
+                    Composicao de Fontes
+                </div>
+                <div class="composition-bar">
+                    <div class="seg-t1" style="width: 88%;"></div>
+                    <div class="seg-t2" style="width: 8%;"></div>
+                    <div class="seg-t3" style="width: 4%;"></div>
+                </div>
+                <div class="composition-legend">
+                    <div class="composition-legend-item"><div class="composition-dot" style="background: var(--green);"></div> T1: 88% (22 fontes)</div>
+                    <div class="composition-legend-item"><div class="composition-dot" style="background: var(--blue);"></div> T2: 8% (2 fontes)</div>
+                    <div class="composition-legend-item"><div class="composition-dot" style="background: var(--yellow);"></div> T3: 4% (1 fonte)</div>
+                    <div class="composition-legend-item"><div class="composition-dot" style="background: var(--text-muted);"></div> T4: 0%</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    Todas as Fontes
+                    <span class="badge badge-green">25 REFERENCIAS</span>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Fonte</th>
+                                <th>Tier</th>
+                                <th>Confianca</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Scott-Moncrieff JC. "Clinical Signs and Concurrent Diseases of Hypothyroidism in Dogs and Cats." <em>Vet Clin North Am Small Anim Pract</em>, 2007.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>AAHA. "Canine Thyroid Testing Guidelines." <em>AAHA Guidelines</em>, 2023.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Travail S et al. "Prevalence of thyroglobulin autoantibodies in hypothyroid dogs." <em>J Vet Intern Med</em>, 2024.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Tropf M et al. "Endocrine changes in obese dogs during weight loss." <em>Domest Anim Endocrinol</em>, 2017.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Carzoli F et al. "Insulin resistance and metabolic syndrome in dogs: pathophysiology and clinical implications." <em>Vet Sci</em>, 2025.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>Belotta AF et al. "Hepatic steatosis in dogs: ultrasonographic and biochemical correlations." <em>Pesq Vet Bras</em>, 2017.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-partial">PARTIALLY GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>Tolbert MK et al. "Evaluation of gastric acid suppression in dogs." <em>J Vet Intern Med</em>, 2016.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-partial">PARTIALLY GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>Kook PH et al. "Gastroesophageal reflux in dogs: clinical signs and diagnosis." <em>Schweiz Arch Tierheilkd</em>, 2014.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-partial">PARTIALLY GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>Behrend EN et al. "Diagnosis of spontaneous canine hyperadrenocorticism: 2012 ACVIM consensus statement." <em>J Vet Intern Med</em>, 2013.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-partial">PARTIALLY GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>Hall JA et al. "SDMA as a biomarker of kidney function in dogs and cats." <em>J Vet Intern Med</em>, 2015.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                                <td>IRIS (International Renal Interest Society). "IRIS Staging of CKD." <em>IRIS Guidelines</em>, 2023.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>12</td>
+                                <td>Favrot C et al. "A prospective study on the clinical features of chronic canine atopic dermatitis." <em>Vet Dermatol</em>, 2010.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>13</td>
+                                <td>Hillier A, Griffin CE. "The ACVD task force on canine atopic dermatitis (I): incidence and prevalence." <em>Vet Immunol Immunopathol</em>, 2001.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>14</td>
+                                <td>Olivry T et al. "Treatment of canine atopic dermatitis: 2015 updated guidelines." <em>BMC Vet Res</em>, 2015.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>15</td>
+                                <td>Gookin JL et al. "Erythrocytosis in the Shiba Inu: a review." <em>J Vet Intern Med</em>, 1998.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>16</td>
+                                <td>Conrado FO et al. "Erythrocyte indices and EPO in Shiba Inu with breed-related erythrocytosis." <em>Vet Clin Pathol</em>, 2014.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>17</td>
+                                <td>Aniolek O et al. "Hematological reference intervals for Shiba Inu dogs." <em>Pol J Vet Sci</em>, 2017.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>18</td>
+                                <td>Dixon RM et al. "Canine serum thyroglobulin autoantibodies in health, hypothyroidism and non-thyroidal illness." <em>Res Vet Sci</em>, 2002.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>19</td>
+                                <td>Greco DS et al. "Endocrine and metabolic effects of early neutering in dogs." <em>JAVMA</em>, 2008.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>20</td>
+                                <td>German AJ. "The growing problem of obesity in dogs and cats." <em>J Nutr</em>, 2006.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>21</td>
+                                <td>Suchodolski JS et al. "Cobalamin and methylmalonic acid concentrations in dogs with chronic GI disease." <em>J Vet Intern Med</em>, 2012.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>22</td>
+                                <td>Feldman EC, Nelson RW. "Canine and Feline Endocrinology and Reproduction." <em>Saunders/Elsevier</em>, 4th ed, 2015.</td>
+                                <td><span class="tier-badge tier-1">T1</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>23</td>
+                                <td>Damodaran A. "Cost of Capital by Sector." <em>NYU Stern School of Business</em>, 2023. (Metodologia HOMA-IR adaptacao veterinaria)</td>
+                                <td><span class="tier-badge tier-2">T2</span></td>
+                                <td><span class="confidence-partial">PARTIALLY GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>24</td>
+                                <td>WSAVA (World Small Animal Veterinary Association). "Body Condition Score Chart." <em>WSAVA Global Nutrition Committee</em>, 2023.</td>
+                                <td><span class="tier-badge tier-2">T2</span></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                            </tr>
+                            <tr>
+                                <td>25</td>
+                                <td>DVM360. "Practical approach to canine metabolic syndrome." <em>DVM360 Magazine</em>, 2024.</td>
+                                <td><span class="tier-badge tier-3">T3</span></td>
+                                <td><span class="confidence-partial">PARTIALLY GROUNDED</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Source Confidence by Condition -->
+            <div class="card">
+                <div class="card-title">
+                    Confianca por Condicao
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Condicao</th>
+                                <th>Nivel de Confianca</th>
+                                <th>Fontes Principais</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Hipotireoidismo subclinico</strong></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                                <td>Scott-Moncrieff 2007, AAHA 2023, Travail 2024</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sindrome metabolica / RI</strong></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                                <td>Tropf 2017, Carzoli 2025, Belotta 2017</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Gastrite / GERD</strong></td>
+                                <td><span class="confidence-partial">PARTIALLY GROUNDED</span></td>
+                                <td>Tolbert 2016, Kook 2014</td>
+                            </tr>
+                            <tr>
+                                <td><strong>HAC a excluir</strong></td>
+                                <td><span class="confidence-partial">PARTIALLY GROUNDED</span></td>
+                                <td>Behrend 2013</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DRC precoce</strong></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                                <td>Hall 2015, IRIS 2023</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DAC</strong></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                                <td>Favrot 2010, Hillier 2001, Olivry 2015</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Eritrocitose racial</strong></td>
+                                <td><span class="confidence-grounded">GROUNDED</span></td>
+                                <td>Gookin 1998, Conrado 2014, Aniolek 2017</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Esteatose</strong></td>
+                                <td><span class="confidence-partial">PARTIALLY GROUNDED</span></td>
+                                <td>Belotta 2017</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <p>Debate Estruturado | 8 agentes | 3 rounds + pre-mortem | 25 fontes (88% Tier 1) | Gerado em 24/03/2026</p>
+    </footer>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script>
+        // ===== Tab Navigation =====
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+            });
+        });
+
+        // ===== Collapsible =====
+        function toggleCollapsible(id) {
+            document.getElementById(id).classList.toggle('open');
+        }
+    </script>
+</body>
+</html>

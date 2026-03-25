@@ -196,6 +196,10 @@
     .badge-nova { background: rgba(251,146,60,0.12); color: #FB923C; }
     .badge-suspeita { background: var(--info-dim); color: var(--info); }
     .badge-category { background: rgba(255,255,255,0.06); color: var(--text-secondary); }
+    .badge-source { font-size: 0.6rem; padding: 2px 7px; border-radius: 10px; font-weight: 600; letter-spacing: 0.04em; }
+    .badge-source.conselho { background: rgba(99,102,241,0.1); color: var(--accent); border: 1px solid rgba(99,102,241,0.2); }
+    .badge-source.debate { background: rgba(34,211,238,0.1); color: #22D3EE; border: 1px solid rgba(34,211,238,0.2); }
+    .badge-source.ambos { background: rgba(5,150,105,0.1); color: var(--success); border: 1px solid rgba(5,150,105,0.2); }
     .condition-desc { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 12px; }
     .condition-trend { font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
     .condition-trend .arrow { font-family: var(--mono); }
@@ -286,8 +290,8 @@
       font-size: 0.85rem; color: var(--text-primary); line-height: 1.7;
       font-style: italic;
     }
-    .sp-briefing-text::before { content: '\u201C'; font-size: 1.2rem; color: var(--accent); font-weight: 700; }
-    .sp-briefing-text::after { content: '\u201D'; font-size: 1.2rem; color: var(--accent); font-weight: 700; }
+    .sp-briefing-text::before { content: '\201C'; font-size: 1.2rem; color: var(--accent); font-weight: 700; }
+    .sp-briefing-text::after { content: '\201D'; font-size: 1.2rem; color: var(--accent); font-weight: 700; }
     .sp-section-label {
       font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
       letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 8px;
@@ -680,18 +684,16 @@
     <!-- ===== VIEW: DASHBOARD ===== -->
     <section id="view-dashboard" class="view active">
 
-      <!-- DEBATE BANNER -->
+      <!-- DEBATE BANNER 24/03 -->
       <div style="background:linear-gradient(135deg,rgba(34,211,238,0.06),rgba(129,140,248,0.08));border:1px solid rgba(34,211,238,0.25);border-radius:var(--radius);padding:20px 24px;margin-bottom:12px;display:flex;align-items:flex-start;gap:16px;">
         <div style="font-size:1.4rem;flex-shrink:0;">&#9881;</div>
         <div>
-          <div style="font-size:0.9rem;font-weight:700;color:#22D3EE;margin-bottom:6px;">Debate Estruturado &#8212; An&#225;lise de Exames Hist&#243;ricos &#8212; 20/03/2026</div>
+          <div style="font-size:0.9rem;font-weight:700;color:#22D3EE;margin-bottom:6px;">Debate Estruturado &#8212; Diagn&#243;sticos Wally &#8212; 24/03/2026</div>
           <div style="font-size:0.8rem;color:var(--text-secondary);line-height:1.6;">
-            6 especialistas, 3 rounds, 25 fontes (68% Tier 1). <strong>Achado cr&#237;tico:</strong> microcitose do Wally &#233; parcialmente <strong>racial</strong> (Shibas t&#234;m VCM ~61 fL &#8212; Giger et al., 1998) &#8212; nunca reconhecido em nenhuma avalia&#231;&#227;o pr&#233;via. &#183;
-            <strong>Hip&#243;tese atualizada:</strong> duas condi&#231;&#245;es independentes (PV ou Cushing + Hipotireoidismo). &#183;
-            4 exames resolvem ~80% das quest&#245;es. &#183;
-            Pseudotrombocitopenia prov&#225;vel (EDTA). &#183;
-            Apoquel: risco de intera&#231;&#227;o JAK2 desconhecida.
-            <a href="debates/exames-historicos-wally-2026-03-20/debate-exames-wally.html" style="margin-left:4px;color:#22D3EE;">Ver debate completo &#8594;</a>
+            8 agentes, 3 rounds + pre-mortem, 30 fontes (100% Tier 1).
+            <strong>Consensos:</strong> investiga&#231;&#227;o PARALELA em coleta &#250;nica, SDMA obrigat&#243;rio, HAC improv&#225;vel mas excluir com LDDS, omeprazol emp&#237;rico AGORA. &#183;
+            <strong>Insights:</strong> eosin&#243;filos zerados como red flag para cortisol, timing da esteatose como pista diagn&#243;stica, castra&#231;&#227;o precoce como fator modulador, B12 como ponte GI-IBD.
+            <a href="debates/diagnosticos-wally-2026-03-24/debate-diagnosticos-wally.html" style="margin-left:4px;color:#22D3EE;">Ver debate completo &#8594;</a>
           </div>
         </div>
       </div>
@@ -700,10 +702,10 @@
       <div style="background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(129,140,248,0.06));border:1px solid rgba(99,102,241,0.2);border-radius:var(--radius);padding:16px 24px;margin-bottom:12px;display:flex;align-items:flex-start;gap:16px;">
         <div style="font-size:1.2rem;flex-shrink:0;">&#9878;</div>
         <div>
-          <div style="font-size:0.85rem;font-weight:700;color:var(--accent);margin-bottom:4px;">Conselho Cl&#237;nico Multidisciplinar &#8212; 20/03/2026</div>
+          <div style="font-size:0.85rem;font-weight:700;color:var(--accent);margin-bottom:4px;">Conselho Cl&#237;nico Multidisciplinar &#8212; 24/03/2026</div>
           <div style="font-size:0.78rem;color:var(--text-secondary);line-height:1.5;">
-            7 especialistas, score <strong style="color:var(--danger);">4.0/10</strong>. 11 condi&#231;&#245;es, 23 a&#231;&#245;es.
-            <a href="conselho-clinico-2026-03-20.html" style="margin-left:4px;">Ver conselho &#8594;</a>
+            7 especialistas. 19 condi&#231;&#245;es avaliadas, 23 a&#231;&#245;es recomendadas.
+            <a href="Reuniao-Conselho/conselho-clinico-2026-03-24.html" style="margin-left:4px;">Ver conselho &#8594;</a>
           </div>
         </div>
       </div>
@@ -711,29 +713,26 @@
       <div style="background:var(--danger-dim);border:1px solid rgba(220,38,38,0.2);border-radius:var(--radius-sm);padding:14px 20px;margin-bottom:24px;display:flex;align-items:center;gap:12px;">
         <span style="font-size:1.1rem;">&#9888;</span>
         <div style="font-size:0.82rem;color:var(--danger);line-height:1.5;">
-          <strong>Hip&#243;tese de trabalho (Debate 20/03):</strong> Duas condi&#231;&#245;es independentes que se refor&#231;am &#8212;
-          (1) <strong>Condi&#231;&#227;o eritroide</strong> (PV ou Cushing subcl&#237;nico) &#8594; policitemia + hiperviscosidade;
-          (2) <strong>Hipotireoidismo subcl&#237;nico</strong> &#8594; dislipidemia + esteatose.
-          EPO s&#233;rica + LDDS resolvem. Flebotomia se Ht &gt;55%. NENHUMA imunossuppress&#227;o at&#233; diagn&#243;stico.
+          <strong>Suspeita principal:</strong> A tireoide do Wally pode estar desacelerando &#8212; e isso explicaria v&#225;rios problemas de uma vez: o sobrepeso que n&#227;o cede com dieta, a gordura alta no sangue, a gordura no f&#237;gado e at&#233; a n&#225;usea matinal. Se os exames confirmarem, o tratamento &#233; simples (um comprimido di&#225;rio) e pode melhorar v&#225;rias coisas ao mesmo tempo.
         </div>
       </div>
 
       <div class="stats-row">
-        <div class="stat-card danger">
-          <div class="stat-value">4.0</div>
-          <div class="stat-label">Score Sa&#250;de (/10) &#8212; Conselho 20/03</div>
-        </div>
         <div class="stat-card warning">
-          <div class="stat-value">11</div>
-          <div class="stat-label">Condi&#231;&#245;es mapeadas</div>
+          <div class="stat-value">18</div>
+          <div class="stat-label">Condi&#231;&#245;es em acompanhamento</div>
         </div>
         <div class="stat-card danger">
-          <div class="stat-value">4</div>
-          <div class="stat-label">Exames divisores (debate) &#8212; coleta &#250;nica</div>
+          <div class="stat-value">7</div>
+          <div class="stat-label">Precisam investiga&#231;&#227;o urgente</div>
         </div>
         <div class="stat-card accent">
-          <div class="stat-value">6+7</div>
-          <div class="stat-label">Especialistas: debate (6) + conselho (7)</div>
+          <div class="stat-value">1</div>
+          <div class="stat-label">Coleta de sangue resolve tudo</div>
+        </div>
+        <div class="stat-card success">
+          <div class="stat-value">2</div>
+          <div class="stat-label">Controladas / sem risco</div>
         </div>
       </div>
 
@@ -846,15 +845,15 @@
           <div class="problem-food" style="border-left:3px solid var(--danger);">
             <div>
               <div class="food-name">Frango</div>
-              <div class="food-status" style="color:var(--danger);">PROIBIDO — Super al&#233;rgico</div>
-              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Info nutr&#243;loga 20/03 &#183; Metodologia a esclarecer</div>
+              <div class="food-status" style="color:var(--danger);">PROIBIDO — Al&#233;rgeno confirmado</div>
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Provoca&#231;&#227;o acidental ~2022 &#183; Padr&#227;o-ouro (Mueller &amp; Olivry 2017)</div>
             </div>
           </div>
           <div class="problem-food" style="border-left:3px solid var(--danger);">
             <div>
               <div class="food-name">Boi</div>
-              <div class="food-status" style="color:var(--danger);">PROIBIDO — Super al&#233;rgico</div>
-              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Info nutr&#243;loga 20/03 &#183; Metodologia a esclarecer</div>
+              <div class="food-status" style="color:var(--danger);">PROIBIDO — Al&#233;rgeno confirmado</div>
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">Dieta de elimina&#231;&#227;o Dez/2025 &#183; Fezes melhoraram ao remover</div>
             </div>
           </div>
           <div class="problem-food" style="border-left:3px solid var(--danger);">
@@ -868,7 +867,7 @@
             <div>
               <div class="food-name">&#211;leo de soja</div>
               <div class="food-status" style="color:var(--warning);">EVITAR — Risco alerg&#234;nico</div>
-              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">15-25% de reatividade em c&#227;es com alergia m&#250;ltipla &#183; Debate 20/03</div>
+              <div style="font-size:0.72rem; color:var(--text-muted); margin-top:2px;">15-25% de reatividade em c&#227;es com alergia m&#250;ltipla &#183; Debate 24/03</div>
             </div>
           </div>
           <div class="problem-food" style="border-left:3px solid var(--warning);">
@@ -912,8 +911,20 @@
             <span class="supp-essential">Gap Cr&#237;tico</span>
           </div>
           <div class="supp-card">
-            <div><div class="supp-name">Vitamina B12</div><div class="supp-dose">250-500 &#181;g/dia VO</div></div>
+            <div><div class="supp-name">Vitamina B12</div><div class="supp-dose">250-500 &#181;g SC/semana &#215; 6 sem</div></div>
+            <span class="supp-essential" style="background:var(--info-dim);color:var(--info);">Introduzir SC</span>
+          </div>
+          <div class="supp-card" style="border-color:rgba(99,102,241,0.3);">
+            <div><div class="supp-name" style="color:var(--accent);">SAMe</div><div class="supp-dose">20 mg/kg/dia (~280 mg) em jejum</div></div>
             <span class="supp-essential" style="background:var(--info-dim);color:var(--info);">Introduzir</span>
+          </div>
+          <div class="supp-card" style="border-color:rgba(217,119,6,0.3);">
+            <div><div class="supp-name" style="color:var(--warning);">Omeprazol</div><div class="supp-dose">1 mg/kg BID noturno &#8212; 14 dias</div></div>
+            <span class="supp-essential" style="background:var(--warning-dim);color:var(--warning);">Trial</span>
+          </div>
+          <div class="supp-card" style="border-color:rgba(217,119,6,0.3);">
+            <div><div class="supp-name" style="color:var(--warning);">Sucralfato</div><div class="supp-dose">500 mg BID &#8212; 30 min antes refei&#231;&#227;o</div></div>
+            <span class="supp-essential" style="background:var(--warning-dim);color:var(--warning);">Trial</span>
           </div>
         </div>
         <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
@@ -925,7 +936,13 @@
           </div>
         </div>
         <div style="margin-top:8px; padding:12px 16px; background:var(--accent-dim); border-radius:var(--radius-sm); font-size:0.8rem; color:var(--accent);">
-          <strong>Omega-3:</strong> Conselho 7/7 recomenda &#243;leo de peixe EPA+DHA. Beneficia 4 condi&#231;&#245;es (DAC + TG + esteatose + policitemia). Ap&#243;s teste de toler&#226;ncia cut&#226;nea.
+          <strong>Omega-3:</strong> Conselho 24/03 (7/7) recomenda &#243;leo de peixe EPA+DHA. Beneficia 4 condi&#231;&#245;es (DAC + TG + esteatose + policitemia). Ap&#243;s teste de toler&#226;ncia cut&#226;nea.
+        </div>
+        <div style="margin-top:8px; padding:12px 16px; background:var(--accent-dim); border-radius:var(--radius-sm); font-size:0.8rem; color:var(--accent);">
+          <strong>SAMe:</strong> Conselho 24/03 &#8212; hepatoprotetor direto para esteatose + GGT 5x elevada. 20 mg/kg/dia em jejum, 60-90 dias (Webster &amp; Cooper, Vet Clin North Am 2009).
+        </div>
+        <div style="margin-top:8px; padding:12px 16px; background:var(--warning-dim); border-radius:var(--radius-sm); font-size:0.8rem; color:var(--warning);">
+          <strong>Omeprazol + Sucralfato:</strong> Conselho 24/03 + Debate 24/03 (7/8 consenso) &#8212; trial emp&#237;rico AGORA para n&#225;usea crônica. Al&#237;vio em 48-72h. Omeprazol BID noturno 14 dias + Sucralfato BID 30 min antes refei&#231;&#227;o.
         </div>
       </div>
 
@@ -992,7 +1009,7 @@
                 <tr>
                   <th>Tema</th>
                   <th>Endoscopet (Nutri)</th>
-                  <th>Dr. Otávio</th>
+                  <th>Dr. Otávio Y.</th>
                   <th>Dados clínicos</th>
                   <th>Status</th>
                 </tr>
@@ -1016,15 +1033,15 @@
                   <td>Glutamina como essencial</td>
                   <td>"Sem evid&#234;ncia para cachorro" (16 e 20/03)</td>
                   <td>&#8212;</td>
-                  <td>Risco-benef&#237;cio favorece manter (conselho 20/03)</td>
+                  <td>Risco-benef&#237;cio favorece manter (conselho 24/03 + Tian, Animal Nutr 2023)</td>
                   <td class="conflict">Parcial</td>
                 </tr>
-                <tr style="background:var(--warning-dim);">
+                <tr style="background:var(--success-dim);">
                   <td><strong>Alergias frango/boi</strong></td>
-                  <td>"Super al&#233;rgico" (20/03) &#8212; metodologia n&#227;o informada</td>
+                  <td>"Super al&#233;rgico" &#10003; confirmado</td>
                   <td>&#8212;</td>
-                  <td>IgE sorol&#243;gico tem 40-60% falsos positivos (Mueller 2016)</td>
-                  <td class="conflict">A esclarecer</td>
+                  <td>Frango: provoca&#231;&#227;o acidental. Boi: elimina&#231;&#227;o. Ambos padr&#227;o-ouro (Mueller 2017)</td>
+                  <td class="consensus">Confirmado</td>
                 </tr>
                 <tr>
                   <td>Corticoide para pele (curto prazo)</td>
@@ -1045,11 +1062,10 @@
           <div class="rec-item p-urgente" style="background:var(--accent-dim);border-color:rgba(99,102,241,0.2);">
             <div class="rec-dot urgente" style="background:var(--accent);"></div>
             <div>
-              <div class="rec-text" style="color:var(--accent);font-weight:600;">PERGUNTAR &#224; Dra. Fernanda (conselho 20/03):</div>
+              <div class="rec-text" style="color:var(--accent);font-weight:600;">PERGUNTAR &#224; Dra. Fernanda:</div>
               <div class="rec-source" style="color:var(--text-secondary);font-size:0.8rem;line-height:1.6;">
-                1. "Como voc&#234; concluiu que o Wally &#233; super al&#233;rgico a frango e boi? Foi teste de sangue ou observa&#231;&#227;o cl&#237;nica?"<br>
-                2. "Por que &#243;leo de soja e n&#227;o omega-3 de &#243;leo de peixe nesta fase?"<br>
-                <em>Essas respostas resolvem ~80% das d&#250;vidas do debate.</em>
+                "Por que &#243;leo de soja e n&#227;o omega-3 de &#243;leo de peixe nesta fase?"<br>
+                <em style="color:var(--success);">&#10003; Alergias frango/boi: RESOLVIDO &#8212; confirmadas por provoca&#231;&#227;o acidental + elimina&#231;&#227;o (padr&#227;o-ouro).</em>
               </div>
             </div>
           </div>
@@ -1082,7 +1098,7 @@
   <!-- ===== FOOTER ===== -->
   <footer class="footer">
     <div class="container">
-      &#218;ltima atualiza&#231;&#227;o: 20/03/2026 (Debate Estruturado 6 especialistas + Conselho Cl&#237;nico 7 especialistas) &nbsp;&#183;&nbsp; Dashboard gerado com Claude Code
+      &#218;ltima atualiza&#231;&#227;o: 24/03/2026 (Debate Estruturado 8 agentes + Conselho Cl&#237;nico 7 especialistas) &nbsp;&#183;&nbsp; Dashboard gerado com Claude Code
     </div>
   </footer>
 
@@ -1093,29 +1109,29 @@
 
     const MARKERS = {
       eritrograma: {
-        eritrocitos: { name: 'Eritrócitos', unit: 'M/\u00B5L', refMin: 5.5, refMax: 8.5, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [6.3, 10.48, 11.40, 9.93], trend: '\u2191\u2191 cr\u00F4nico desde 2024' },
-        hemoglobina: { name: 'Hemoglobina', unit: 'g/dL', refMin: 12, refMax: 18, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [12.3, 19.50, 20.2, 19.5], trend: '\u2191\u2191 cr\u00F4nico' },
-        hematocrito: { name: 'Hemat\u00F3crito', unit: '%', refMin: 37, refMax: 55, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [40, 56.10, 60, 55.6], trend: '\u2191\u2191 cr\u00F4nico' },
-        vcm: { name: 'VCM', unit: 'fL', refMin: 60, refMax: 77, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [63.5, 53.53, 65, 56.0], trend: '\u2195 Shiba normal ~61fL (Giger 1998) \u2014 microcitose parcialmente racial' },
-        hcm: { name: 'HCM', unit: 'pg', refMin: 19.5, refMax: 24.5, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [19.5, 18.60, 20, 19.6], trend: '\u2195 vari\u00E1vel' },
-        chcm: { name: 'CHCM', unit: 'g/dL', refMin: 31, refMax: 37, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [30.8, 34.75, 30, 35.1], trend: '\u2192 est\u00E1vel' },
-        rdw: { name: 'RDW', unit: '%', refMin: 12, refMax: 15, dates: ['Jan/2024','Ago/2024','Dez/2025'], values: [18.40, 15.4, 18.6], trend: '\u2195 vari\u00E1vel' }
+        eritrocitos: { name: 'Eritr\u00F3citos (range Shiba)', unit: 'M/\u00B5L', refMin: 7.0, refMax: 11.0, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [6.3, 10.48, 11.40, 9.93], trend: '\u2192 Normal para Shiba (hem\u00E1cias menores = mais numerosas)' },
+        hemoglobina: { name: 'Hemoglobina (range Shiba)', unit: 'g/dL', refMin: 13.0, refMax: 20.0, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [12.3, 19.50, 20.2, 19.5], trend: '\u2192 Normal para Shiba' },
+        hematocrito: { name: 'Hemat\u00F3crito (range Shiba)', unit: '%', refMin: 39, refMax: 58, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [40, 56.10, 60, 55.6], trend: '\u2192 Levemente acima em Ago/2024 (60%), atual normal (55.6%)' },
+        vcm: { name: 'VCM (range Shiba)', unit: 'fL', refMin: 55, refMax: 66, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [63.5, 53.53, 65, 56.0], trend: '\u2192 Normal \u2014 Shibas t\u00EAm hem\u00E1cias menores (Gookin 1998)' },
+        hcm: { name: 'HCM (range Shiba)', unit: 'pg', refMin: 17.0, refMax: 22.0, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [19.5, 18.60, 20, 19.6], trend: '\u2192 Normal para Shiba (Aniolek 2017)' },
+        chcm: { name: 'CHCM (range Shiba)', unit: 'g/dL', refMin: 30.0, refMax: 34.0, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [30.8, 34.75, 30, 35.1], trend: '\u2192 Est\u00E1vel, levemente acima em alguns pontos' },
+        rdw: { name: 'RDW (range Shiba)', unit: '%', refMin: 12, refMax: 17, dates: ['Jan/2024','Ago/2024','Dez/2025'], values: [18.40, 15.4, 18.6], trend: '\u2191 Levemente acima (60% dos Shibas saud\u00E1veis t\u00EAm RDW elevado \u2014 Aniolek 2017)' }
       },
       leucograma: {
         leucocitos: { name: 'Leuc\u00F3citos', unit: 'mil/\u00B5L', refMin: 5.5, refMax: 16.9, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [6.9, 8.22, 7.93, 10.3], trend: '\u2192 est\u00E1vel' },
         eosinofilos: { name: 'Eosin\u00F3filos', unit: '/\u00B5L', refMin: 100, refMax: 1400, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [0, 247, 468, 0], trend: '\u2195 zerados com DAC ativa' },
         linfocitos: { name: 'Linf\u00F3citos', unit: '/\u00B5L', refMin: 1000, refMax: 4800, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [2070, 2302, 1776, 2060], trend: '\u2192 est\u00E1vel' },
         monocitos: { name: 'Mon\u00F3citos', unit: '/\u00B5L', refMin: 150, refMax: 2000, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [414, 329, 222, 824], trend: '\u2192 est\u00E1vel' },
-        plaquetas: { name: 'Plaquetas', unit: 'mil/\u00B5L', refMin: 175, refMax: 500, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [260, 289, 567, 166], trend: '\u2195 567\u2192166 queda brusca' }
+        plaquetas: { name: 'Plaquetas (range Shiba)', unit: 'mil/\u00B5L', refMin: 110, refMax: 300, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [260, 289, 567, 166], trend: '\u2195 166 mil com agregados = prov\u00E1vel pseudo (EDTA). Shibas t\u00EAm plaquetas menores (Gookin 1998)' }
       },
       bioquimica: {
-        alt: { name: 'ALT', unit: 'U/L', refMin: 10, refMax: 125, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [17, 30, 23, 22], trend: '\u2192 est\u00E1vel, normal' },
+        alt: { name: 'ALT (range ajustado)', unit: 'U/L', refMin: 10, refMax: 100, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [17, 30, 23, 22], trend: '\u2192 Normal. ALT normal N\u00C3O descarta esteatose (GGT sobe antes)' },
         fa: { name: 'Fosfatase Alcalina', unit: 'U/L', refMin: 23, refMax: 212, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [200, 23.6, 23, 41], trend: '\u2193 normalizou (FA filhote)' },
         ureia: { name: 'Ureia', unit: 'mg/dL', refMin: 7, refMax: 27, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [29, 29.4, 38, 43], trend: '\u2191 subindo' },
-        creatinina: { name: 'Creatinina', unit: 'mg/dL', refMin: 0.5, refMax: 1.8, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [0.8, 1.41, 1.2, 1.10], trend: '\u2192 est\u00E1vel' },
+        creatinina: { name: 'Creatinina (range ajustado)', unit: 'mg/dL', refMin: 0.5, refMax: 1.4, dates: ['Mai/2019','Jan/2024','Ago/2024','Dez/2025'], values: [0.8, 1.41, 1.2, 1.10], trend: '\u2192 Jan/2024 no limite (1.41). SDMA preferido para obeso castrado (Hall 2015)' },
         albumina: { name: 'Albumina', unit: 'g/dL', refMin: 2.3, refMax: 4.0, dates: ['Ago/2024','Jun/2025','Dez/2025'], values: [3.6, 3.77, 4.2], trend: '\u2191 subindo' },
-        triglicerideos: { name: 'Triglicer\u00EDdeos', unit: 'mg/dL', refMin: 50, refMax: 150, dates: ['Ago/2024','Dez/2025'], values: [127, 250], trend: '\u2191\u2191 dobrou em 16 meses' },
-        colesterol: { name: 'Colesterol', unit: 'mg/dL', refMin: 110, refMax: 320, dates: ['Ago/2024','Dez/2025'], values: [184, 144], trend: '\u2192 est\u00E1vel' },
+        triglicerideos: { name: 'Triglicer\u00EDdeos (range Shiba)', unit: 'mg/dL', refMin: 50, refMax: 120, dates: ['Ago/2024','Dez/2025'], values: [127, 250], trend: '\u2191\u2191 250 = 3x o esperado para Shiba (~85 mg/dL, Usui 2014)' },
+        colesterol: { name: 'Colesterol (range Shiba)', unit: 'mg/dL', refMin: 110, refMax: 230, dates: ['Ago/2024','Dez/2025'], values: [184, 144], trend: '\u2192 Dentro do normal para Shiba' },
         glicose: { name: 'Glicose', unit: 'mg/dL', refMin: 74, refMax: 143, dates: ['Ago/2024','Dez/2025'], values: [64, 88], trend: '\u2191 normalizou' },
         ferro: { name: 'Ferro', unit: '\u00B5g/dL', refMin: 84, refMax: 223, dates: ['Ago/2024'], values: [90], trend: 'Lim\u00EDtrofe baixo' },
         calcio: { name: 'C\u00E1lcio Total', unit: 'mg/dL', refMin: 8.0, refMax: 12.0, dates: ['Ago/2024','Jun/2025','Dez/2025'], values: [10.4, 10.0, 10.7], trend: '\u2192 est\u00E1vel' }
@@ -1129,191 +1145,328 @@
 
     const CONDITIONS = [
       {
-        id: 'policitemia',
-        name: 'Policitemia Cr\u00F4nica Absoluta',
-        status: 'ativa',
-        severity: 'alta',
-        category: 'Hematol\u00F3gica',
-        firstDetected: 'Jan/2024',
-        trend: '\u2191 Cr\u00EDtica \u2014 flebotomia se Ht >55%',
-        trendClass: 'danger',
-        description: 'Ht 56\u219260\u219255.6% em 2 anos. Eco contraste espl\u00EAnico = hiperviscosidade. VCM 56 fL parcialmente racial (Shiba ~61 fL, Giger 1998). Debate: EPO s\u00E9rica divide PV vs. secund\u00E1ria. Plaquetas 166 mil = prov\u00E1vel pseudo (EDTA).',
-        markers: ['eritrocitos','hemoglobina','hematocrito','vcm'],
-        markerCategory: 'eritrograma',
-        source: 'Hemograma \u2014 detectado Jan/2024. Debate 20/03: 6 especialistas, 3 rounds, 25 fontes.',
-        analysis: 'DEBATE 20/03 (6/6 consenso): Policitemia absoluta cr\u00F4nica com risco tromb\u00F3tico real \u2014 eco contraste espl\u00EAnico documenta hiperviscosidade. ACHADO CR\u00CDTICO: microcitose parcialmente racial (Shibas VCM ~61 fL, Giger et al. 1998 T1) \u2014 nunca reconhecido em avalia\u00E7\u00F5es pr\u00E9vias, pode ter desviado investiga\u00E7\u00E3o por 2 anos. Hipotireoidismo N\u00C3O explica policitemia (causa anemia em 30-40% dos c\u00E3es). Duas hip\u00F3teses: PV (EPO baixa, JAK2 \u2014 Beurlet 2011 T1) ou Cushing subcl\u00EDnico (EPO alta). FA normal (41 U/L) enfraquece Cushing cl\u00EDnico. Plaquetas 166 mil com agregados = pseudotrombocitopenia por EDTA \u2014 hemograma citrato resolve.',
-        recommendations: ['FLEBOTOMIA TERAP\u00CAUTICA se Ht >55% (15-20 mL/kg + cristaloide IV) \u2014 ANTES de diagn\u00F3stico', 'EPO s\u00E9rica URGENTE \u2014 divide PV (baixa) vs. secund\u00E1ria (alta)', 'Hemograma em tubo de CITRATO \u2014 resolve plaquetas reais', 'LDDS (dexametasona baixa dose) \u2014 melhor que cortisol basal para Cushing c\u00EDclico', 'Se EPO baixa: teste JAK2 (NC State)', 'Painel de ferro: ferritina, TIBC, sat. transferrina', 'N\u00C3O suplementar ferro (freio natural \u00E0 eritropoiese)', 'N\u00C3O diagnosticar CIVD sem hemograma citrato', 'N\u00C3O interpretar VCM isoladamente \u2014 usar refer\u00EAncia racial Shiba (~61 fL)'],
-        redFlags: ['Hemat\u00F3crito > 55% \u2192 flebotomia (debate: limiar atualizado)', 'Sinais neurol\u00F3gicos (ataxia, convuls\u00E3o) \u2192 emerg\u00EAncia', 'Mucosas congestas + taquipneia \u2192 emerg\u00EAncia']
-      },
-      {
         id: 'dermatite',
         name: 'Dermatite At\u00F3pica Canina',
         status: 'cronica',
         severity: 'moderada',
         category: 'Dermatol\u00F3gica',
+        sourceOrigin: 'Ambos',
         firstDetected: '~2025',
-        trend: '\u2192 Cr\u00F4nica controlada',
+        trend: '\u2192 Cr\u00F4nica confirmada \u2014 controlada com dieta + Allermil',
         trendClass: 'warning',
-        description: 'Les\u00F5es em \u00E1reas t\u00EDpicas (barriga, axilas, inguinal, perianal). Gatilho alimentar confirmado: \u00F3leo de canola. Alergias a frango e boi (info nutr\u00F3loga 20/03 \u2014 metodologia a esclarecer).',
+        description: 'DAC multifocal com crit\u00E9rios de Favrot preenchidos. Les\u00F5es em \u00E1reas t\u00EDpicas (barriga, axilas, inguinal, perianal). Gatilho alimentar confirmado: \u00F3leo de canola. Alergias a frango e boi. Ra\u00E7a predisposta (Shiba Inu).',
         markers: ['eosinofilos'],
         markerCategory: 'leucograma',
-        source: 'Observa\u00E7\u00E3o cl\u00EDnica + predisposi\u00E7\u00E3o racial (Shiba Inu = preval\u00EAncia muito alta de DAC).',
-        analysis: 'Shiba Inu tem preval\u00EAncia muito alta de DAC. DEBATE 20/03: Apoquel (oclacitinib) tem seletividade JAK1/JAK2 de apenas 1.8x (JAVMA 2023 T1, Nederveld 2025 T1). Se PV com muta\u00E7\u00E3o JAK2, intera\u00E7\u00E3o completamente desconhecida \u2014 NENHUM estudo publicado. Eosinopenia absoluta (0) + poss\u00EDvel PV/Cushing = sistema j\u00E1 suprimido. 5/6 especialistas: suspender Apoquel/Cytopoint at\u00E9 EPO + LDDS. Se DAC piorar severamente, Cytopoint (anti-IL-31, mais espec\u00EDfico) prefer\u00EDvel sobre Apoquel (inibidor JAK).',
-        recommendations: ['SUSPENDER Apoquel/Cytopoint at\u00E9 resultados de EPO + LDDS (debate 5/6)', 'Se PV descartada: Apoquel pode ser seguro (debate)', 'Se PV confirmada: Cytopoint prefer\u00EDvel (anti-IL-31, n\u00E3o interage com JAK2)', 'NUNCA reintroduzir \u00F3leo de canola', 'EVITAR \u00F3leo de soja (risco al\u00E9rgico 15-25%)', 'Omega-3 de \u00F3leo de PEIXE ultrapurificado', 'Esclarecer metodologia das alergias a frango/boi com nutr\u00F3loga', 'Manter Allermil semanal', 'Considerar teste al\u00E9rgico intrad\u00E9rmico', 'Descartar Cushing antes de imunossupressor'],
+        source: 'Observa\u00E7\u00E3o cl\u00EDnica + predisposi\u00E7\u00E3o racial. Conselho 24/03 (G3\u00D7P5=15). Debate 24/03: 8 agentes, ranking #4 CONFIRMADA.',
+        analysis: 'Debate 24/03 (8 agentes, ranking #4 CONFIRMADA): DAC com crit\u00E9rios de Favrot preenchidos em ra\u00E7a com preval\u00EAncia muito alta (Hillier 2001, Favrot 2010 T1). Oclacitinib (Apoquel) \u00E9 inibidor JAK1 (Gonzales, Vet Dermatol 2016 T1). Eosin\u00F3filos zerados como red flag para cortisol \u2014 c\u00E3o com alergia ativa deveria ter eosin\u00F3filos elevados. Eosinopenia absoluta (0) + poss\u00EDvel Cushing = sistema j\u00E1 suprimido. 7/8 agentes: suspender Apoquel/Cytopoint at\u00E9 EPO + LDDS. Se DAC piorar severamente, Cytopoint (anti-IL-31, mais espec\u00EDfico) prefer\u00EDvel sobre Apoquel. T4L como co-fator dermatol\u00F3gico \u2014 levotiroxina pode melhorar DAC se hipotireoidismo confirmado (Dixon, Vet Rec 1999 T1).',
+        recommendations: ['SUSPENDER Apoquel/Cytopoint at\u00E9 resultados de EPO + LDDS (7/8 consenso)', 'Se PV descartada: Apoquel pode ser seguro', 'Se PV confirmada: Cytopoint prefer\u00EDvel (anti-IL-31, n\u00E3o interage com JAK2)', 'NUNCA reintroduzir \u00F3leo de canola', 'EVITAR \u00F3leo de soja (risco al\u00E9rgico 15-25%)', 'Omega-3 de \u00F3leo de PEIXE ultrapurificado', 'Frango + boi confirmados (provoca\u00E7\u00E3o + elimina\u00E7\u00E3o)', 'Manter Allermil semanal', 'Considerar teste al\u00E9rgico intrad\u00E9rmico', 'Descartar Cushing antes de imunossupressor'],
         redFlags: ['Pioderma profundo \u2192 antibi\u00F3tico + citologia urgente', 'Otite bilateral recorrente \u2192 cultura', 'Les\u00F5es proliferativas ou ulceradas \u2192 bi\u00F3psia']
       },
       {
         id: 'esteatose',
-        name: 'Esteatose Hep\u00E1tica',
-        status: 'nova',
-        severity: 'moderada',
+        name: 'Esteatose Hep\u00E1tica + GGT 5x',
+        status: 'ativa',
+        severity: 'alta',
         category: 'Hep\u00E1tica',
+        sourceOrigin: 'Ambos',
         firstDetected: 'Dez/2025',
-        trend: '\u2191 Detectada recentemente',
+        trend: '\u2191 4 US normais \u2192 esteatose s\u00FAbita com peso est\u00E1vel = fator acelerante',
         trendClass: 'danger',
-        description: 'Eco hep\u00E1tico sutil aumentado no ultrassom (Dez/2025). Correla\u00E7\u00E3o com triglicer\u00EDdeos 2x o limite.',
+        description: 'Esteatose nova em Dez/2025 ap\u00F3s 4 US normais, com peso est\u00E1vel \u2014 indica fator acelerante. GGT 5x o limite superior. Correla\u00E7\u00E3o com TG 250 mg/dL e suspeita de hipotireoidismo.',
         markers: ['triglicerideos','alt','fa'],
         markerCategory: 'bioquimica',
-        source: 'Ultrassom abdominal (Dez/2025, Provet/Munhoz). F\u00EDgado normal em todos os US anteriores.',
-        analysis: 'DEBATE 20/03: Esteatose \u00E9 multifatorial \u2014 hiperviscosidade (PV) + hipotireoidismo + dieta. ALT/AST normais N\u00C3O significam f\u00EDgado saud\u00E1vel \u2014 na esteatose canina, transaminases permanecem normais at\u00E9 est\u00E1gio avan\u00E7ado (Center, Ettinger & Feldman T1). Hiperviscosidade cr\u00F4nica pode comprometer microvasculariza\u00E7\u00E3o hep\u00E1tica. Interven\u00E7\u00E3o diet\u00E9tica (baixa gordura + omega-3) \u00E9 risco zero, benef\u00EDcio certo \u2014 6/6 consenso. Come\u00E7ar imediatamente sem esperar resultados.',
-        recommendations: ['Dieta baixa gordura + omega-3 peixe IMEDIATO (debate 6/6)', 'Monitorar com US hep\u00E1tico em 3-6 meses', 'Tratar hipotireoidismo se confirmado (resolve dislipidemia)', 'Considerar SAMe (18-20 mg/kg/dia)', 'Reduzir jejum noturno (arroz japon\u00EAs)'],
+        source: 'US abdominal (Dez/2025, Provet/Munhoz). Conselho 24/03 (G3\u00D7P5=15). Debate 24/03: 8 agentes, ranking #5 MODERADA-ALTA.',
+        analysis: 'Debate 24/03 (8 agentes, ranking #5 MODERADA-ALTA): Timing da esteatose \u00E9 cr\u00EDtico \u2014 4 US normais seguidas de esteatose em Dez/2025 com peso est\u00E1vel = fator acelerante (Belotta, JVIM 2017 T1). GGT 5x o limite superior documenta hepatopatia lip\u00EDdica ativa. ALT/AST normais N\u00C3O garantem f\u00EDgado saud\u00E1vel \u2014 na esteatose canina, transaminases sobem tardiamente. Faz parte da s\u00EDndrome metab\u00F3lica com RI \u2014 TG 250, BCS 7/9. SAMe como hepatoprotetor direto (Webster & Cooper, Vet Clin North Am 2009 T1). Interven\u00E7\u00E3o diet\u00E9tica (baixa gordura + omega-3) \u00E9 risco zero, benef\u00EDcio certo \u2014 8/8 consenso.',
+        recommendations: ['Dieta baixa gordura + omega-3 peixe IMEDIATO (8/8 consenso)', 'Monitorar com US hep\u00E1tico em 3-6 meses', 'Tratar hipotireoidismo se confirmado (resolve dislipidemia)', 'SAMe 20 mg/kg/dia em jejum (hepatoprotetor direto)', 'Reduzir jejum noturno (arroz japon\u00EAs)'],
         redFlags: ['ALT ou AST > 3\u00D7 limite \u2192 hepatite ativa', 'Icter\u00EDcia \u2192 emerg\u00EAncia', 'Ascite ao US \u2192 progress\u00E3o para cirrose']
       },
       {
         id: 'hipertrigliceridemia',
-        name: 'Hipertrigliceridemia',
+        name: 'Hipertrigliceridemia (250 mg/dL)',
         status: 'ativa',
-        severity: 'moderada',
+        severity: 'alta',
         category: 'Metab\u00F3lica',
+        sourceOrigin: 'Ambos',
         firstDetected: 'Dez/2025',
-        trend: '\u2191 Piorando',
+        trend: '\u2191 Dobrou em 16 meses \u2014 componente da s\u00EDndrome metab\u00F3lica',
         trendClass: 'danger',
-        description: 'Triglicer\u00EDdeos dobraram em 16 meses: 127 \u2192 250 mg/dL. Associada a esteatose e suspeita de hipotireoidismo.',
+        description: 'TG dobraram em 16 meses: 127 \u2192 250 mg/dL. Componente central da s\u00EDndrome metab\u00F3lica com RI. Associada a esteatose, GGT 5x e BCS 7/9.',
         markers: ['triglicerideos','colesterol'],
         markerCategory: 'bioquimica',
-        source: 'Perfil lip\u00EDdico \u2014 Triglicer\u00EDdeos 127 mg/dL (Ago/2024) \u2192 250 mg/dL (Dez/2025).',
-        analysis: 'Triglicer\u00EDdeos normais em Ago/2024 (127), saltaram para 250 em Dez/2025 (2\u00D7 limite). O aumento r\u00E1pido associado a esteatose hep\u00E1tica nova e peso resistente \u00E0 dieta sugere dislipidemia secund\u00E1ria a hipotireoidismo. Dra. Fernanda solicitou repeti\u00E7\u00E3o.',
-        recommendations: ['Repetir triglicer\u00EDdeos + colesterol (Dra. Fernanda)', 'Adicionar omega-3 de \u00F3leo de peixe', 'Investigar e tratar hipotireoidismo', 'Manter dieta hipocal\u00F3rica atual'],
+        source: 'Perfil lip\u00EDdico \u2014 TG 127 (Ago/2024) \u2192 250 (Dez/2025). Conselho 24/03 (G4\u00D7P5=20). Debate 24/03: parte do ranking #2 (S\u00EDndrome metab\u00F3lica com RI).',
+        analysis: 'Debate 24/03 (8 agentes, parte do ranking #2 ALTA): TG dobraram com peso est\u00E1vel \u2014 indica dislipidemia secund\u00E1ria, n\u00E3o diet\u00E9tica. Componente central da s\u00EDndrome metab\u00F3lica com resist\u00EAncia insul\u00EDnica (TG 250, esteatose, GGT 5x, BCS 7/9). Hipotireoidismo subcl\u00EDnico (T4L queda 1.40\u21921.03) como principal driver. Investiga\u00E7\u00E3o paralela em coleta \u00FAnica (8/8 consenso). Insulina em jejum + HOMA-IR obrigat\u00F3rios. Dra. Fernanda solicitou repeti\u00E7\u00E3o de TG.',
+        recommendations: ['Repetir triglicer\u00EDdeos + colesterol (Dra. Fernanda)', 'Adicionar omega-3 de \u00F3leo de peixe (8/8 consenso)', 'Investigar e tratar hipotireoidismo (motor da dislipidemia)', 'Insulina em jejum + HOMA-IR', 'Manter dieta baixa gordura'],
         redFlags: ['Triglicer\u00EDdeos > 500 mg/dL \u2192 risco pancreatite', 'Lipemia vis\u00EDvel no soro \u2192 alerta pancreatite']
       },
       {
         id: 'hipotireoidismo',
-        name: 'Hipotireoidismo Subcl\u00EDnico Funcional',
+        name: 'Hipotireoidismo Subcl\u00EDnico',
         status: 'ativa',
-        severity: 'moderada',
+        severity: 'alta',
         category: 'End\u00F3crina',
+        sourceOrigin: 'Ambos',
         firstDetected: 'Jun/2025',
-        trend: '\u2193 T4L caindo \u2014 motor da dislipidemia (debate 5/6)',
+        trend: '\u2193 T4L queda 1.40\u21921.03 \u2014 ra\u00E7a predisposta',
         trendClass: 'danger',
-        description: 'T4L 1.40\u21921.03 em 10 meses. Debate: N\u00C3O explica policitemia (causa anemia). \u00C9 o motor da dislipidemia + esteatose. "Quick win" \u2014 levotiroxina barata resolve se confirmado.',
+        description: 'T4L queda 1.40\u21921.03 em 10 meses. Ra\u00E7a predisposta (Shiba Inu). Motor da dislipidemia + esteatose + GGT 5x. N\u00C3O explica eritrocitose (causa anemia).',
         markers: ['t4livre','tsh'],
         markerCategory: 'endocrino',
-        source: 'Painel end\u00F3crino (Ago/2024, Jun/2025). Debate 20/03: 6/6 concordam que \u00E9 condi\u00E7\u00E3o concomitante, n\u00E3o causa da policitemia.',
-        analysis: 'DEBATE 20/03 (5/6 consenso): Hipotireoidismo N\u00C3O explica a policitemia \u2014 causa anemia em 30-40% dos c\u00E3es afetados, o oposto (Merck Vet Manual T1). T4L em decl\u00EDnio (1.40\u21921.03) \u00E9 condi\u00E7\u00E3o CONCOMITANTE. Motor da dislipidemia: triglicer\u00EDdeos dobraram (127\u2192250), esteatose surgiu. "Quick win" do tratamento \u2014 levotiroxina simples e barata, resolve dislipidemia + esteatose + B12 se confirmado. \u00C1rvore: T4L <0.7 + TSH >0.5 = cl\u00EDnico; T4L 0.7-1.0 + TgAA positivo = tireoidite autoimune \u2192 trial levotiroxina; T4L >1.0 = eutire\u00F3ideo.',
-        recommendations: ['T4L di\u00E1lise + TSH + TgAA na mesma sess\u00E3o que EPO e LDDS (coleta \u00FAnica)', 'N\u00C3O iniciar levotiroxina antes de descartar Cushing', 'Se T4L <0.7 + TSH >0.5: levotiroxina', 'Se T4L 0.7-1.0 + TgAA positivo: trial levotiroxina (tireoidite autoimune)', 'Se T4L >1.0: eutire\u00F3ideo \u2014 dislipidemia por outra causa', 'Insulina em jejum (resist\u00EAncia insul\u00EDnica)'],
+        source: 'Painel end\u00F3crino (Ago/2024, Jun/2025). Conselho 24/03 (G4\u00D7P3=12). Debate 24/03: 8 agentes, ranking #1 ALTA.',
+        analysis: 'Debate 24/03 (8 agentes, ranking #1 ALTA): Hipotireoidismo subcl\u00EDnico \u00E9 a condi\u00E7\u00E3o de maior probabilidade + impacto combinado. T4L queda de 1.40\u21921.03 em ra\u00E7a predisposta (Shiba Inu). N\u00C3O explica eritrocitose \u2014 causa anemia em 30-40% dos c\u00E3es afetados (Merck Vet Manual T1). Motor da dislipidemia: TG dobraram (127\u2192250), esteatose surgiu, GGT 5x. Levotiroxina \u00E9 "quick win" \u2014 simples e barata, resolve dislipidemia + esteatose + B12 se confirmado. \u00C1rvore decis\u00F3ria: T4L <0.7 + TSH >0.5 = cl\u00EDnico; T4L 0.7-1.0 + TgAA positivo = tireoidite autoimune \u2192 trial levotiroxina; T4L >1.0 = eutire\u00F3ideo. Coleta \u00FAnica (8/8 consenso): EPO + LDDS + T4L/TSH/TgAA + SDMA.',
+        recommendations: ['T4L di\u00E1lise + TSH + TgAA na mesma sess\u00E3o que EPO e LDDS (coleta \u00FAnica, 8/8 consenso)', 'N\u00C3O iniciar levotiroxina antes de descartar Cushing', 'Se T4L <0.7 + TSH >0.5: levotiroxina', 'Se T4L 0.7-1.0 + TgAA positivo: trial levotiroxina (tireoidite autoimune)', 'Se T4L >1.0: eutire\u00F3ideo \u2014 dislipidemia por outra causa', 'Insulina em jejum (resist\u00EAncia insul\u00EDnica)'],
         redFlags: ['Triglicer\u00EDdeos > 500 (risco pancreatite)', 'Bradicardia + hipotermia \u2192 hipotireoidismo severo', 'Mixedema (edema facial) \u2192 emerg\u00EAncia']
       },
       {
         id: 'alergia-alimentar',
         name: 'Hipersensibilidade Alimentar M\u00FAltipla',
-        status: 'nova',
+        status: 'confirmada',
         severity: 'moderada',
         category: 'Alergol\u00F3gica',
-        firstDetected: 'Mar/2026',
-        trend: '\u2191 Al\u00E9rgenos identificados',
-        trendClass: 'warning',
-        description: 'Alergias a frango, boi e \u00F3leo de canola. Nutr\u00F3loga informou frango/boi em 20/03/2026 \u2014 metodologia a esclarecer.',
+        sourceOrigin: 'Ambos',
+        firstDetected: '~2022',
+        trend: '\u2192 Frango + boi confirmados por provoca\u00E7\u00E3o + elimina\u00E7\u00E3o',
+        trendClass: 'info',
+        description: 'Frango: confirmado por provoca\u00E7\u00E3o acidental ~2022 (coceira severa, se escondia para co\u00E7ar). Boi: confirmado por dieta de elimina\u00E7\u00E3o Dez/2025 (fezes melhoraram). Canola: confirmada por correla\u00E7\u00E3o temporal Jan/2026. Tr\u00EAs al\u00E9rgenos com confirma\u00E7\u00E3o cl\u00EDnica robusta.',
         markers: ['eosinofilos'],
         markerCategory: 'leucograma',
-        source: 'Nutr\u00F3loga Dra. Fernanda Yamamoto Tavares (20/03/2026). \u00D3leo de canola por observa\u00E7\u00E3o cl\u00EDnica direta.',
-        analysis: 'Tr\u00EAs al\u00E9rgenos alimentares: frango, boi (info nutr\u00F3loga) e \u00F3leo de canola (correla\u00E7\u00E3o cl\u00EDnica). Debate cl\u00EDnico (20/03) alertou: testes sorol\u00F3gicos de IgE alimentar t\u00EAm especificidade de 40-60% (Mueller, Vet Dermatol, 2016). Padr\u00E3o-ouro \u00E9 dieta de elimina\u00E7\u00E3o com provoca\u00E7\u00E3o controlada. C\u00E3es com hipersensibilidade m\u00FAltipla t\u00EAm 15-25% de chance de reagir a soja (Muller, BMC Vet Res, 2016). A dieta de elimina\u00E7\u00E3o com su\u00EDno est\u00E1 correta.',
-        recommendations: ['Perguntar \u00E0 nutr\u00F3loga: teste de sangue ou observa\u00E7\u00E3o cl\u00EDnica?', 'Se sorol\u00F3gico: considerar provoca\u00E7\u00E3o controlada para confirmar', 'Manter su\u00EDno como prote\u00EDna principal', 'EVITAR soja (al\u00E9rgeno em 15-25% dos c\u00E3es com hipersensibilidade m\u00FAltipla)', 'Omega-3 de \u00F3leo de peixe PURIFICADO (<1 ppm prote\u00EDna) \u00E9 seguro', 'Considerar teste al\u00E9rgico intrad\u00E9rmico para aeroal\u00E9rgenios'],
-        redFlags: ['Anafilaxia ap\u00F3s novo alimento \u2192 emerg\u00EAncia', 'Pioderma profundo ap\u00F3s contato \u2192 antibio\u0301tico + dermatologista urgente', 'Edema facial/labial \u2192 emerg\u00EAncia']
+        source: 'Nutr\u00F3loga Dra. Fernanda (20/03/2026). Canola por observa\u00E7\u00E3o cl\u00EDnica. Conselho 24/03 (G2\u00D7P3=6).',
+        analysis: 'Atualizado 25/03/2026: Tr\u00EAs al\u00E9rgenos CONFIRMADOS por m\u00E9todos cl\u00EDnicos robustos. Frango: provoca\u00E7\u00E3o acidental ~2022 (AN veio com frango \u2192 coceira severa, se escondia). Boi: dieta de elimina\u00E7\u00E3o Dez/2025 (Dra. Fernanda removeu \u2192 fezes melhoraram). Canola: correla\u00E7\u00E3o temporal Jan/2026. Provoca\u00E7\u00E3o + elimina\u00E7\u00E3o s\u00E3o padr\u00E3o-ouro (Mueller & Olivry, BMC Vet Res 2017 T1). Su\u00EDno \u00E9 a \u00FAnica prote\u00EDna tolerada confirmada. EVITAR soja (Mueller & Olivry 2017 T1).',
+        recommendations: ['NUNCA reintroduzir frango ou boi (al\u00E9rgenos confirmados)', 'Manter su\u00EDno como prote\u00EDna principal (\u00FAnica tolerada confirmada)', 'EVITAR soja (al\u00E9rgeno em 15-25% dos c\u00E3es com hipersensibilidade m\u00FAltipla)', 'Omega-3 de \u00F3leo de peixe PURIFICADO (<1 ppm prote\u00EDna) \u00E9 seguro', 'Considerar teste al\u00E9rgico intrad\u00E9rmico para aeroal\u00E9rgenos'],
+        redFlags: ['Anafilaxia ap\u00F3s novo alimento \u2192 emerg\u00EAncia', 'Pioderma profundo ap\u00F3s contato \u2192 antibi\u00F3tico + dermatologista urgente', 'Edema facial/labial \u2192 emerg\u00EAncia']
       },
       {
         id: 'cushing',
-        name: 'Hiperadrenocorticismo Subcl\u00EDnico (Cushing)',
-        status: 'ativa',
-        severity: 'alta',
+        name: 'Hiperadrenocorticismo (HAC)',
+        status: 'suspeita',
+        severity: 'leve',
         category: 'End\u00F3crina',
+        sourceOrigin: 'Ambos',
         firstDetected: 'Mar/2026',
-        trend: '\u2191 Investigar URGENTE \u2014 LDDS divide caminho (debate 6/6)',
-        trendClass: 'danger',
-        description: 'Debate: Cushing explica mais achados (navalha de Occam), mas FA normal (41 U/L) enfraquece hip\u00F3tese (FA elevada em >90% dos Cushing cl\u00EDnicos). Cushing C\u00CDCLICO pode explicar eosinopenia intermitente (247\u2192468\u21920).',
+        trend: '\u2193 Baixa probabilidade \u2014 FA normal contra-evid\u00EAncia forte',
+        trendClass: 'info',
+        description: 'Probabilidade baixa, mas alto impacto se presente. FA normal (41 U/L) \u00E9 contra-evid\u00EAncia forte (FA elevada em >90% dos Cushing cl\u00EDnicos). Excluir com LDDS. Eosin\u00F3filos zerados como red flag para cortisol.',
         markers: ['eosinofilos'],
         markerCategory: 'leucograma',
-        source: 'Conselho 20/03 + Debate 20/03 (Dr. Tanaka, Dr. Duarte). Cushing c\u00EDclico: secre\u00E7\u00E3o intermitente de cortisol.',
-        analysis: 'DEBATE 20/03: Cushing subcl\u00EDnico como hip\u00F3tese competidora com PV. Vantagem: parcim\u00F4nia (1 diagn\u00F3stico vs. 2+) \u2014 explica eritrocitose + eosinopenia + dislipidemia + esteatose. Desvantagem: FA normal (41 U/L) presente em apenas 5-15% dos Cushing cl\u00EDnicos (Feldman & Nelson T1). Insight: Cushing C\u00CDCLICO pode explicar eosin\u00F3filos vari\u00E1veis (247\u2192468\u21920) e FA normal intermitente. Um \u00FAnico cortisol basal pode ser falso-negativo em fase baixa. LDDS tem maior sensibilidade que cortisol basal isolado para Cushing c\u00EDclico. EPO s\u00E9rica resolve: EPO alta \u2192 Cushing poss\u00EDvel; EPO baixa \u2192 PV mais prov\u00E1vel.',
-        recommendations: ['LDDS (dexametasona baixa dose) \u2014 mais sens\u00EDvel que RCCU para Cushing c\u00EDclico', 'EPO s\u00E9rica na mesma sess\u00E3o (coleta \u00FAnica)', 'Se LDDS n\u00E3o suprime: US adrenal + Trilostano ou cirurgia', 'Se LDDS suprime: Cushing descartado \u2192 investigar PV', 'N\u00C3O iniciar Apoquel/Cytopoint antes do resultado (debate 6/6)', 'N\u00C3O iniciar levotiroxina antes de descartar Cushing', 'N\u00C3O usar cortisol basal isolado \u2014 falso-negativo em Cushing c\u00EDclico'],
+        source: 'Conselho 24/03 (G4\u00D7P1=4). Debate 24/03: 8 agentes, ranking #8 BAIXA (alto impacto se presente).',
+        analysis: 'Debate 24/03 (8 agentes, ranking #8 BAIXA): HAC improv\u00E1vel mas excluir com LDDS (6/8 consenso). FA normal (41 U/L) \u00E9 contra-evid\u00EAncia forte \u2014 presente em apenas 5-15% dos Cushing cl\u00EDnicos (Feldman & Nelson T1). Insight: eosin\u00F3filos zerados como red flag para cortisol (247\u2192468\u21920). Cushing C\u00CDCLICO poderia explicar FA normal intermitente, mas probabilidade global permanece baixa. LDDS tem maior sensibilidade que cortisol basal isolado. EPO s\u00E9rica resolve o diagn\u00F3stico diferencial: EPO alta \u2192 secund\u00E1ria (Cushing poss\u00EDvel); EPO baixa \u2192 PV mais prov\u00E1vel.',
+        recommendations: ['LDDS (dexametasona baixa dose) para excluir (6/8 consenso)', 'EPO s\u00E9rica na mesma sess\u00E3o (coleta \u00FAnica, 8/8 consenso)', 'Se LDDS n\u00E3o suprime: US adrenal + Trilostano ou cirurgia', 'Se LDDS suprime: Cushing descartado \u2192 investigar PV', 'N\u00C3O iniciar Apoquel/Cytopoint antes do resultado (7/8 consenso)', 'N\u00C3O iniciar levotiroxina antes de descartar Cushing', 'N\u00C3O usar cortisol basal isolado \u2014 falso-negativo em Cushing c\u00EDclico'],
         redFlags: ['PU/PD s\u00FAbita (poli\u00FAria/polidipsia) \u2192 Cushing manifesto', 'Alopecia sim\u00E9trica bilateral \u2192 sinal cl\u00E1ssico', 'Abd\u00F4men pendular + fraqueza muscular \u2192 confirma\u00E7\u00E3o cl\u00EDnica']
       },
       {
         id: 'gerd-enteropatia',
-        name: 'GERD / Enteropatia Cr\u00F4nica',
+        name: 'Gastrite Cr\u00F4nica / GERD Biliar',
         status: 'ativa',
-        severity: 'moderada',
+        severity: 'alta',
         category: 'Gastroenterol\u00F3gica',
+        sourceOrigin: 'Ambos',
         firstDetected: 'Jun/2025',
-        trend: '\u2191 9 meses sem diagn\u00F3stico histol\u00F3gico',
+        trend: '\u2191 N\u00E1usea refrat\u00E1ria + B12 baixa \u2014 omeprazol emp\u00EDrico AGORA',
         trendClass: 'danger',
-        description: 'N\u00E1usea matinal cr\u00F4nica refrat\u00E1ria. B12 lim\u00EDtrofe. Apenas arroz japon\u00EAs tolerado \u00E0 noite. Conselho: G3\u00D7P4=12.',
+        description: 'V\u00F4mito biliar / n\u00E1usea cr\u00F4nica refrat\u00E1ria. B12 lim\u00EDtrofe (304). Apenas arroz japon\u00EAs tolerado \u00E0 noite. B12 como ponte para IBD subcl\u00EDnica.',
         markers: ['b12'],
         markerCategory: 'endocrino',
-        source: 'Conselho Cl\u00EDnico 20/03/2026 \u2014 Dra. Luana Castilho (Gastroenterologista).',
-        analysis: 'Enteropatia cr\u00F4nica sem diagn\u00F3stico histopatol\u00F3gico \u00E9 o maior gap. Arroz funciona por tamponamento + baixa estimula\u00E7\u00E3o secret\u00F3ria. B12 lim\u00EDtrofe (304) = m\u00E1 absor\u00E7\u00E3o proximal. T4L baixo pode ser driver de gastroparesia.',
-        recommendations: ['Endoscopia alta + colonoscopia com bi\u00F3psias URGENTE', 'Omeprazol 1 mg/kg SID (prote\u00E7\u00E3o g\u00E1strica imediata)', 'Sucralfato 0.5-1g BID (prote\u00E7\u00E3o mucosa)', 'Arroz japon\u00EAs 30-40g \u00E0s 22-23h como ROTINA', 'B12 250-500 \u00B5g/dia VO ou SC semanal', 'B12 + folato + TLI no painel'],
+        source: 'Conselho 24/03 (G4\u00D7P5=20). Debate 24/03: 8 agentes, ranking #3 ALTA (independente).',
+        analysis: 'Debate 24/03 (8 agentes, ranking #3 ALTA, independente): Gastrite cr\u00F4nica / GERD biliar como condi\u00E7\u00E3o independente da s\u00EDndrome metab\u00F3lica. N\u00E1usea refrat\u00E1ria h\u00E1 9+ meses sem diagn\u00F3stico histol\u00F3gico \u00E9 o maior gap cl\u00EDnico. Arroz funciona por tamponamento + baixa estimula\u00E7\u00E3o secret\u00F3ria. B12 lim\u00EDtrofe (304) como ponte GI-IBD subcl\u00EDnica \u2014 sugere m\u00E1 absor\u00E7\u00E3o proximal. T4L baixo pode ser driver de gastroparesia. Omeprazol emp\u00EDrico AGORA (7/8 consenso) \u2014 al\u00EDvio em 48-72h independente do workup. Investiga\u00E7\u00E3o paralela em coleta \u00FAnica (8/8 consenso).',
+        recommendations: ['Omeprazol 1 mg/kg BID emp\u00EDrico AGORA (7/8 consenso)', 'Endoscopia alta + colonoscopia com bi\u00F3psias URGENTE', 'Sucralfato 0.5-1g BID (prote\u00E7\u00E3o mucosa)', 'Arroz japon\u00EAs 30-40g \u00E0s 22-23h como ROTINA', 'B12 250-500 \u00B5g SC semanal (absor\u00E7\u00E3o oral comprometida)', 'B12 + folato + TLI no painel'],
         redFlags: ['V\u00F4mito com sangue \u2192 \u00FAlcera ativa', 'Perda de peso r\u00E1pida \u2192 m\u00E1 absor\u00E7\u00E3o severa', 'Diarreia profusa + desidrata\u00E7\u00E3o \u2192 emerg\u00EAncia']
       },
       {
         id: 'sindrome-metabolica',
-        name: 'S\u00EDndrome Metab\u00F3lica Canina',
-        status: 'nova',
-        severity: 'moderada',
+        name: 'S\u00EDndrome Metab\u00F3lica com RI (Obesidade Refrat\u00E1ria)',
+        status: 'ativa',
+        severity: 'alta',
         category: 'Metab\u00F3lica',
+        sourceOrigin: 'Ambos',
         firstDetected: 'Mar/2026',
-        trend: '\u2191 4/5 crit\u00E9rios presentes',
+        trend: '\u2191 TG 250 + esteatose + GGT 5x + BCS 7/9',
         trendClass: 'danger',
-        description: 'Sobrepeso + hipertrigliceridemia + esteatose + resist\u00EAncia ao emagrecimento. Conselho: G3\u00D7P4=12.',
+        description: 'S\u00EDndrome metab\u00F3lica com resist\u00EAncia insul\u00EDnica: TG 250, esteatose nova, GGT 5x, BCS 7/9. Obesidade refrat\u00E1ria \u00E0 dieta \u2014 causa end\u00F3crina, n\u00E3o diet\u00E9tica.',
         markers: ['triglicerideos'],
         markerCategory: 'bioquimica',
-        source: 'Conselho Cl\u00EDnico 20/03/2026 \u2014 Dr. Henrique Azevedo (Endocrinologista), Dra. Camila Rezende (Nutricionista).',
-        analysis: 'Quatro de cinco crit\u00E9rios presentes. Resist\u00EAncia ao emagrecimento \u00E9 end\u00F3crina, n\u00E3o diet\u00E9tica \u2014 N\u00C3O restringir calorias abaixo de 335 kcal. DEBATE 20/03 (insight #5): o "ganho de peso" pode N\u00C3O existir. Pesos registrados: 10 kg (Ago/2024, poss\u00EDvel erro), 11.5 kg (Jun/2025, ECG), 14.9 kg (Jun/2025, eco). Se 14.9 kg \u00E9 o peso real e sempre pesou ~14 kg, registros anteriores s\u00E3o erros. Pesagem padronizada essencial antes de usar peso como crit\u00E9rio diagn\u00F3stico.',
-        recommendations: ['N\u00C3O restringir calorias abaixo de 335', 'Tratar eixo endócrino (causa raiz)', 'Omega-3 EPA+DHA 50-100 mg/kg/dia', 'Reduzir jejum (arroz japon\u00EAs noturno)', 'Insulina em jejum (resist\u00EAncia insul\u00EDnica)'],
+        source: 'Conselho 24/03 (G3\u00D7P5=15, obesidade refrat\u00E1ria). Debate 24/03: 8 agentes, ranking #2 ALTA (coexistente com hipotireoidismo).',
+        analysis: 'Debate 24/03 (8 agentes, ranking #2 ALTA, coexistente): S\u00EDndrome metab\u00F3lica com resist\u00EAncia insul\u00EDnica \u2014 TG 250, esteatose, GGT 5x, BCS 7/9. Resist\u00EAncia ao emagrecimento \u00E9 end\u00F3crina, n\u00E3o diet\u00E9tica \u2014 N\u00C3O restringir calorias abaixo de 335 kcal. Castra\u00E7\u00E3o precoce (6 meses) como fator modulador \u2014 sarcopenia e creatinina mascarada. Registros de peso inconsistentes (10\u219211.5\u219214.9 kg) \u2014 pesagem padronizada essencial antes de usar peso como crit\u00E9rio. Insulina em jejum + HOMA-IR obrigat\u00F3rios. Investiga\u00E7\u00E3o paralela em coleta \u00FAnica (8/8 consenso).',
+        recommendations: ['N\u00C3O restringir calorias abaixo de 335', 'Tratar eixo end\u00F3crino (causa raiz)', 'Omega-3 EPA+DHA 50-100 mg/kg/dia (8/8 consenso)', 'Insulina em jejum + HOMA-IR', 'Reduzir jejum (arroz japon\u00EAs noturno)', 'Pesagem padronizada em balan\u00E7a veterin\u00E1ria calibrada'],
         redFlags: ['Triglicer\u00EDdeos > 500 \u2192 risco pancreatite', 'Glicemia > 200 \u2192 diabetes', 'Obesidade m\u00F3rbida > 17 kg \u2192 restri\u00E7\u00E3o urgente']
       },
       {
         id: 'deficiencia-ferro-b12',
-        name: 'S\u00EDndrome de M\u00E1 Absor\u00E7\u00E3o + Ferro/B12',
+        name: 'B12 Baixa + M\u00E1 Absor\u00E7\u00E3o',
         status: 'ativa',
         severity: 'moderada',
         category: 'Nutricional / GI',
+        sourceOrigin: 'Ambos',
         firstDetected: 'Ago/2024',
-        trend: '\u2193 B12 + duodenite + muco = ma absor\u00E7\u00E3o (debate)',
+        trend: '\u2193 B12 304 + duodenite + muco fecal = m\u00E1 absor\u00E7\u00E3o cr\u00F4nica',
         trendClass: 'warning',
-        description: 'Debate: B12 304 + duodenite Jun/2025 + muco fecal Dez/2025 = s\u00EDndrome de m\u00E1 absor\u00E7\u00E3o cr\u00F4nica subdiagnosticada. 3 achados em 3 momentos que ningu\u00E9m conectou.',
+        description: 'B12 304 pg/mL (ter\u00E7o inferior) + duodenite Jun/2025 + muco fecal Dez/2025. Tr\u00EAs achados em momentos distintos sugerem m\u00E1 absor\u00E7\u00E3o cr\u00F4nica. B12 como ponte GI-IBD subcl\u00EDnica.',
         markers: ['ferro','b12'],
         markerCategory: 'bioquimica',
-        source: 'Debate 20/03: insight surpreendente \u2014 tr\u00EAs achados em tr\u00EAs momentos conectados pela primeira vez.',
-        analysis: 'DEBATE 20/03 (insight #4): B12 de 304 pg/mL (ter\u00E7o inferior) + duodenite em Jun/2025 + muco na primeira amostra de fezes em Dez/2025. Tr\u00EAs achados em tr\u00EAs momentos que ningu\u00E9m conectou. M\u00E1 absor\u00E7\u00E3o cr\u00F4nica pode comprometer ferro (explicando parcialmente ferro lim\u00EDtrofe), B12 e vitaminas lipossol\u00FAveis \u2014 incluindo vitamina K (cofator de coagula\u00E7\u00E3o). Em contexto de plaquetas possivelmente baixas, defici\u00EAncia de vitamina K \u00E9 risco real. Ferro lim\u00EDtrofe pode estar agindo como freio natural \u00E0 eritropoiese excessiva \u2014 N\u00C3O suplementar.',
-        recommendations: ['N\u00C3O suplementar ferro (freio natural \u00E0 eritropoiese)', 'B12 250-500 \u00B5g/dia VO ou 250 \u00B5g SC semanal', 'Ferritina + TIBC + sat. transferrina', 'Folato + TLI no painel', 'Considerar avalia\u00E7\u00E3o de vitamina K (risco se m\u00E1 absor\u00E7\u00E3o + plaquetas baixas)', 'Endoscopia com bi\u00F3psias (confirmar enteropatia)'],
+        source: 'Conselho 24/03 (G2\u00D7P4=8). Debate 24/03: B12 como ponte GI-IBD subcl\u00EDnica (insight 8 agentes).',
+        analysis: 'Debate 24/03 (8 agentes): B12 como ponte GI-IBD subcl\u00EDnica. B12 de 304 pg/mL (ter\u00E7o inferior) + duodenite em Jun/2025 + muco na primeira amostra de fezes em Dez/2025. M\u00E1 absor\u00E7\u00E3o cr\u00F4nica pode comprometer ferro, B12 e vitaminas lipossol\u00FAveis \u2014 incluindo vitamina K (cofator de coagula\u00E7\u00E3o). Ferro lim\u00EDtrofe pode estar agindo como freio natural \u00E0 eritropoiese excessiva \u2014 N\u00C3O suplementar. Via SC preferida para B12 (absor\u00E7\u00E3o oral comprometida em GI inflamat\u00F3rio \u2014 Toresson, JVIM 2016 T1).',
+        recommendations: ['N\u00C3O suplementar ferro (freio natural \u00E0 eritropoiese)', 'B12 250-500 \u00B5g SC semanal (absor\u00E7\u00E3o oral comprometida)', 'Ferritina + TIBC + sat. transferrina', 'Folato + TLI no painel', 'Considerar avalia\u00E7\u00E3o de vitamina K (risco se m\u00E1 absor\u00E7\u00E3o + plaquetas baixas)', 'Endoscopia com bi\u00F3psias (confirmar enteropatia)'],
         redFlags: ['B12 < 150 \u2192 anemia megalobl\u00E1stica', 'Ferritina < 30 \u2192 defici\u00EAncia real']
       },
       {
         id: 'lama-biliar',
         name: 'Lama Biliar Persistente (Risco Mucocele)',
         status: 'cronica',
-        severity: 'leve',
+        severity: 'moderada',
         category: 'Hep\u00E1tica',
+        sourceOrigin: 'Conselho',
         firstDetected: 'Jan/2024',
-        trend: '\u2192 Persistente h\u00E1 24 meses',
+        trend: '\u2192 Persistente h\u00E1 24 meses \u2014 Shiba predisposto a mucocele',
         trendClass: 'warning',
-        description: 'Lama biliar em ves\u00EDcula desde jan/2024. Shiba predisposto a mucocele. Conselho: G2\u00D7P3=6.',
+        description: 'Lama biliar em ves\u00EDcula desde jan/2024. Shiba predisposto a mucocele biliar. Persistente por 24 meses com dislipidemia associada.',
         markers: ['triglicerideos'],
         markerCategory: 'bioquimica',
-        source: 'Conselho Cl\u00EDnico 20/03/2026 \u2014 Dr. Marcelo Tavares (Hepatologista).',
-        analysis: 'Lama biliar persistente h\u00E1 24 meses em ra\u00E7a predisposta a mucocele biliar. UDCA indicado imediatamente para dissolu\u00E7\u00E3o + hepatoprote\u00E7\u00E3o. Monitoramento semestral por US com avalia\u00E7\u00E3o de espessura de parede.',
+        source: 'US seriadas 2024-2025. Conselho 24/03 (G2\u00D7P4=8).',
+        analysis: 'Conselho 24/03 (G2\u00D7P4=8): Lama biliar persistente h\u00E1 24 meses em ra\u00E7a predisposta a mucocele biliar. Dislipidemia associada (TG 250) agrava o risco. UDCA indicado imediatamente para dissolu\u00E7\u00E3o + hepatoprote\u00E7\u00E3o. Monitoramento semestral por US com avalia\u00E7\u00E3o de espessura de parede.',
         recommendations: ['UDCA 10-15 mg/kg/dia SID (imediato)', 'US vesicular semestral com espessura de parede', '\u00C1cidos biliares pr\u00E9/p\u00F3s-prandiais', 'SAMe 17-20 mg/kg/dia ap\u00F3s resultado dos \u00E1cidos biliares'],
         redFlags: ['V\u00F4mito + icter\u00EDcia + dor abdominal \u2192 obstru\u00E7\u00E3o biliar', 'Ves\u00EDcula distendida ao US \u2192 mucocele', 'Ruptura de mucocele \u2192 emerg\u00EAncia cir\u00FArgica']
+      },
+      {
+        id: 'ureia-progressiva',
+        name: 'Ureia Progressiva (DRC Precoce?)',
+        status: 'ativa',
+        severity: 'alta',
+        category: 'Renal',
+        sourceOrigin: 'Ambos',
+        firstDetected: 'Mai/2019',
+        trend: '\u2191 Subindo h\u00E1 6 anos (29\u219243) \u2014 SDMA nunca dosado',
+        trendClass: 'danger',
+        description: 'Ureia 29\u219229.4\u219238\u219243 mg/dL em 6 anos. Creatinina pode mascarar DRC por sarcopenia (castra\u00E7\u00E3o precoce aos 6 meses). SDMA nunca dosado \u2014 obrigat\u00F3rio.',
+        markers: ['ureia','creatinina'],
+        markerCategory: 'bioquimica',
+        source: 'Conselho 24/03 (G3\u00D7P4=12). Debate 24/03: 8 agentes, ranking #6 MODERADA. SDMA obrigat\u00F3rio (7/8 consenso).',
+        analysis: 'Debate 24/03 (8 agentes, ranking #6 MODERADA): Progress\u00E3o linear de ureia em 6 anos com creatinina est\u00E1vel. Creatinina pode estar mascarada por sarcopenia \u2014 castra\u00E7\u00E3o precoce (6 meses) reduz massa muscular a longo prazo (insight Dra. Helena). SDMA \u00E9 independente de massa muscular (Hall, JVIM 2015 T1) e resolve a quest\u00E3o com um exame. SDMA obrigat\u00F3rio (7/8 consenso). IRIS 2023 recomenda SDMA como biomarcador prim\u00E1rio. Investiga\u00E7\u00E3o paralela em coleta \u00FAnica (8/8 consenso).',
+        recommendations: ['SDMA s\u00E9rico URGENTE (7/8 consenso, Hall JVIM 2015)', 'Rela\u00E7\u00E3o prote\u00EDna/creatinina urin\u00E1ria (UPC)', 'Urin\u00E1lise completa', 'Se SDMA >18: estadiar IRIS', 'Press\u00E3o arterial (risco renal + eritrocitose)'],
+        redFlags: ['Ureia >80 mg/dL \u2192 DRC avan\u00E7ada', 'SDMA >18 + creatinina est\u00E1vel \u2192 DRC oculta', 'Poli\u00FAria/polidipsia \u2192 progress\u00E3o']
+      },
+      {
+        id: 'esplenomegalia',
+        name: 'Esplenomegalia Intermitente + ECE',
+        status: 'cronica',
+        severity: 'leve',
+        category: 'Hematol\u00F3gica',
+        sourceOrigin: 'Conselho',
+        firstDetected: 'Jun/2025',
+        trend: '\u2195 Intermitente \u2014 eco contraste espl\u00EAnico',
+        trendClass: 'info',
+        description: 'Esplenomegalia em US Jun/2025 e Out/2025 (eco contraste espl\u00EAnico). Normal em Dez/2025. ECE associada a eritrocitose racial.',
+        markers: ['hematocrito'],
+        markerCategory: 'eritrograma',
+        source: 'US seriadas 2025. Conselho 24/03 (G3\u00D7P2=6).',
+        analysis: 'Conselho 24/03 (G3\u00D7P2=6): Eco contraste espl\u00EAnico documenta hiperviscosidade associada \u00E0 eritrocitose. Intermit\u00EAncia reflete varia\u00E7\u00F5es no hemat\u00F3crito e no sequestro espl\u00EAnico. Com eritrocitose reclassificada como 65% racial, esplenomegalia \u00E9 achado secund\u00E1rio.',
+        recommendations: ['Monitorar em US seriadas', 'Correlacionar com hemat\u00F3crito', 'Flebotomia se Ht >55%'],
+        redFlags: ['Esplenomegalia persistente + perda peso \u2192 neoplasia', 'Ruptura espl\u00EAnica \u2192 emerg\u00EAncia']
+      },
+      {
+        id: 't4l-cofator-dermato',
+        name: 'T4L como Co-fator Dermatol\u00F3gico',
+        status: 'suspeita',
+        severity: 'leve',
+        category: 'End\u00F3crina/Dermato',
+        sourceOrigin: 'Conselho',
+        firstDetected: 'Mar/2026',
+        trend: '\u2192 Pendente painel tireoidiano',
+        trendClass: 'warning',
+        description: 'T4L em queda (1.40\u21921.03) pode agravar DAC. Pele seca, rarefa\u00E7\u00E3o de pelos e hiperpigmenta\u00E7\u00E3o s\u00E3o sinais dermatol\u00F3gicos de hipotireoidismo.',
+        markers: ['t4livre'],
+        markerCategory: 'endocrino',
+        source: 'Conselho 24/03 (G2\u00D7P3=6). Dixon et al., Vet Rec 1999.',
+        analysis: 'Conselho 24/03 (G2\u00D7P3=6): Hipotireoidismo causa altera\u00E7\u00F5es cut\u00E2neas em 60-80% dos c\u00E3es afetados (Dixon 1999 T1). T4L queda 1.40\u21921.03 pode estar agravando DAC. Se confirmado, levotiroxina pode melhorar DAC independentemente de Apoquel. Dermatologista deve solicitar T4T + T4L + anti-T4.',
+        recommendations: ['T4T + T4L + anti-T4 na consulta dermatol\u00F3gica', 'Se confirmado: tratar tireoide antes de reavaliar DAC'],
+        redFlags: ['Alopecia sim\u00E9trica bilateral \u2192 hipotireoidismo cl\u00EDnico']
+      },
+      {
+        id: 'linfadenopatia',
+        name: 'Linfadenopatia Intermitente',
+        status: 'cronica',
+        severity: 'leve',
+        category: 'Hematol\u00F3gica',
+        sourceOrigin: 'Conselho',
+        firstDetected: 'Out/2025',
+        trend: '\u2195 Epis\u00F3dica \u2014 vista Out/2025, normal Dez/2025',
+        trendClass: 'info',
+        description: 'Linfonodomegalia il\u00EDaca esquerda em US Out/2025. Resolvida em Dez/2025. Provavelmente reativa.',
+        markers: [],
+        markerCategory: 'eritrograma',
+        source: 'US Gold Lab Vet Out/2025. Conselho 24/03 (G2\u00D7P2=4).',
+        analysis: 'Conselho 24/03 (G2\u00D7P2=4): Epis\u00F3dica e autolimitada. Pode ser reativa \u00E0 eritrocitose ou processo inflamat\u00F3rio (DAC). Monitorar em US de controle.',
+        recommendations: ['Monitorar em US seriadas', 'PAAF se persistente ou progressiva', 'Avaliar se correlaciona com flares de DAC'],
+        redFlags: ['Linfonodomegalia generalizada \u2192 linfoma', 'Progress\u00E3o r\u00E1pida \u2192 PAAF urgente']
+      },
+      {
+        id: 'alergia-anestesico',
+        name: 'Poss\u00EDvel Alergia a Anest\u00E9sico',
+        status: 'suspeita',
+        severity: 'leve',
+        category: 'Alergol\u00F3gica',
+        sourceOrigin: 'Conselho',
+        firstDetected: '2025',
+        trend: '\u2192 Protocolo anest\u00E9sico pendente',
+        trendClass: 'info',
+        description: 'Rea\u00E7\u00E3o al\u00E9rgica ap\u00F3s cirurgia dental em 2025. Protocolo anest\u00E9sico necess\u00E1rio antes de qualquer seda\u00E7\u00E3o futura.',
+        markers: [],
+        markerCategory: 'eritrograma',
+        source: 'Hist\u00F3rico cl\u00EDnico 2025. Conselho 24/03 (G2\u00D7P2=4).',
+        analysis: 'Conselho 24/03 (G2\u00D7P2=4): Antes de qualquer procedimento que exija seda\u00E7\u00E3o (endoscopia), obter protocolo anest\u00E9sico da cirurgia dental para identificar agente causador. Pr\u00E9-medica\u00E7\u00E3o anti-histam\u00EDnica pode ser necess\u00E1ria.',
+        recommendations: ['Obter protocolo anest\u00E9sico da cirurgia dental 2025', 'Identificar agente causador', 'Pr\u00E9-medica\u00E7\u00E3o antes de pr\u00F3ximo procedimento', 'Alertar anestesista em qualquer cirurgia futura'],
+        redFlags: ['Anafilaxia durante seda\u00E7\u00E3o \u2192 emerg\u00EAncia', 'Nova exposi\u00E7\u00E3o sem precau\u00E7\u00E3o \u2192 risco alto']
+      },
+      {
+        id: 'pancreatite-risco',
+        name: 'Pancreatite (Risco por TG Elevado)',
+        status: 'suspeita',
+        severity: 'leve',
+        category: 'Gastroenterol\u00F3gica',
+        sourceOrigin: 'Conselho',
+        firstDetected: 'Mar/2026',
+        trend: '\u2192 Pendente Spec cPL',
+        trendClass: 'info',
+        description: 'Baixa probabilidade atual (p\u00E2ncreas normal em 5 US). TG 250 mg/dL = risco aumentado. Spec cPL pendente.',
+        markers: ['triglicerideos'],
+        markerCategory: 'bioquimica',
+        source: 'Conselho 24/03 (G3\u00D7P1=3). Xenoulis & Steiner, JSAP 2015.',
+        analysis: 'Conselho 24/03 (G3\u00D7P1=3): US seriadas sem altera\u00E7\u00F5es pancre\u00E1ticas \u2014 p\u00E2ncreas normal em 5 exames. Por\u00E9m hipertrigliceridemia (250 mg/dL) \u00E9 fator de risco independente para pancreatite (Xenoulis & Steiner, JSAP 2015 T1). Spec cPL \u00E9 lipase pancre\u00E1tica espec\u00EDfica canina \u2014 o exame definitivo.',
+        recommendations: ['Spec cPL para descartar', 'Manter dieta baixa gordura', 'Omega-3 para reduzir TG'],
+        redFlags: ['TG >500 \u2192 risco alto de pancreatite', 'V\u00F4mito + dor abdominal + anorexia \u2192 emerg\u00EAncia']
+      },
+      {
+        id: 'escape-mitral',
+        name: 'Escape Mitral Discreto (Achado Incidental)',
+        status: 'cronica',
+        severity: 'leve',
+        category: 'Cardiol\u00F3gica',
+        sourceOrigin: 'Conselho',
+        firstDetected: 'Jun/2025',
+        trend: '\u2192 Achado incidental \u2014 sem significado cl\u00EDnico',
+        trendClass: 'info',
+        description: 'Eco Jun/2025 normal. Escape mitral discreto fisiol\u00F3gico. FE 65%. AE/Ao 1.28 (<1.6). Achado incidental.',
+        markers: [],
+        markerCategory: 'eritrograma',
+        source: 'Ecocardiograma VetCardia Jun/2025. Dra. Amanda Faria. Conselho 24/03 (G1\u00D7P5=5).',
+        analysis: 'Conselho 24/03 (G1\u00D7P5=5): Achado incidental sem significado cl\u00EDnico. Eco dentro da normalidade em todos os par\u00E2metros. Monitoramento anual recomendado, especialmente considerando eritrocitose (hiperviscosidade aumenta trabalho card\u00EDaco).',
+        recommendations: ['Eco de controle anual', 'Monitorar press\u00E3o arterial', 'Holter se taquicardia persistir'],
+        redFlags: ['Tosse + intoler\u00E2ncia ao exerc\u00EDcio \u2192 progress\u00E3o valvar', 'AE/Ao >1.6 \u2192 remodelamento card\u00EDaco', 'S\u00EDncope \u2192 emerg\u00EAncia']
+      },
+      {
+        id: 'alergia-canola-controlada',
+        name: 'Alergia a Canola (Controlada)',
+        status: 'cronica',
+        severity: 'leve',
+        category: 'Alergol\u00F3gica',
+        sourceOrigin: 'Conselho',
+        firstDetected: 'Jan/2026',
+        trend: '\u2192 Controlada \u2014 eliminada da dieta',
+        trendClass: 'info',
+        description: 'Correla\u00E7\u00E3o temporal forte: introdu\u00E7\u00E3o de \u00F3leo de canola \u2192 dermatite axilar + perianal. Removido permanentemente da dieta.',
+        markers: [],
+        markerCategory: 'eritrograma',
+        source: 'Observa\u00E7\u00E3o cl\u00EDnica Jan/2026. Conselho 24/03 (G2\u00D7P5=10, controlada).',
+        analysis: 'Conselho 24/03 (G2\u00D7P5=10, controlada): Al\u00E9rgeno confirmado por correla\u00E7\u00E3o temporal direta. Introdu\u00E7\u00E3o causou dermatite em \u00E1reas t\u00EDpicas (axilas + perianal). Elimina\u00E7\u00E3o resolveu as les\u00F5es. Nunca reintroduzir.',
+        recommendations: ['NUNCA reintroduzir \u00F3leo de canola', 'Verificar r\u00F3tulos de ra\u00E7\u00F5es e petiscos', 'Alertar qualquer vet novo sobre esta alergia'],
+        redFlags: ['Reexposi\u00E7\u00E3o acidental \u2192 dermatite recorrente']
       }
     ];
 
@@ -1324,29 +1477,20 @@
         color: 'danger',
         specialists: [
           {
-            specialty: 'Hematologista',
-            who: 'Dra. Camila Thomazini \u2014 HAMA (centrohama.com.br)',
-            why: 'Policitemia absoluta cr\u00F4nica (Ht 55-60%). Debate: flebotomia se Ht >55%, EPO divide PV vs. secund\u00E1ria. Plaquetas provavelmente pseudo (EDTA).',
-            briefing: 'Doutora, meu cachorro Wally \u00E9 um Shiba Inu de 7 anos. Ele tem sangue grosso desde 2024 (hemat\u00F3crito 55-60%). Um debate m\u00E9dico com 6 especialistas concluiu que: (1) parte da microcitose \u00E9 racial \u2014 Shibas t\u00EAm VCM normal de ~61 fL; (2) as plaquetas de 166 mil provavelmente s\u00E3o pseudotrombocitopenia por EDTA (tinham agregados no laudo); (3) precisa de EPO s\u00E9rica pra saber se \u00E9 policitemia vera ou secund\u00E1ria. No ultrassom apareceu eco de contraste espl\u00EAnico, que \u00E9 sinal de hiperviscosidade.',
-            exams: ['EPO s\u00E9rica URGENTE (divide PV vs. secund\u00E1ria)', 'Hemograma em tubo de CITRATO (plaquetas reais)', 'Se plaquetas citrato <170 mil: D-d\u00EDmero + Fibrinog\u00EAnio', 'Se EPO baixa/normal: teste JAK2 (NC State)', 'Ferritina + TIBC + sat. transferrina', 'Flebotomia terap\u00EAutica se Ht >55% (15-20 mL/kg + cristaloide)'],
-            questions: ['O hemat\u00F3crito est\u00E1 acima de 55% h\u00E1 2 anos. Precisa de flebotomia agora?', 'As plaquetas de 166 mil tinham agregados no laudo \u2014 pode ser pseudotrombocitopenia por EDTA?', 'Shiba tem VCM normalmente mais baixo (~61 fL). Parte da microcitose pode ser racial?', 'Se a EPO vier baixa/normal, \u00E9 poss\u00EDvel fazer teste JAK2 pra policitemia vera?'],
-            gap: true
-          },
-          {
             specialty: 'Gastroenterologista',
             who: 'GAP \u2014 buscar especialista para endoscopia digestiva',
-            why: 'N\u00E1usea matinal cr\u00F4nica patol\u00F3gica. 4 tentativas de alimenta\u00E7\u00E3o noturna falharam.',
+            why: 'Gastrite cr\u00F4nica / GERD biliar, ranking #3 ALTA (8 agentes). N\u00E1usea refrat\u00E1ria. Omeprazol emp\u00EDrico AGORA (7/8 consenso).',
             briefing: 'Doutor(a), meu cachorro tem n\u00E1usea toda manh\u00E3 h\u00E1 meses. Ele acorda com \u00E2nsia e \u00E0s vezes sai bile amarela. J\u00E1 tentamos dar comida de noite \u2014 ovo, fil\u00E9, mandioquinha, chuchu \u2014 e todas as vezes deu n\u00E1usea na manh\u00E3 seguinte. A \u00FAnica coisa que funcionou foi arroz japon\u00EAs \u00E0s 22h. Ele est\u00E1 em dieta de elimina\u00E7\u00E3o por alergias alimentares: s\u00F3 come fil\u00E9 mignon su\u00EDno + batata-doce ou mandioquinha + suplementos. A nutr\u00F3loga dele \u00E9 do Endoscopet.',
-            exams: ['Endoscopia digestiva alta + bi\u00F3psias (SEM omeprazol pr\u00E9vio)', 'Avalia\u00E7\u00E3o de gl\u00E2ndulas anais (sacculite nunca descartada)'],
+            exams: ['Endoscopia digestiva alta + bi\u00F3psias < 30 dias (Conselho 24/03)', 'Spec cPL (lipase pancre\u00E1tica espec\u00EDfica \u2014 Conselho 24/03)', '\u00C1cidos biliares pr\u00E9/p\u00F3s-prandiais', 'TLI (fun\u00E7\u00E3o pancre\u00E1tica ex\u00F3crina)', 'Dysbiosis Index (flora intestinal)', 'Avalia\u00E7\u00E3o de gl\u00E2ndulas anais (sacculite nunca descartada)'],
             questions: ['A n\u00E1usea \u00E9 todo dia de manh\u00E3, mesmo quando come \u00E0 noite. O que pode estar causando?', 'Tem como dar algum protetor de est\u00F4mago enquanto esperamos a endoscopia?', 'Ele tamb\u00E9m se co\u00E7a muito no \u00E2nus \u2014 pode ter algum problema nas gl\u00E2ndulas anais?'],
             gap: true
           },
           {
             specialty: 'Endocrinologista \u2014 Cushing + Tireoide',
             who: 'Dra. Raquel Fukumori \u2014 CVAL Alto da Lapa',
-            why: 'CUSHING: debate 6/6 \u2014 LDDS urgente (Cushing c\u00EDclico explic. eosinopenia intermitente). TIREOIDE: T4L caindo, motor da dislipidemia.',
-            briefing: 'Doutora, meu cachorro Shiba de 7 anos tem dois problemas que parecem independentes. (1) Sangue grosso h\u00E1 2 anos (hemat\u00F3crito 55-60%) \u2014 um debate m\u00E9dico com 6 especialistas concluiu que pode ser policitemia vera OU Cushing subcl\u00EDnico. A fosfatase alcalina est\u00E1 normal (41), o que \u00E9 incomum em Cushing, mas pode ser Cushing c\u00EDclico. Os eosin\u00F3filos variaram: 247\u2192468\u21920, compat\u00EDvel com secre\u00E7\u00E3o intermitente de cortisol. (2) T4 livre caiu de 1.40 pra 1.03, triglicer\u00EDdeos dobraram, gordura no f\u00EDgado \u2014 provavelmente hipotireoidismo subcl\u00EDnico. Os especialistas recomendam LDDS (mais sens\u00EDvel que cortisol basal pra Cushing c\u00EDclico) + T4L/TSH/TgAA na mesma coleta.',
-            exams: ['LDDS (dexametasona baixa dose) \u2014 mais sens\u00EDvel para Cushing c\u00EDclico', 'T4L por di\u00E1lise de equil\u00EDbrio', 'TSH canino', 'TgAA (anticorpos antitireoglobulina)', 'EPO s\u00E9rica (na mesma coleta \u2014 divide PV vs. secund\u00E1ria)'],
+            why: 'CUSHING: HAC improv\u00E1vel mas excluir com LDDS (6/8 consenso). TIREOIDE: T4L queda 1.40\u21921.03, ranking #1 no debate (8 agentes), motor da dislipidemia.',
+            briefing: 'Doutora, meu cachorro Shiba de 7 anos tem dois problemas que parecem separados. O primeiro: o sangue dele est\u00E1 muito grosso h\u00E1 2 anos (hemat\u00F3crito entre 55 e 60%). A fosfatase alcalina est\u00E1 normal (41 U/L), ent\u00E3o Cushing cl\u00E1ssico parece menos prov\u00E1vel, mas os eosin\u00F3filos variaram muito nos exames (247, depois 468, depois zero) \u2014 isso pode indicar um Cushing que vai e volta. O segundo: o horm\u00F4nio da tireoide (T4 livre) caiu de 1.40 pra 1.03 em menos de um ano, os triglicer\u00EDdeos dobraram pra 250, e apareceu gordura no f\u00EDgado no ultrassom. Parece que a tireoide est\u00E1 desacelerando. Gostaria de fazer o teste LDDS (que \u00E9 mais sens\u00EDvel pra Cushing que vai e volta) junto com o painel completo da tireoide na mesma coleta.',
+            exams: ['LDDS (dexametasona baixa dose) \u2014 mais sens\u00EDvel para Cushing c\u00EDclico', 'T4L por di\u00E1lise de equil\u00EDbrio', 'TSH canino', 'TgAA (anticorpos antitireoglobulina)', 'EPO s\u00E9rica (na mesma coleta \u2014 divide PV vs. secund\u00E1ria)', 'SDMA s\u00E9rico (fun\u00E7\u00E3o renal independente de massa muscular)', 'Insulina em jejum + HOMA-IR (resist\u00EAncia insul\u00EDnica)'],
             questions: ['Os eosin\u00F3filos variaram muito (247\u2192468\u21920) \u2014 pode ser Cushing c\u00EDclico? Por isso preferimos LDDS ao cortisol basal.', 'A tireoide pode explicar os triglicer\u00EDdeos e a gordura no f\u00EDgado, mas N\u00C3O a policitemia, correto?', 'Se confirmar hipotireoidismo + Cushing, qual tratar primeiro?', 'Podemos coletar LDDS + T4L/TSH/TgAA + EPO na mesma sess\u00E3o?'],
             gap: true
           }
@@ -1360,10 +1504,10 @@
           {
             specialty: 'Nutr\u00F3loga \u2014 Dra. Fernanda Yamamoto',
             who: 'Dra. Fernanda Yamamoto Tavares (CRMV-SP 57.169)',
-            why: '2 d\u00FAvidas pendentes que mudam a conduta do Wally.',
-            briefing: 'Dra. Fernanda, queria entender melhor duas coisas que conversamos. Fiquei pesquisando e queria tirar umas d\u00FAvidas antes de seguir com o tratamento.',
+            why: '1 d\u00FAvida pendente: omega-3 vs \u00F3leo de soja.',
+            briefing: 'Dra. Fernanda, queria entender melhor uma coisa que conversamos. Sobre o \u00F3leo de soja no lugar do omega-3 \u2014 fiquei pesquisando e queria tirar essa d\u00FAvida antes de seguir com o tratamento.',
             exams: ['Repetir triglicer\u00EDdeos + colesterol (j\u00E1 solicitado pela Dra.)', 'Informar que usei \u00F3leo de canola no lugar do \u00F3leo de soja que foi prescrito'],
-            questions: ['Como a senhora concluiu que o Wally \u00E9 super al\u00E9rgico a frango e boi? Foi teste de sangue ou pela observa\u00E7\u00E3o dele?', 'Sobre o \u00F3leo de soja no lugar do omega-3: li que omega-3 de peixe poderia ajudar na pele, no colesterol e na inflama\u00E7\u00E3o do Wally. Tem algum motivo espec\u00EDfico pra n\u00E3o usar?'],
+            questions: ['Sobre o \u00F3leo de soja no lugar do omega-3: li que omega-3 de peixe poderia ajudar na pele, no colesterol e na inflama\u00E7\u00E3o do Wally. Tem algum motivo espec\u00EDfico pra n\u00E3o usar?'],
             gap: false
           },
           {
@@ -1386,8 +1530,8 @@
             specialty: 'Dermatologista \u2014 Dra. Karina Cantagallo',
             who: 'Dra. Karina Louren\u00E7o Cantagallo (CRMV 22558) \u2014 Ortoderm',
             why: 'DAC ativa + alergias m\u00FAltiplas + eosin\u00F3filos zerados.',
-            briefing: 'Dra. Karina, tenho novidades. A nutr\u00F3loga do Wally disse que ele \u00E9 super al\u00E9rgico a frango e boi, al\u00E9m da canola que j\u00E1 sab\u00EDamos. Ele continua na dieta de elimina\u00E7\u00E3o com su\u00EDno. O que me preocupa \u00E9 que fizemos uma avalia\u00E7\u00E3o completa e os eosin\u00F3filos dele est\u00E3o zerados, o que \u00E9 estranho pra quem tem alergia. Me alertaram que pode ser Cushing e que seria melhor descartar isso antes de come\u00E7ar rem\u00E9dio pra alergia.',
-            exams: ['Teste al\u00E9rgico intrad\u00E9rmico (pra saber exatamente ao que ele reage)', 'Provoca\u00E7\u00E3o oral controlada pra confirmar frango e boi'],
+            briefing: 'Dra. Karina, tenho novidades sobre o Wally. A nutr\u00F3loga dele disse que ele \u00E9 muito al\u00E9rgico a frango e boi, al\u00E9m da canola que j\u00E1 sab\u00EDamos (canola causou irrita\u00E7\u00E3o na axila e no \u00E2nus quando usamos). Ele continua na dieta de elimina\u00E7\u00E3o s\u00F3 com su\u00EDno. O que me preocupa \u00E9 que no \u00FAltimo exame de sangue os eosin\u00F3filos dele deram zero \u2014 e ele tem alergia de pele ativa, ent\u00E3o deveria estar alto, n\u00E9? Li que isso pode ser sinal de cortisol alto. Queremos descartar problema na adrenal antes de come\u00E7ar rem\u00E9dio pra alergia.',
+            exams: ['Teste al\u00E9rgico intrad\u00E9rmico (pra saber exatamente ao que ele reage)'],
             questions: ['Esses eosin\u00F3filos zerados com a dermatite dele \u2014 \u00E9 preocupante? Precisa investigar alguma coisa antes de tratar a alergia?', 'Seria bom fazer aquele teste na pele pra saber exatamente o que causa a alergia dele?', 'Posso dar omega-3 de \u00F3leo de peixe pra ajudar na pele? Ou com tantas alergias \u00E9 arriscado?'],
             gap: false
           },
@@ -1395,10 +1539,19 @@
             specialty: 'Cardiologista \u2014 Dra. Amanda Faria',
             who: 'Dra. Amanda Rodrigues de Faria (CRMV 37128) \u2014 VetCardia',
             why: 'Controle card\u00EDaco + risco por policitemia.',
-            briefing: 'Dra. Amanda, estamos investigando v\u00E1rias coisas com o Wally. Ele tem policitemia \u2014 o sangue muito grosso \u2014 e as plaquetas ca\u00EDram bastante. J\u00E1 estamos indo na hematologista. Queremos fazer um eco de controle porque o \u00FAltimo foi em junho de 2025, e tamb\u00E9m saber se a taquicardia que apareceu no eletro era s\u00F3 de estresse.',
+            briefing: 'Dra. Amanda, o Wally tem o sangue muito grosso (hemat\u00F3crito entre 55 e 60% h\u00E1 2 anos) e as plaquetas ca\u00EDram no \u00FAltimo exame. O conselho concluiu que a eritrocitose \u00E9 provavelmente racial (65%). A EPO s\u00E9rica foi inclu\u00EDda na coleta \u00FAnica para confirmar. O \u00FAltimo eco dele foi em junho de 2025 e deu normal, mas com escape mitral discreto. No eletro apareceu taquicardia, que achamos que era de estresse (ele fica muito nervoso em consulta). Quero saber se precisa repetir o eco e se a taquicardia era s\u00F3 de nervosismo mesmo.',
             exams: ['Ecocardiograma de controle (\u00FAltimo: Jun/2025)', 'Holter 24h (confirmar se taquicardia \u00E9 de estresse)', 'Press\u00E3o arterial (risco por policitemia)'],
             questions: ['Precisa repetir o eco? O \u00FAltimo foi em junho do ano passado.', 'A taquicardia no eletro era de estresse, n\u00E9? Precisa fazer Holter pra confirmar?', 'Com o sangue grosso que ele tem, precisa medir a press\u00E3o?'],
             gap: false
+          },
+          {
+            specialty: 'Hematologista \u2014 CONDICIONAL',
+            who: 'Dra. Camila Martos Thomazini (CRMV-SP 23.939) \u2014 Hama Academy',
+            why: 'Eritrocitose racial (65% probabilidade, Conselho G3\u00D7P2=6, Debate #7 benigna). EPO j\u00E1 coletada com Endocrinologista. Consulta SOMENTE se EPO alterada.',
+            briefing: 'Doutora, meu cachorro Wally \u00E9 um Shiba Inu de 7 anos com hemat\u00F3crito entre 55 e 60% h\u00E1 2 anos. O conselho cl\u00EDnico concluiu que h\u00E1 65% de probabilidade de ser eritrocitose racial (Shibas t\u00EAm ranges mais altos). A EPO s\u00E9rica j\u00E1 foi coletada e o resultado foi [INSERIR RESULTADO]. Gostaria de avaliar se precisa de investiga\u00E7\u00E3o adicional.',
+            exams: ['Revisar resultado da EPO s\u00E9rica (j\u00E1 coletada)', 'Se EPO baixa/normal: discutir teste JAK2 (NC State)', 'Se EPO elevada: investigar causa secund\u00E1ria (renal, hip\u00F3xia)', 'Hemograma em tubo de CITRATO se plaquetas n\u00E3o foram reconfirmadas'],
+            questions: ['A EPO veio [RESULTADO] \u2014 o que significa pra eritrocitose dele?', 'Precisa de algum exame adicional ou podemos fechar como racial?'],
+            gap: true
           }
         ]
       }
@@ -1406,32 +1559,35 @@
 
     const RECOMMENDATIONS = {
       medicacoes: {
-        title: 'Medica\u00E7\u00F5es & A\u00E7\u00F5es Imediatas (Conselho + Debate 20/03)',
+        title: 'Medica\u00E7\u00F5es & A\u00E7\u00F5es Imediatas (Conselho + Debate 24/03)',
         items: [
-          { text: 'FLEBOTOMIA TERAP\u00CAUTICA se Ht >55% (15-20 mL/kg + cristaloide IV)', priority: 'critico', source: 'Debate 20/03: 6/6 consenso. Eco contraste espl\u00EAnico = hiperviscosidade documentada.' },
-          { text: 'Coleta sangu\u00EDnea \u00FANICA: EPO + LDDS + T4L/TSH/TgAA + hemograma citrato + lip\u00EDdico jejum 18h + B12 + ferritina + TIBC', priority: 'urgente', source: 'Debate 20/03: 6/6 consenso. 4 exames dividem todos os caminhos diagn\u00F3sticos.' },
-          { text: 'Omeprazol 1 mg/kg SID \u2014 prote\u00E7\u00E3o g\u00E1strica imediata', priority: 'urgente', source: 'Conselho 20/03: Dra. Luana Castilho (Gastro).' },
-          { text: 'UDCA 10-15 mg/kg/dia SID \u2014 hepatoprote\u00E7\u00E3o + dissolu\u00E7\u00E3o lama biliar', priority: 'urgente', source: 'Conselho 20/03: Dr. Marcelo Tavares (Hepato).' },
-          { text: 'Sucralfato 0.5-1g BID \u2014 prote\u00E7\u00E3o mucosa g\u00E1strica', priority: 'urgente', source: 'Conselho 20/03: Dra. Luana Castilho (Gastro).' },
-          { text: 'Carbonato de C\u00E1lcio 50 mg/kg/dia \u2014 GAP CR\u00CDTICO na dieta', priority: 'urgente', source: 'Conselho 20/03: Dra. Camila Rezende (Nutri).' },
-          { text: 'B12 250-500 \u00B5g/dia VO ou 250 \u00B5g SC semanal', priority: 'urgente', source: 'Conselho + Debate: B12 304 + duodenite + muco = s\u00EDndrome m\u00E1 absor\u00E7\u00E3o.' },
-          { text: 'SUSPENDER Apoquel/Cytopoint at\u00E9 EPO + LDDS', priority: 'critico', source: 'Debate 20/03: 5/6 consenso. Eosinopenia + poss\u00EDvel PV = JAK2 intera\u00E7\u00E3o desconhecida (JAVMA 2023).' },
-          { text: 'N\u00C3O iniciar levotiroxina antes de descartar Cushing', priority: 'critico', source: 'Debate 20/03: descartar Cushing primeiro.' },
-          { text: 'N\u00C3O iniciar hidroxiureia sem EPO s\u00E9rica', priority: 'critico', source: 'Debate 20/03: se eritrocitose secund\u00E1ria, tratar causa, n\u00E3o medula.' },
-          { text: 'Pesagem padronizada em balan\u00E7a veterin\u00E1ria calibrada', priority: 'urgente', source: 'Debate 20/03: registros inconsistentes (10\u219211.5\u219214.9 kg). "Ganho de peso" pode n\u00E3o existir.' }
+          { text: 'FLEBOTOMIA TERAP\u00CAUTICA se Ht >55% (15-20 mL/kg + cristaloide IV)', priority: 'critico', source: 'Debate 24/03: 8/8 consenso. Eco contraste espl\u00EAnico = hiperviscosidade documentada.' },
+          { text: 'Coleta sangu\u00EDnea \u00FANICA: EPO + LDDS + T4L/TSH/TgAA + SDMA + hemograma citrato + lip\u00EDdico jejum 18h + B12 + ferritina + TIBC + insulina jejum', priority: 'urgente', source: 'Conselho + Debate 24/03: 8/8 consenso investiga\u00E7\u00E3o paralela. SDMA obrigat\u00F3rio 7/8 (Hall, JVIM 2015). Insulina + HOMA-IR para s\u00EDndrome metab\u00F3lica.' },
+          { text: 'Omeprazol 1 mg/kg BID \u2014 trial emp\u00EDrico AGORA para n\u00E1usea', priority: 'urgente', source: 'Conselho 24/03 + Debate 24/03: 7/8 consenso. Al\u00EDvio em 48-72h independente do workup.' },
+          { text: 'SAMe 20 mg/kg/dia em jejum \u2014 hepatoprotetor direto', priority: 'urgente', source: 'Conselho 24/03: esteatose + GGT 5x. Webster & Cooper, Vet Clin North Am 2009.' },
+          { text: 'UDCA 10-15 mg/kg/dia SID \u2014 hepatoprote\u00E7\u00E3o + dissolu\u00E7\u00E3o lama biliar', priority: 'urgente', source: 'Conselho 24/03: Dr. Marcelo Tavares (Hepato). Shiba predisposto a mucocele.' },
+          { text: 'Sucralfato 500 mg BID \u2014 prote\u00E7\u00E3o mucosa g\u00E1strica', priority: 'urgente', source: 'Conselho 24/03: sin\u00E9rgico com omeprazol. 30 min antes da refei\u00E7\u00E3o.' },
+          { text: 'Carbonato de C\u00E1lcio ~1g/dia na refei\u00E7\u00E3o \u2014 GAP CR\u00CDTICO', priority: 'urgente', source: 'Conselho 24/03: dieta caseira sem osso e sem suplementa\u00E7\u00E3o de c\u00E1lcio.' },
+          { text: 'B12 SC 250-500 \u00B5g/semana \u00D7 6 semanas \u2014 via subcut\u00E2nea preferida', priority: 'urgente', source: 'Conselho 24/03: absor\u00E7\u00E3o oral comprometida em GI inflamat\u00F3rio (Toresson, JVIM 2016).' },
+          { text: 'Spec cPL \u2014 descartar pancreatite subcl\u00EDnica', priority: 'importante', source: 'Conselho 24/03: TG 250 = risco aumentado. Xenoulis & Steiner, JSAP 2015.' },
+          { text: 'Gasometria + ferritina \u2014 complementar eritrocitose', priority: 'importante', source: 'Conselho 24/03: diferenciar componente respirat\u00F3rio. Ferritina normal em Shibas 61-277 ng/mL (Gookin 1998).' },
+          { text: 'SUSPENDER Apoquel/Cytopoint at\u00E9 EPO + LDDS', priority: 'critico', source: 'Debate 24/03: 7/8 consenso. Eosinopenia + poss\u00EDvel Cushing = descartar antes de imunossupressor (Gonzales, Vet Dermatol 2016 T1).' },
+          { text: 'N\u00C3O iniciar levotiroxina antes de descartar Cushing', priority: 'critico', source: 'Debate 24/03: descartar Cushing primeiro.' },
+          { text: 'N\u00C3O iniciar hidroxiureia sem EPO s\u00E9rica', priority: 'critico', source: 'Debate 24/03: se eritrocitose secund\u00E1ria, tratar causa, n\u00E3o medula.' },
+          { text: 'Pesagem padronizada em balan\u00E7a veterin\u00E1ria calibrada', priority: 'urgente', source: 'Debate 24/03: registros inconsistentes (10\u219211.5\u219214.9 kg). "Ganho de peso" pode n\u00E3o existir.' }
         ]
       },
       alimentacao: {
-        title: 'Alimenta\u00E7\u00E3o (Conselho + Debate 20/03)',
+        title: 'Alimenta\u00E7\u00E3o (Conselho + Debate 24/03)',
         items: [
-          { text: 'Dieta BAIXA GORDURA + omega-3 peixe \u2014 come\u00E7ar HOJE, risco zero', priority: 'urgente', source: 'Debate 20/03: 6/6 consenso. Beneficia dislipidemia e esteatose independente de etiologia.' },
-          { text: 'Omega-3 de \u00F3leo de peixe ULTRAPURIFICADO (50-100 mg/kg EPA+DHA/dia)', priority: 'urgente', source: 'Conselho 7/7 + Debate 6/6. Beneficia 4 condi\u00E7\u00F5es.' },
-          { text: 'PROIBIDO: frango e boi \u2014 super al\u00E9rgico', priority: 'critico', source: 'Nutr\u00F3loga Dra. Fernanda (20/03) \u2014 metodologia a esclarecer' },
+          { text: 'Dieta BAIXA GORDURA + omega-3 peixe \u2014 come\u00E7ar HOJE, risco zero', priority: 'urgente', source: 'Debate 24/03: 8/8 consenso. Beneficia dislipidemia e esteatose independente de etiologia.' },
+          { text: 'Omega-3 de \u00F3leo de peixe ULTRAPURIFICADO (50-100 mg/kg EPA+DHA/dia)', priority: 'urgente', source: 'Conselho 24/03 + Debate 24/03: 8/8 consenso. Beneficia 4 condi\u00E7\u00F5es.' },
+          { text: 'PROIBIDO: frango e boi \u2014 al\u00E9rgenos confirmados', priority: 'critico', source: 'Frango: provoca\u00E7\u00E3o acidental ~2022. Boi: elimina\u00E7\u00E3o Dez/2025. Ambos padr\u00E3o-ouro (Mueller & Olivry 2017 T1)' },
           { text: 'PROIBIDO: \u00F3leo de canola \u2014 al\u00E9rgeno confirmado', priority: 'critico', source: 'Desencadeou dermatite axilar + perianal' },
-          { text: 'EVITAR: \u00F3leo de soja \u2014 risco al\u00E9rgico 15-25%', priority: 'importante', source: 'Conselho 20/03 \u2014 Muller, BMC Vet Res, 2016' },
-          { text: 'N\u00C3O restringir calorias abaixo de 335 kcal/dia', priority: 'critico', source: 'Conselho 20/03: resist\u00EAncia ao emagrecimento \u00E9 end\u00F3crina.' },
+          { text: 'EVITAR: \u00F3leo de soja \u2014 risco al\u00E9rgico', priority: 'importante', source: 'Conselho 24/03 \u2014 Mueller & Olivry, BMC Vet Res 2017 T1' },
+          { text: 'N\u00C3O restringir calorias abaixo de 335 kcal/dia', priority: 'critico', source: 'Conselho 24/03: resist\u00EAncia ao emagrecimento \u00E9 end\u00F3crina.' },
           { text: 'N\u00C3O suplementar ferro \u2014 freio natural \u00E0 eritropoiese excessiva', priority: 'critico', source: 'Conselho + Debate: ferro lim\u00EDtrofe protege contra policitemia.' },
-          { text: 'N\u00C3O usar "ganho de peso" como crit\u00E9rio diagn\u00F3stico sem pesagem padronizada', priority: 'importante', source: 'Debate 20/03: pesos 10\u219211.5\u219214.9 kg \u2014 inconsist\u00EAncias entre registros.' },
+          { text: 'N\u00C3O usar "ganho de peso" como crit\u00E9rio diagn\u00F3stico sem pesagem padronizada', priority: 'importante', source: 'Debate 24/03: pesos 10\u219211.5\u219214.9 kg \u2014 inconsist\u00EAncias entre registros.' },
           { text: 'Arroz japon\u00EAs 30-40g \u00E0s 22-23h como tamp\u00E3o g\u00E1strico (ROTINA)', priority: 'importante', source: '\u00DAnica op\u00E7\u00E3o tolerada (17/03).' },
           { text: 'Manter su\u00EDno como prote\u00EDna principal', priority: 'rotina', source: 'Validado pelo conselho + debate' },
           { text: 'Sal light: pode ser reintroduzido (teste 2 semanas)', priority: 'moderado', source: 'Conselho: sem contraindica\u00E7\u00E3o cl\u00EDnica' }
@@ -1440,11 +1596,11 @@
       rotina: {
         title: 'Rotina & Cuidados',
         items: [
-          { text: 'Manter glutamina (prudente manter — evidência limitada mas risco-benefício favorável)', priority: 'importante', source: 'Conselho 20/03: nutróloga correta na ciência, errada na prática para este paciente' },
-          { text: 'NUNCA interromper Fiber Mais + Nutroplus', priority: 'critico', source: 'Interrupção causou crise GI. Glutamina: manter sem interromper.' },
-          { text: 'Manter banho semanal com Allermil (sextas-feiras)', priority: 'rotina', source: 'Protocolo dermatológico' },
-          { text: 'Manter natação 1x/semana', priority: 'rotina', source: 'Exercício de baixo impacto + controle de peso' },
-          { text: 'Simparic mensal — antipulgas/carrapatos', priority: 'rotina', source: 'Protocolo antiparasitário contínuo' }
+          { text: 'Manter glutamina (prudente manter \u2014 evid\u00EAncia limitada mas risco-benef\u00EDcio favor\u00E1vel)', priority: 'importante', source: 'Conselho 24/03: nutr\u00F3loga correta na ci\u00EAncia, errada na pr\u00E1tica para este paciente' },
+          { text: 'NUNCA interromper Fiber Mais + Nutroplus', priority: 'critico', source: 'Interrup\u00E7\u00E3o causou crise GI. Glutamina: manter sem interromper.' },
+          { text: 'Manter banho semanal com Allermil (sextas-feiras)', priority: 'rotina', source: 'Protocolo dermatol\u00F3gico' },
+          { text: 'Manter nata\u00E7\u00E3o 1x/semana', priority: 'rotina', source: 'Exerc\u00EDcio de baixo impacto + controle de peso' },
+          { text: 'Simparic mensal \u2014 antipulgas/carrapatos', priority: 'rotina', source: 'Protocolo antiparasit\u00E1rio cont\u00EDnuo' }
         ]
       }
     };
@@ -1463,15 +1619,15 @@
     };
 
     const VETS = [
+      { name: 'Dr. Ot\u00E1vio Jiro Yamaoka', specialty: 'Cl\u00EDnico Geral', clinic: '', crmv: '', color: '#6366F1' },
       { name: 'Dra. Karina Louren\u00E7o Cantagallo', specialty: 'Dermatologia', clinic: 'Ortoderm', crmv: 'CRMV 22558', color: '#818CF8' },
       { name: 'Dra. Fernanda Yamamoto Tavares', specialty: 'Nutri\u00E7\u00E3o Cl\u00EDnica', clinic: 'Endoscopet', crmv: 'CRMV-SP 57.169', color: '#10B981' },
-      { name: 'Dra. Amanda Rodrigues de Faria', specialty: 'Cardiologia', clinic: 'VetCardia', crmv: 'CRMV 37128', color: '#F59E0B' },
-      { name: 'Dr. Franz Naoki Yoshitoshi', specialty: 'Nutricionista', clinic: 'Endoscopet', crmv: '', color: '#3B82F6' }
+      { name: 'Dra. Camila Martos Thomazini', specialty: 'Hematologia', clinic: 'Hama Academy', crmv: 'CRMV-SP 23.939', color: '#F59E0B' }
     ];
 
     const COMMS = [
       {
-        vet: 'Dr. Ot\u00E1vio Kenji Iryo', date: '11/03/2026',
+        vet: 'Dr. Ot\u00E1vio Jiro Yamaoka', date: '11/03/2026',
         context: 'Mayra enviou fotos da axila e \u00E2nus com eritema.',
         recommendation: 'Dermotrat spray 2x/dia.',
         evals: [
@@ -1495,7 +1651,7 @@
         recommendation: 'N\u00E3o dar omega-3, dar \u00F3leo de soja + sal light. Wally super al\u00E9rgico a frango e boi. Glutamina n\u00E3o funciona (estudos inconclusivos).',
         evals: [
           { flag: '\u274C', text: '\u00D3leo de soja vs omega-3: debate concluiu que omega-3 de peixe \u00E9 superior (beneficia 4 condi\u00E7\u00F5es)' },
-          { flag: '\u26A0\uFE0F', text: 'Alergias frango/boi: info valiosa, mas metodologia n\u00E3o esclarecida (IgE tem 40-60% falsos positivos)' },
+          { flag: '\u2705', text: 'Alergias frango/boi: CONFIRMADAS \u2014 frango por provoca\u00E7\u00E3o acidental ~2022, boi por elimina\u00E7\u00E3o Dez/2025 (padr\u00E3o-ouro)' },
           { flag: '\u26A0\uFE0F', text: 'Glutamina: correta na ci\u00EAncia (evid\u00EAncia limitada), errada na pr\u00E1tica (risco-benef\u00EDcio favorece manter)' },
           { flag: '\u2705', text: 'Sal light: pode ser reintroduzido com seguran\u00E7a (pot\u00E1ssio normal)' }
         ]
@@ -1626,7 +1782,7 @@
         const sv = c.severity === 'alta' ? 'sev-alta' : c.severity === 'moderada' ? 'sev-moderada' : 'sev-leve';
         return '<div class="condition-card ' + sv + '" onclick="openConditionModal(\'' + c.id + '\')">' +
           '<div class="condition-name">' + c.name + '</div>' +
-          '<div class="condition-meta"><span class="badge ' + sc + '">' + c.status + '</span><span class="badge badge-category">' + c.category + '</span></div>' +
+          '<div class="condition-meta"><span class="badge ' + sc + '">' + c.status + '</span><span class="badge badge-category">' + c.category + '</span>' + (c.sourceOrigin ? '<span class="badge badge-source ' + c.sourceOrigin.toLowerCase() + '">' + c.sourceOrigin + '</span>' : '') + '</div>' +
           '<div class="condition-desc">' + c.description + '</div>' +
           '<div class="condition-trend"><span class="arrow" style="color:var(--' + c.trendClass + ')">' + c.trend.charAt(0) + '</span><span>' + c.trend.substring(2) + '</span>&nbsp;\u00B7&nbsp; Desde ' + c.firstDetected + '</div>' +
           '<div class="condition-cta">Ver evid\u00EAncia diagn\u00F3stica</div>' +
@@ -1785,7 +1941,7 @@
         '<div style="margin-top:8px;color:var(--success);font-weight:500;">Conclus\u00E3o: Exame normal</div></div></div>' +
         '<div class="chart-card"><div style="font-size:0.85rem;font-weight:600;margin-bottom:12px;">Radiografia (Ago/2024)</div>' +
         '<div style="font-size:0.8rem;color:var(--text-secondary);line-height:1.8;">' +
-        '<div>Coluna cervicotorácica: <span style="color:var(--success)">Normal</span></div>' +
+        '<div>Coluna cervicot\u00F3racica: <span style="color:var(--success)">Normal</span></div>' +
         '<div>Coluna lombosacra: <span style="color:var(--success)">Normal</span></div>' +
         '<div>Espondilose descartada</div>' +
         '<div style="margin-top:8px;">RX t\u00F3rax+abd\u00F4men (Jan/2024): <span style="color:var(--success)">Normal</span></div></div></div>';
