@@ -195,6 +195,8 @@
     .badge-cronica { background: var(--warning-dim); color: var(--warning); }
     .badge-nova { background: rgba(251,146,60,0.12); color: #FB923C; }
     .badge-suspeita { background: var(--info-dim); color: var(--info); }
+    .badge-confirmada { background: var(--success-dim); color: var(--success); }
+    .pending-data { background: var(--warning-dim); color: var(--warning); padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 0.8em; white-space: nowrap; }
     .badge-category { background: rgba(255,255,255,0.06); color: var(--text-secondary); }
     .badge-source { font-size: 0.6rem; padding: 2px 7px; border-radius: 10px; font-weight: 600; letter-spacing: 0.04em; }
     .badge-source.conselho { background: rgba(99,102,241,0.1); color: var(--accent); border: 1px solid rgba(99,102,241,0.2); }
@@ -699,40 +701,93 @@
       </div>
 
       <!-- COUNCIL BANNER -->
-      <div style="background:linear-gradient(135deg,rgba(99,102,241,0.08),rgba(129,140,248,0.06));border:1px solid rgba(99,102,241,0.2);border-radius:var(--radius);padding:16px 24px;margin-bottom:12px;display:flex;align-items:flex-start;gap:16px;">
+      <div style="background:linear-gradient(135deg,rgba(220,53,69,0.08),rgba(212,134,10,0.06));border:1px solid rgba(220,53,69,0.25);border-radius:var(--radius);padding:16px 24px;margin-bottom:12px;display:flex;align-items:flex-start;gap:16px;">
         <div style="font-size:1.2rem;flex-shrink:0;">&#9878;</div>
         <div>
-          <div style="font-size:0.85rem;font-weight:700;color:var(--accent);margin-bottom:4px;">Conselho Cl&#237;nico Multidisciplinar &#8212; 24/03/2026</div>
+          <div style="font-size:0.85rem;font-weight:700;color:var(--accent);margin-bottom:4px;">Conselho Cl&#237;nico Reanálise &#8212; 16/04/2026 (pós-eventos de abril)</div>
           <div style="font-size:0.78rem;color:var(--text-secondary);line-height:1.5;">
-            7 especialistas. 19 condi&#231;&#245;es avaliadas, 23 a&#231;&#245;es recomendadas.
-            <a href="Reuniao-Conselho/conselho-clinico-2026-03-24.html" style="margin-left:4px;">Ver conselho &#8594;</a>
+            7 especialistas + consultor cardiologia, 5 rounds (safety net forçado), 50 fontes (88% Tier 1). Score: <strong>4.8/10</strong> (↑ de 3.8 em 24/03).
+            <strong>Consensos robustos:</strong> nunca mais Depo-Medrol, cultura esta semana, Cytopoint como imunomodulador, omeprazol+arroz paralelo, painel endócrino 23-30/05.
+            <a href="Reuniao-Conselho/conselho-clinico-2026-04-16.html" style="margin-left:4px;">Ver conselho 16/04 &#8594;</a>
+            &nbsp;·&nbsp;
+            <a href="Reuniao-Conselho/conselho-clinico-2026-03-24.html" style="color:var(--text-secondary);">conselho 24/03 anterior</a>
           </div>
         </div>
       </div>
 
-      <div style="background:var(--danger-dim);border:1px solid rgba(220,38,38,0.2);border-radius:var(--radius-sm);padding:14px 20px;margin-bottom:24px;display:flex;align-items:center;gap:12px;">
+      <div style="background:var(--danger-dim);border:1px solid rgba(220,38,38,0.25);border-radius:var(--radius-sm);padding:14px 20px;margin-bottom:12px;display:flex;align-items:flex-start;gap:12px;">
         <span style="font-size:1.1rem;">&#9888;</span>
         <div style="font-size:0.82rem;color:var(--danger);line-height:1.5;">
-          <strong>Suspeita principal:</strong> A tireoide do Wally pode estar desacelerando &#8212; e isso explicaria v&#225;rios problemas de uma vez: o sobrepeso que n&#227;o cede com dieta, a gordura alta no sangue, a gordura no f&#237;gado e at&#233; a n&#225;usea matinal. Se os exames confirmarem, o tratamento &#233; simples (um comprimido di&#225;rio) e pode melhorar v&#225;rias coisas ao mesmo tempo.
+          <strong>Foco imediato (16/04/2026):</strong> três eventos de abril em paciente já frágil &#8212; (1) sobredosagem de Baytril 21,4 mg/kg/dia × 3 dias; (2) Depo-Medrol aplicado em 11/04 (ação 2-4 semanas, "embarga" diagnóstico endócrino até ~23/05); (3) pioderma bilateral expandindo sem cultura. <strong>Ações desta semana:</strong> conferir bula do Xantinon B12 (xilitol?), cultura + antibiograma na Ortoderm (17-18/04), exames hepáticos + ácidos biliares pré/pós (17/04), iniciar omeprazol 1 mg/kg SID + arroz japonês 30g às 22h, upgrade omega-3 para 1000 mg EPA+DHA/dia.
+        </div>
+      </div>
+
+      <div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:var(--radius-sm);padding:12px 20px;margin-bottom:24px;display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:1.1rem;">&#128269;</span>
+        <div style="font-size:0.8rem;color:var(--text-secondary);line-height:1.5;">
+          <strong>Hipótese endócrina (reavaliada em 16/04):</strong> o T4 baixo pode ser <em>hipotireoidismo subclínico</em> OU <em>NTIS (não-tireoidiano doente)</em> &#8212; síndrome metabólica canina com obesidade + dislipidemia + DAC crônica. O painel de 23-30/05 (pós janela Depo) resolverá. <strong>Não iniciar levotiroxina empiricamente.</strong>
         </div>
       </div>
 
       <div class="stats-row">
         <div class="stat-card warning">
-          <div class="stat-value">18</div>
+          <div class="stat-value" id="kpi-total">—</div>
           <div class="stat-label">Condi&#231;&#245;es em acompanhamento</div>
         </div>
         <div class="stat-card danger">
-          <div class="stat-value">7</div>
+          <div class="stat-value" id="kpi-urgent">—</div>
           <div class="stat-label">Precisam investiga&#231;&#227;o urgente</div>
         </div>
         <div class="stat-card accent">
-          <div class="stat-value">1</div>
+          <div class="stat-value" id="kpi-coleta">1</div>
           <div class="stat-label">Coleta de sangue resolve tudo</div>
         </div>
         <div class="stat-card success">
-          <div class="stat-value">2</div>
+          <div class="stat-value" id="kpi-controlled">—</div>
           <div class="stat-label">Controladas / sem risco</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Ações Esta Semana (16-22/04) &#8212; Conselho 16/04/2026</div>
+        <p class="section-subtitle">9 ações urgentes consolidadas. Ver <a href="Reuniao-Conselho/conselho-clinico-2026-04-16.html" style="color:var(--accent);">relatório completo &#8594;</a></p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;margin-top:12px;">
+          <div style="background:var(--danger-dim);border-left:3px solid var(--danger);padding:12px 16px;border-radius:var(--radius-sm);">
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:4px;">1. Checar bula do Xantinon B12 <span style="color:var(--danger);">HOJE</span></div>
+            <div style="font-size:0.78rem;color:var(--text-secondary);">Se contiver xilitol → suspender imediatamente, trocar por silimarina (Legalon Vet). Risco catastrófico em cães.</div>
+          </div>
+          <div style="background:var(--danger-dim);border-left:3px solid var(--danger);padding:12px 16px;border-radius:var(--radius-sm);">
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:4px;">2. Agendar Ortoderm (Dra. Karina Cantagallo)</div>
+            <div style="font-size:0.78rem;color:var(--text-secondary);">Consulta + cultura + citologia + antibiograma nesta semana (17-18/04).</div>
+          </div>
+          <div style="background:var(--danger-dim);border-left:3px solid var(--danger);padding:12px 16px;border-radius:var(--radius-sm);">
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:4px;">3. Exames hepáticos completos (17/04)</div>
+            <div style="font-size:0.78rem;color:var(--text-secondary);">ALT + AST + FA + GGT + <strong>ácidos biliares pré+pós-prandiais</strong> + albumina + bilirrubina T/D.</div>
+          </div>
+          <div style="background:var(--danger-dim);border-left:3px solid var(--danger);padding:12px 16px;border-radius:var(--radius-sm);">
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:4px;">4. Iniciar omeprazol 1 mg/kg SID (17/04)</div>
+            <div style="font-size:0.78rem;color:var(--text-secondary);">~14 mg 30min antes da refeição das 7h, por 14 dias. Teste terapêutico GERD.</div>
+          </div>
+          <div style="background:var(--danger-dim);border-left:3px solid var(--danger);padding:12px 16px;border-radius:var(--radius-sm);">
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:4px;">5. Arroz japonês 30g às 22h (17/04)</div>
+            <div style="font-size:0.78rem;color:var(--text-secondary);">Reduz jejum 15h→10-12h. Diário de náusea (S/N) na manhã seguinte.</div>
+          </div>
+          <div style="background:var(--danger-dim);border-left:3px solid var(--danger);padding:12px 16px;border-radius:var(--radius-sm);">
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:4px;">6. Upgrade omega-3 (OM3 2 caps/dia)</div>
+            <div style="font-size:0.78rem;color:var(--text-secondary);">1000 mg EPA+DHA/dia (Bauer JAVMA 2011 — dose-alvo 50-75 mg/kg).</div>
+          </div>
+          <div style="background:var(--danger-dim);border-left:3px solid var(--danger);padding:12px 16px;border-radius:var(--radius-sm);">
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:4px;">7. Reavaliar Dr. Otávio (~19/04)</div>
+            <div style="font-size:0.78rem;color:var(--text-secondary);">NÃO retomar Baytril — trocar por antibiograma. NÃO Simparic (fígado não estabilizado).</div>
+          </div>
+          <div style="background:var(--danger-dim);border-left:3px solid var(--danger);padding:12px 16px;border-radius:var(--radius-sm);">
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:4px;">8. Monitoramento Cushing iatrogênico</div>
+            <div style="font-size:0.78rem;color:var(--text-secondary);">Semanal até 09/05: PU/PD, polifagia, distensão abdominal, cicatrização, PA, alopecia tronco.</div>
+          </div>
+          <div style="background:rgba(212,134,10,0.08);border-left:3px solid var(--warning);padding:12px 16px;border-radius:var(--radius-sm);">
+            <div style="font-weight:700;font-size:0.88rem;margin-bottom:4px;">9. Cytopoint 25/04 (imunomodulador DAC)</div>
+            <div style="font-size:0.78rem;color:var(--text-secondary);">~30 mg SC (Ortoderm). Perfil metabólico preservado — substitui corticoide sistêmico.</div>
+          </div>
         </div>
       </div>
 
@@ -775,7 +830,7 @@
       </div>
 
       <div class="section" style="margin-top: 40px;">
-        <div class="collapsible-header" onclick="toggleCollapsible(this)">
+        <div class="collapsible-header" role="button" tabindex="0" onclick="toggleCollapsible(this)">
           <span class="section-title" style="margin:0;">Índice Completo de Exames</span>
           <span class="toggle">&#9660;</span>
         </div>
@@ -1098,7 +1153,7 @@
   <!-- ===== FOOTER ===== -->
   <footer class="footer">
     <div class="container">
-      &#218;ltima atualiza&#231;&#227;o: 24/03/2026 (Debate Estruturado 8 agentes + Conselho Cl&#237;nico 7 especialistas) &nbsp;&#183;&nbsp; Dashboard gerado com Claude Code
+      &#218;ltima atualiza&#231;&#227;o: 16/04/2026 (Conselho Cl&#237;nico Reanálise &#8212; 7 especialistas + consultor cardiologia, 5 rounds safety net forçado, 88% fontes Tier 1, Score 4.8/10). Conselho anterior: 24/03/2026. &nbsp;&#183;&nbsp; Dashboard gerado com Claude Code
     </div>
   </footer>
 
@@ -1697,12 +1752,24 @@
     // =========================================================================
     // CHART UTILITY
     // =========================================================================
+    function highlightPendingData(text) {
+      return text.replace(/\[([A-ZÁÉÍÓÚÇÃÕÊ\s]+)\]/g, '<span class="pending-data">⏳ $1</span>');
+    }
+
+    const CHART_AVAILABLE = typeof Chart !== 'undefined';
+
+    function findMarker(markerKey, catKey) {
+      if (MARKERS[catKey]?.[markerKey]) return MARKERS[catKey][markerKey];
+      for (const cat of Object.values(MARKERS)) { if (cat[markerKey]) return cat[markerKey]; }
+      return null;
+    }
+
     function createMarkerChart(canvasId, markerKey, catKey) {
-      const cat = MARKERS[catKey];
-      if (!cat || !cat[markerKey]) return null;
-      const m = cat[markerKey];
+      const m = findMarker(markerKey, catKey);
+      if (!m) return null;
       const canvas = document.getElementById(canvasId);
       if (!canvas) return null;
+      if (!CHART_AVAILABLE) { canvas.parentElement.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text-muted);font-size:0.8rem;">Gráfico indisponível offline</div>'; return null; }
 
       const refMinArr = m.values.map(() => m.refMin);
       const refMaxArr = m.values.map(() => m.refMax);
@@ -1778,9 +1845,9 @@
     function renderConditions() {
       const grid = document.getElementById('conditions-grid');
       grid.innerHTML = CONDITIONS.map(c => {
-        const sc = c.status === 'ativa' ? 'badge-ativa' : c.status === 'cronica' ? 'badge-cronica' : c.status === 'nova' ? 'badge-nova' : 'badge-suspeita';
+        const sc = c.status === 'ativa' ? 'badge-ativa' : c.status === 'cronica' ? 'badge-cronica' : c.status === 'nova' ? 'badge-nova' : c.status === 'confirmada' ? 'badge-confirmada' : 'badge-suspeita';
         const sv = c.severity === 'alta' ? 'sev-alta' : c.severity === 'moderada' ? 'sev-moderada' : 'sev-leve';
-        return '<div class="condition-card ' + sv + '" onclick="openConditionModal(\'' + c.id + '\')">' +
+        return '<div class="condition-card ' + sv + '" role="button" tabindex="0" onclick="openConditionModal(\'' + c.id + '\')">' +
           '<div class="condition-name">' + c.name + '</div>' +
           '<div class="condition-meta"><span class="badge ' + sc + '">' + c.status + '</span><span class="badge badge-category">' + c.category + '</span>' + (c.sourceOrigin ? '<span class="badge badge-source ' + c.sourceOrigin.toLowerCase() + '">' + c.sourceOrigin + '</span>' : '') + '</div>' +
           '<div class="condition-desc">' + c.description + '</div>' +
@@ -1804,7 +1871,7 @@
         tier.specialists.forEach(sp => {
           const cardId = 'sp-card-' + globalIdx;
           html += '<div class="sp-card" id="' + cardId + '">';
-          html += '<div class="sp-card-header" onclick="document.getElementById(\'' + cardId + '\').classList.toggle(\'open\')">';
+          html += '<div class="sp-card-header" role="button" tabindex="0" onclick="document.getElementById(\'' + cardId + '\').classList.toggle(\'open\')">';
           html += '<div class="sp-card-header-left">';
           html += '<div class="sp-card-number ' + tier.color + '">' + globalIdx + '</div>';
           html += '<div><div class="sp-card-specialty">' + sp.specialty + '</div>';
@@ -1815,14 +1882,14 @@
           html += '</div></div>';
           html += '<div class="sp-card-body">';
           html += '<div class="sp-why">' + sp.why + '</div>';
-          html += '<div class="sp-briefing"><div class="sp-briefing-label">\uD83D\uDDE3\uFE0F O que falar quando chegar</div><div class="sp-briefing-text">' + sp.briefing + '</div></div>';
+          html += '<div class="sp-briefing"><div class="sp-briefing-label">\uD83D\uDDE3\uFE0F O que falar quando chegar</div><div class="sp-briefing-text">' + highlightPendingData(sp.briefing) + '</div></div>';
           html += '<div class="sp-section-label">Exames que precisa pedir</div>';
           html += '<ul class="sp-list exams">';
-          sp.exams.forEach(e => { html += '<li>' + e + '</li>'; });
+          sp.exams.forEach(e => { html += '<li>' + highlightPendingData(e) + '</li>'; });
           html += '</ul>';
           html += '<div class="sp-section-label">O que perguntar</div>';
           html += '<ul class="sp-list questions">';
-          sp.questions.forEach(q => { html += '<li>' + q + '</li>'; });
+          sp.questions.forEach(q => { html += '<li>' + highlightPendingData(q) + '</li>'; });
           html += '</ul></div></div>';
           globalIdx++;
         });
@@ -1996,6 +2063,7 @@
       if (macroChartInstance) return;
       const canvas = document.getElementById('macro-chart');
       if (!canvas) return;
+      if (!CHART_AVAILABLE) { canvas.parentElement.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text-muted);font-size:0.8rem;">Gráfico indisponível offline</div>'; return; }
       requestAnimationFrame(() => {
         macroChartInstance = new Chart(canvas.getContext('2d'), {
           type: 'doughnut',
@@ -2019,7 +2087,7 @@
       if (!c) return;
       destroyActiveCharts();
 
-      const sc = c.status === 'ativa' ? 'badge-ativa' : c.status === 'cronica' ? 'badge-cronica' : c.status === 'nova' ? 'badge-nova' : 'badge-suspeita';
+      const sc = c.status === 'ativa' ? 'badge-ativa' : c.status === 'cronica' ? 'badge-cronica' : c.status === 'nova' ? 'badge-nova' : c.status === 'confirmada' ? 'badge-confirmada' : 'badge-suspeita';
       let html = '<div class="modal-header"><div><div class="modal-title">' + c.name + '</div>' +
         '<div style="display:flex;gap:8px;align-items:center;"><span class="badge ' + sc + '">' + c.status + '</span>' +
         '<span class="badge badge-category">' + c.category + '</span>' +
@@ -2032,7 +2100,7 @@
       if (c.markers.length > 0) {
         html += '<div class="modal-section"><div class="modal-section-title">Marcadores Associados</div><div class="modal-charts-grid">';
         c.markers.forEach((mk, i) => {
-          const md = MARKERS[c.markerCategory]?.[mk];
+          const md = findMarker(mk, c.markerCategory);
           if (!md) return;
           const lv = md.values[md.values.length - 1];
           const col = lv > md.refMax ? 'var(--danger)' : lv < md.refMin ? 'var(--warning)' : 'var(--success)';
@@ -2080,9 +2148,29 @@
     }
 
     // =========================================================================
+    // ACCESSIBILITY: keyboard activation for role="button" elements
+    // =========================================================================
+    document.addEventListener('keydown', function(e) {
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.getAttribute('role') === 'button') {
+        e.preventDefault();
+        e.target.click();
+      }
+    });
+
+    // =========================================================================
+    // KPIs (computed from CONDITIONS)
+    // =========================================================================
+    function renderKPIs() {
+      document.getElementById('kpi-total').textContent = CONDITIONS.length;
+      document.getElementById('kpi-urgent').textContent = CONDITIONS.filter(c => c.severity === 'alta').length;
+      document.getElementById('kpi-controlled').textContent = CONDITIONS.filter(c => c.severity === 'leve' && c.status === 'cronica').length;
+    }
+
+    // =========================================================================
     // INIT
     // =========================================================================
     document.addEventListener('DOMContentLoaded', function() {
+      renderKPIs();
       renderConditions();
       renderSpecialistPlan();
       renderRecommendations();

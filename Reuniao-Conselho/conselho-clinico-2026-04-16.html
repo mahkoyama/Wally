@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Conselho Clínico — Wally | 16/04/2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#f8f9fb; --card:#ffffff; --card-hover:#f1f4f8;
+  --border:#e2e8f0; --accent:#0077cc;
+  --text:#1e293b; --sub:#64748b;
+  --status-red:#dc3545; --status-yellow:#d4860a;
+  --status-green:#198754; --status-gray:#6c757d;
+  --spring:cubic-bezier(0.34,1.56,0.64,1);
+  --ease-out:cubic-bezier(0.16,1,0.3,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:'DM Sans', system-ui, -apple-system, sans-serif;
+  background:var(--bg); color:var(--text);
+  font-size:15px; line-height:1.6;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+}
+header{
+  background:var(--card); border-bottom:1px solid var(--border);
+  padding:28px 32px;
+}
+header .brand{font-size:13px;color:var(--sub);text-transform:uppercase;letter-spacing:0.08em;font-weight:600}
+header h1{font-size:26px;font-weight:700;margin:6px 0 4px}
+header .meta{color:var(--sub);font-size:14px}
+header .score-badge{
+  display:inline-flex; align-items:center; gap:10px;
+  background:var(--card-hover); border:1px solid var(--border);
+  padding:10px 14px; border-radius:12px; margin-top:12px;
+}
+header .score-badge .score{
+  font-weight:700; font-size:22px; color:var(--status-yellow);
+}
+header .score-badge .score-label{color:var(--sub);font-size:12px;text-transform:uppercase;letter-spacing:0.06em}
+nav.tabs{
+  display:flex; gap:4px; padding:0 32px; background:var(--card);
+  border-bottom:1px solid var(--border); overflow-x:auto;
+  position:sticky; top:0; z-index:20;
+}
+nav.tabs button{
+  font-family:inherit; font-weight:600; font-size:14px;
+  background:transparent; border:none; cursor:pointer;
+  padding:14px 18px; color:var(--sub);
+  border-bottom:3px solid transparent; white-space:nowrap;
+  transition:color .2s var(--ease-out), border-color .2s var(--ease-out);
+}
+nav.tabs button.active{color:var(--accent); border-bottom-color:var(--accent)}
+nav.tabs button:hover{color:var(--text)}
+main{max-width:1280px; margin:0 auto; padding:28px 24px 80px}
+.panel{display:none; animation:secIn .4s var(--ease-out)}
+.panel.active{display:block}
+@keyframes secIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:12px;
+  padding:22px; margin-bottom:18px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+}
+.card h2{font-size:18px;font-weight:700;margin:0 0 8px;color:var(--text)}
+.card h3{font-size:15px;font-weight:600;margin:18px 0 6px;color:var(--text)}
+.card h4{font-size:14px;font-weight:600;margin:14px 0 4px;color:var(--sub);text-transform:uppercase;letter-spacing:0.04em}
+.card p{margin:0 0 10px}
+.card ul{margin:8px 0 10px; padding-left:20px}
+.card li{margin-bottom:4px}
+
+.grid{display:grid; gap:16px}
+.grid-2{grid-template-columns:repeat(auto-fit, minmax(320px, 1fr))}
+.grid-3{grid-template-columns:repeat(auto-fit, minmax(240px, 1fr))}
+
+.stat{background:var(--card-hover); border:1px solid var(--border); border-radius:10px; padding:14px}
+.stat .label{font-size:12px;color:var(--sub);text-transform:uppercase;letter-spacing:0.04em;font-weight:600}
+.stat .value{font-size:24px;font-weight:700;margin-top:4px;color:var(--text)}
+.stat .sub{font-size:12px;color:var(--sub);margin-top:2px}
+
+.badge{display:inline-block; font-size:11px; font-weight:600; padding:3px 8px; border-radius:999px; letter-spacing:0.04em; text-transform:uppercase}
+.badge-red{background:rgba(220,53,69,0.12); color:var(--status-red)}
+.badge-yellow{background:rgba(212,134,10,0.12); color:var(--status-yellow)}
+.badge-green{background:rgba(25,135,84,0.12); color:var(--status-green)}
+.badge-gray{background:rgba(108,117,125,0.12); color:var(--status-gray)}
+.badge-accent{background:rgba(0,119,204,0.12); color:var(--accent)}
+
+table{width:100%; border-collapse:collapse; font-size:13.5px}
+table th, table td{padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); vertical-align:top}
+table th{background:var(--card-hover); font-weight:600; color:var(--sub); font-size:12px; text-transform:uppercase; letter-spacing:0.04em}
+table tr:hover{background:var(--card-hover)}
+
+.specialist-post{
+  background:var(--card); border:1px solid var(--border); border-left:4px solid var(--accent);
+  border-radius:10px; padding:18px 22px; margin-bottom:14px;
+  transition:transform .25s var(--spring), box-shadow .25s var(--ease-out);
+}
+.specialist-post.hoverable:hover{transform:translateY(-2px); box-shadow:0 8px 20px rgba(0,0,0,0.06)}
+.specialist-post.karina{border-left-color:#7b2cbf}
+.specialist-post.marcelo{border-left-color:#d4860a}
+.specialist-post.luana{border-left-color:#198754}
+.specialist-post.henrique{border-left-color:#b7094c}
+.specialist-post.camilar{border-left-color:#0077cc}
+.specialist-post.bruno{border-left-color:#6f42c1}
+.specialist-post.amanda{border-left-color:#e63946}
+.specialist-post.lucas{border-left-color:#1e293b}
+.specialist-post .header{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; flex-wrap:wrap; gap:8px}
+.specialist-post .name{font-weight:700; font-size:15px}
+.specialist-post .role{font-size:12px;color:var(--sub);font-weight:500}
+.specialist-post .round{font-size:11px; color:var(--sub); font-weight:600; text-transform:uppercase; letter-spacing:0.06em}
+.specialist-post .content{font-size:14px; line-height:1.65}
+.specialist-post .status-line{margin-top:10px; padding-top:8px; border-top:1px dashed var(--border); font-size:12.5px; font-weight:600; color:var(--sub)}
+.specialist-post .shift{margin-top:6px; padding:8px 10px; background:var(--card-hover); border-radius:8px; font-size:12px}
+.specialist-post .shift strong{color:var(--accent)}
+
+.filter-bar{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; padding:14px; background:var(--card-hover); border-radius:10px; border:1px solid var(--border)}
+.filter-bar label{font-size:12px; font-weight:600; color:var(--sub); text-transform:uppercase; letter-spacing:0.04em; display:flex; align-items:center; gap:6px}
+.filter-bar select{font-family:inherit; font-size:13px; padding:6px 10px; border:1px solid var(--border); border-radius:6px; background:var(--card); color:var(--text); cursor:pointer}
+
+.tension-card{background:var(--card); border:1px solid var(--status-yellow); border-left:4px solid var(--status-yellow); border-radius:10px; padding:16px; margin-bottom:10px}
+.tension-card .tension-label{font-size:12px; color:var(--status-yellow); font-weight:700; text-transform:uppercase; letter-spacing:0.06em}
+
+.engagement-brief{background:var(--card-hover); border:1px solid var(--border); border-radius:8px; padding:12px 14px; margin-bottom:8px; font-size:13px}
+.engagement-brief strong{color:var(--accent)}
+
+.action-block{border-left:4px solid var(--border); padding:12px 16px; margin-bottom:10px; background:var(--card); border-radius:8px; border-top:1px solid var(--border); border-right:1px solid var(--border); border-bottom:1px solid var(--border)}
+.action-block.urgente{border-left-color:var(--status-red)}
+.action-block.importante{border-left-color:var(--status-yellow)}
+.action-block.preventivo{border-left-color:var(--status-green)}
+.action-block .title{font-weight:600; margin-bottom:4px}
+.action-block .meta{font-size:12px; color:var(--sub)}
+.action-block .supporters{margin-top:6px; font-size:11.5px; color:var(--sub); font-style:italic}
+
+.disaster-row{background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin-bottom:10px}
+.disaster-row .spec{font-weight:700; color:var(--accent)}
+.disaster-row .block{margin-top:6px; font-size:13px}
+.disaster-row .block strong{color:var(--sub); font-size:11px; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:2px}
+
+.chart-wrap{position:relative; height:260px}
+
+footer{
+  max-width:1280px; margin:0 auto; padding:24px;
+  color:var(--sub); font-size:12px; border-top:1px solid var(--border); text-align:center;
+}
+
+/* Score pie container */
+.score-hero{display:flex; gap:30px; align-items:center; flex-wrap:wrap}
+.score-hero .chart-wrap{width:220px; height:220px; flex-shrink:0}
+.score-hero .explain{flex:1; min-width:280px; font-size:13.5px}
+.score-hero .explain ol{padding-left:20px}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">Conselho Clínico Multidisciplinar — Reanálise 16/04/2026</div>
+  <h1>Wally — Shiba Inu macho castrado, 7a 3m, 14 kg</h1>
+  <div class="meta">7 especialistas + consultor cardiologia | 5 rounds (safety net forçado) | Modelo 4.7 | 88% fontes Tier 1</div>
+  <div class="score-badge">
+    <div>
+      <div class="score-label">Score Geral</div>
+      <div class="score">4.8/10</div>
+    </div>
+    <div style="color:var(--sub); font-size:12px; line-height:1.4">
+      vs 24/03: <strong>3.8/10</strong> &nbsp;|&nbsp; variação +1.0<br/>
+      Pioderma bilateral expandindo + eventos de abril
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button class="tab-btn active" data-tab="tab1" role="tab">1 · Sumário Executivo</button>
+  <button class="tab-btn" data-tab="tab2" role="tab">2 · Canal de Debate</button>
+  <button class="tab-btn" data-tab="tab3" role="tab">3 · Consensos &amp; Divergências</button>
+  <button class="tab-btn" data-tab="tab4" role="tab">4 · Plano de Ação</button>
+  <button class="tab-btn" data-tab="tab5" role="tab">5 · Desastre Total</button>
+</nav>
+
+<main>
+
+<!-- ============ TAB 1 — SUMÁRIO EXECUTIVO ============ -->
+<section id="tab1" class="panel active">
+
+  <div class="card">
+    <h2>O que aconteceu em abril</h2>
+    <p>Wally chega a 16/04 em <strong>compound decompensation</strong>: quatro sistemas correlacionados (metabolismo + fígado + tireoide + imunidade cutânea) sobre os quais incidiram três choques em abril.</p>
+    <div class="grid grid-3">
+      <div class="stat">
+        <div class="label">Sobredosagem Baytril</div>
+        <div class="value" style="color:var(--status-red)">21.4 mg/kg/d</div>
+        <div class="sub">× 3 dias (11-13/04). Acima do máximo 20 mg/kg/d. Total recebido ~900 mg vs prescrito 750 mg.</div>
+      </div>
+      <div class="stat">
+        <div class="label">Depo-Medrol (ativo)</div>
+        <div class="value" style="color:var(--status-red)">11/04 → 23/05</div>
+        <div class="sub">Irreversível. Janela cega endócrina/cultura: 4-6 semanas.</div>
+      </div>
+      <div class="stat">
+        <div class="label">Pioderma bilateral</div>
+        <div class="value" style="color:var(--status-red)">Expandindo</div>
+        <div class="sub">Peito + costela L+R + axila + coxas. Sem cultura.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <h2>Bloco 1 — Diagnósticos em Vigor (Consenso Robusto)</h2>
+      <table>
+        <thead><tr><th>Condição</th><th>Status</th><th>G × P</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Pioderma bilateral + Flare DAC multifocal</strong></td><td><span class="badge badge-red">Crítico</span></td><td>4 × 5 = 20</td></tr>
+          <tr><td><strong>Síndrome metabólica canina</strong> (obesidade refratária + TG 250 + esteatose)</td><td><span class="badge badge-red">Crítico</span></td><td>4 × 5 = 20</td></tr>
+          <tr><td><strong>Gastrite/GERD biliar crônica</strong></td><td><span class="badge badge-red">Ativo</span></td><td>3 × 5 = 15</td></tr>
+          <tr><td><strong>Cushing iatrogênico (janela Depo)</strong></td><td><span class="badge badge-red">Monitoramento</span></td><td>4 × 3 = 12</td></tr>
+          <tr><td><strong>Hipotireoidismo subclínico vs NTIS</strong> (embarcado)</td><td><span class="badge badge-red">Dx pendente</span></td><td>3 × 4 = 12</td></tr>
+          <tr><td><strong>Alérgenos ambientais</strong> não testados</td><td><span class="badge badge-red">Investigar</span></td><td>3 × 4 = 12</td></tr>
+          <tr><td><strong>Hepatite medicamentosa aguda</strong> (pós-Baytril)</td><td><span class="badge badge-red">Confirmar</span></td><td>4 × 2 = 8</td></tr>
+          <tr><td><strong>Xilitol potencial em Xantinon</strong></td><td><span class="badge badge-red">Verificar HOJE</span></td><td>5 × 1 = 5</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2>Bloco 2 — Em Investigação</h2>
+      <table>
+        <thead><tr><th>Pergunta</th><th>Resolve com</th></tr></thead>
+        <tbody>
+          <tr><td>Hipo subclínico ou NTIS?</td><td>Painel endócrino 23-30/05 (pós janela Depo)</td></tr>
+          <tr><td>Arroz noturno sozinho ou omeprazol sozinho?</td><td>Desescalonamento em 14-28 dias</td></tr>
+          <tr><td>Qual bactéria no pioderma?</td><td>Cultura + antibiograma 17-18/04</td></tr>
+          <tr><td>Alérgenos ambientais (ácaros, pólen)?</td><td>Teste IgE sorológico 25/04</td></tr>
+          <tr><td>Progressão da esteatose pós-Depo?</td><td>Re-US abdominal ~15/05</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Score Geral — cálculo</h2>
+    <div class="score-hero">
+      <div class="chart-wrap"><canvas id="scoreChart"></canvas></div>
+      <div class="explain">
+        <p><strong>Fórmula (fixa):</strong> Score = max(0, 10 − média(G × P) / 2.5) das condições 🔴</p>
+        <p>Soma G × P das 8 condições 🔴: <strong>104</strong> → média = <strong>13.0</strong> → 13.0/2.5 = <strong>5.2</strong> → 10 − 5.2 = <strong>4.8/10</strong></p>
+        <p><strong>Variação vs 24/03 (3.8):</strong> <span class="badge badge-yellow">+1.0 — ligeira piora compensada</span></p>
+        <p>Piora: pioderma expandindo, Depo-Medrol aplicado, sobredosagem Baytril. Compensação: gastrite passou a ter protocolo ativo, DAC passou a ter plano Cytopoint.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Qualidade dos Consensos</h2>
+    <table>
+      <thead><tr><th>Consenso</th><th>Classificação</th><th>Fundamento</th></tr></thead>
+      <tbody>
+        <tr><td>Depo-Medrol "nunca mais em Wally"</td><td><span class="badge badge-green">Robusto</span></td><td>Position Shift Dr. Rafael R1→R2; unanimidade ancorada em ICADA 2015 + Scott-Moncrieff + Ling 2012</td></tr>
+        <tr><td>Cultura bacteriana esta semana (não esperar 19/04)</td><td><span class="badge badge-green">Robusto</span></td><td>Position Shift Dr. Rafael R1→R2; Beco 2013 + ISCAID 2014</td></tr>
+        <tr><td>Cytopoint como imunomodulador de escolha</td><td><span class="badge badge-green">Robusto</span></td><td>Position Shift Dra. Karina R1 (Apoquel) → R2 (Cytopoint)</td></tr>
+        <tr><td>Omeprazol + arroz paralelo (não sequencial)</td><td><span class="badge badge-green">Robusto</span></td><td>Position Shift Dra. Luana R1→R2</td></tr>
+        <tr><td>Painel endócrino adiado 23-30/05</td><td><span class="badge badge-yellow">Amplo-mas-raso</span></td><td>Todos concordaram desde R1, sem shifts</td></tr>
+        <tr><td>Xilitol no Xantinon = risco catastrófico se presente</td><td><span class="badge badge-accent">Estreito-mas-profundo</span></td><td>Apenas Dr. Marcelo, ancorado em Dunayer 2006</td></tr>
+        <tr><td>Omega-3 1000 mg EPA+DHA/dia</td><td><span class="badge badge-accent">Estreito-mas-profundo</span></td><td>Dra. Camila R. única voz, ancorada em Bauer 2011</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ TAB 2 — CANAL ============ -->
+<section id="tab2" class="panel">
+
+  <div class="filter-bar">
+    <label>Round <select id="filter-round">
+      <option value="all">Todos</option>
+      <option value="1">Round 1</option>
+      <option value="2">Round 2</option>
+      <option value="3">Round 3</option>
+      <option value="4">Round 4</option>
+    </select></label>
+    <label>Especialista <select id="filter-spec">
+      <option value="all">Todos</option>
+      <option value="rafael">Dr. Rafael (Clínico Geral)</option>
+      <option value="karina">Dra. Karina (Dermato)</option>
+      <option value="marcelo">Dr. Marcelo (Hepato)</option>
+      <option value="luana">Dra. Luana (Gastro)</option>
+      <option value="henrique">Dr. Henrique (Endócrino)</option>
+      <option value="camilar">Dra. Camila R. (Nutri)</option>
+      <option value="bruno">Dr. Bruno (Alergologia)</option>
+      <option value="amanda">Dra. Amanda (Cardio — consultora)</option>
+    </select></label>
+  </div>
+
+  <div class="card">
+    <h2>Tension Map + Engagement Briefs (entre R1 e R2)</h2>
+    <div class="tension-card">
+      <div class="tension-label">Tensão 1 · Depo-Medrol — compensar ou nunca mais?</div>
+      <div>Dr. Rafael (compensar com monitoramento) vs Dra. Karina + Dr. Bruno + Dr. Marcelo (erro de escolha, política "nunca mais"). 3 critérios: conflito + epistemologia + dependência.</div>
+    </div>
+    <div class="tension-card">
+      <div class="tension-label">Tensão 2 · Cultura bacteriana — quando?</div>
+      <div>Dra. Karina (cultura AGORA, 17-18/04) vs Dr. Rafael (cultura só se sem resposta 19/04). 2 critérios.</div>
+    </div>
+    <div class="tension-card">
+      <div class="tension-label">Tensão 3 · Natureza da tireoidopatia</div>
+      <div>Dr. Rafael (hipotireoidismo subclínico) vs Dr. Henrique (NTIS/síndrome metabólica). 2 critérios.</div>
+    </div>
+    <div class="tension-card">
+      <div class="tension-label">Tensão 4 · Xantinon vs silimarina</div>
+      <div>Dr. Marcelo (preferir silimarina, checar xilitol) vs Dr. Rafael (clínico prescreveu, manter). 2 critérios.</div>
+    </div>
+    <div class="tension-card">
+      <div class="tension-label">Tensão 5 · Arroz japonês — implementar já ou protocolo 3 testes?</div>
+      <div>Dra. Camila R. (já) vs Dra. Luana (3 testes). 2 critérios.</div>
+    </div>
+
+    <h3 style="margin-top:24px">Engagement Briefs</h3>
+    <div class="engagement-brief"><strong>Dr. Rafael</strong> → engaja Dra. Karina (corticoide sistêmico: uma vez pode?) + Dr. Henrique (NTIS vs hipo)</div>
+    <div class="engagement-brief"><strong>Dra. Karina</strong> → engaja Dr. Rafael (cultura AGORA é exagero?) + Dr. Bruno (Cytopoint primeira linha)</div>
+    <div class="engagement-brief"><strong>Dr. Marcelo</strong> → engaja Dr. Rafael (xilitol check) + Dra. Luana (omeprazol × lama biliar)</div>
+    <div class="engagement-brief"><strong>Dra. Luana</strong> → engaja Dra. Camila R. (arroz protocolo) + Dr. Marcelo (omeprazol × lama biliar)</div>
+    <div class="engagement-brief"><strong>Dr. Henrique</strong> → engaja Dr. Rafael (T4L é NTIS ou hipo?) + Dra. Camila R. (gasto energético)</div>
+    <div class="engagement-brief"><strong>Dra. Camila R.</strong> → engaja Dra. Luana (arroz) + Dr. Bruno (proteína novel agora?)</div>
+    <div class="engagement-brief"><strong>Dr. Bruno</strong> → engaja Dra. Karina (ASIT + Cytopoint) + Dr. Henrique (impacto Depo em teste alergeno)</div>
+  </div>
+
+  <div id="posts-container">
+    <!-- Posts injetados via JS -->
+  </div>
+</section>
+
+<!-- ============ TAB 3 — CONSENSOS E DIVERGÊNCIAS ============ -->
+<section id="tab3" class="panel">
+
+  <div class="card">
+    <h2>Bloco 1 — Consensos Firmes</h2>
+    <table>
+      <thead><tr><th>Consenso</th><th>Apoiado por</th><th>Shift?</th></tr></thead>
+      <tbody>
+        <tr><td>Nunca mais Depo-Medrol em Wally; política de equipe</td><td>7 especialistas</td><td><span class="badge badge-green">Rafael R1→R2</span></td></tr>
+        <tr><td>Cultura + citologia + antibiograma 17-18/04 (Ortoderm)</td><td>Karina, Rafael, Bruno</td><td><span class="badge badge-green">Rafael R1→R2</span></td></tr>
+        <tr><td>Cytopoint como imunomodulador de escolha</td><td>Karina, Bruno, Rafael, Henrique</td><td><span class="badge badge-green">Karina R1→R2</span></td></tr>
+        <tr><td>Omeprazol 1 mg/kg SID × 14d + arroz japonês 30g às 22h (paralelo)</td><td>Luana, Camila R., Marcelo</td><td><span class="badge badge-green">Luana R1→R2</span></td></tr>
+        <tr><td>Omega-3 upgrade para 1000 mg EPA+DHA/dia</td><td>Camila R., Bruno, Karina, Marcelo</td><td><span class="badge badge-gray">Sem shift — ancorado Bauer 2011</span></td></tr>
+        <tr><td>Painel endócrino adiado para 23-30/05 (janela Depo)</td><td>Henrique, Rafael, Marcelo</td><td><span class="badge badge-gray">Sem shift (fato bioquímico)</span></td></tr>
+        <tr><td>Exames hepáticos + ácidos biliares pré/pós-prandiais 17/04</td><td>Marcelo, Rafael</td><td><span class="badge badge-gray">Sem shift</span></td></tr>
+        <tr><td>Monitoramento Cushing iatrogênico semanal até 09/05</td><td>Henrique, Rafael, Bruno</td><td><span class="badge badge-gray">Sem shift</span></td></tr>
+        <tr><td>Simparic retomar em maio após enzimas hepáticas estáveis</td><td>Marcelo, Rafael, Otávio</td><td><span class="badge badge-gray">Amplo-mas-raso</span></td></tr>
+        <tr><td>Teste IgE sorológico (Heska/Greer) em 25/04 + ASIT se positivo (jun-jul)</td><td>Bruno, Karina</td><td><span class="badge badge-gray">Sem shift</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Bloco 2 — Divergências Abertas + O que as resolveria</h2>
+    <table>
+      <thead><tr><th>Divergência</th><th>Entre</th><th>Resolve com</th></tr></thead>
+      <tbody>
+        <tr><td>Natureza da tireoidopatia (hipo subclínico vs NTIS vs síndrome metabólica pura)</td><td>Rafael vs Henrique</td><td>Painel completo 23-30/05 (T4L diálise + TSH + Anti-TG + LDDS)</td></tr>
+        <tr><td>Arroz japonês eficácia isolada vs omeprazol eficácia isolada</td><td>Luana vs Camila R.</td><td>Desescalonamento sequencial em 14-28 dias (pausar omeprazol, observar)</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:12px;color:var(--sub);font-size:13px"><strong>Nota:</strong> ambas divergências têm <strong>risco clínico baixo</strong> — não atrasam decisões terapêuticas críticas. Resolvidas com exames em cronograma já previsto.</p>
+  </div>
+
+  <div class="card">
+    <h2>Recomendações Eliminadas pelo Synthesis Pipeline</h2>
+    <table>
+      <thead><tr><th>Recomendação</th><th>Eliminada por</th><th>Justificativa</th></tr></thead>
+      <tbody>
+        <tr><td>Suspender Xantinon cegamente antes de checar bula</td><td>Plausibility + N&amp;S</td><td>Checagem de lote resolve com 5 min</td></tr>
+        <tr><td>Iniciar levotiroxina empiricamente antes de painel 30/05</td><td>Plausibility</td><td>NTIS é hipótese dominante; levotiroxina em NTIS piora</td></tr>
+        <tr><td>Amoxi+clavulanato como 1ª linha no lugar de cefalexina</td><td>Redundancy</td><td>Cefalexina suficiente para Staph Gram+ em pioderma</td></tr>
+        <tr><td>MSC (células-tronco) como 1ª linha para DAC</td><td>Plausibility</td><td>Reservar para refratariedade a Cytopoint+ASIT+Apoquel (≥ dez/2026)</td></tr>
+        <tr><td>3 testes sequenciais isolados de arroz antes de omeprazol</td><td>Redundancy</td><td>Protocolo paralelo é mais eficiente</td></tr>
+        <tr><td>Aspirina/clopidogrel profilático tromboembólico</td><td>Plausibility + N&amp;S</td><td>Risco TEP baixo-moderado em cão; &gt; risco GI</td></tr>
+        <tr><td>Biópsia hepática imediata</td><td>Plausibility</td><td>Reservar para ALT &gt; 10× ou falência aguda</td></tr>
+        <tr><td>Proteína novel (pato/coelho) ativa agora</td><td>Plausibility</td><td>Alérgeno dominante atual é ambiental, não alimentar</td></tr>
+        <tr><td>Ecocardiograma urgente esta semana</td><td>Plausibility</td><td>Jun/2025 normal; rotina dez/2026</td></tr>
+        <tr><td>Suspender glutamina</td><td>Redundancy</td><td>Evidência clínica de dependência individual (EP-002)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Insights Cross-Especialidade</h2>
+    <ol>
+      <li><strong>Janela cega diagnóstica (4-6 semanas):</strong> Depo-Medrol + sobredosagem Baytril criam confusão simultânea em endócrino, cultura, teste intradermal. Priorizar exames AINDA válidos: citologia Gram, IgE sorológico, ácidos biliares. Reservar inválidos para 23-30/05.</li>
+      <li><strong>Arroz japonês é marcador fisiopatológico:</strong> AMIDO SIMPLES tolerado + QUALQUER proteína/vegetal estimula náusea aponta para <em>hipersecreção reativa a estímulo CCK/gastrina noturno</em>, não motilidade lenta genérica.</li>
+      <li><strong>"Nunca mais Depo" = Wally sai do paradigma de corticoide sistêmico.</strong> Documentar explicitamente em prontuário para evitar repetição pelo vet de plantão.</li>
+      <li><strong>Inflamação crônica de baixo grau integrada:</strong> bilateral pele + eritrocitose racial + TG 250 + esteatose + T4L em queda podem ser manifestações da mesma síndrome. Omega-3 1000 mg/dia é pivot terapêutico central.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ TAB 4 — PLANO DE AÇÃO ============ -->
+<section id="tab4" class="panel">
+
+  <div class="card">
+    <h2><span class="badge badge-red">🔴 URGENTE</span> Esta semana (16-22/04)</h2>
+    <div class="action-block urgente">
+      <div class="title">1. Tutora checa bula/lote Xantinon B12 HOJE</div>
+      <div class="meta">Se xilitol presente → suspender, trocar por silimarina (Legalon Vet 50-100 mg/kg/d). Se OK → manter 30 dias.</div>
+      <div class="supporters">Apoiado por: Dr. Marcelo, Dr. Rafael</div>
+    </div>
+    <div class="action-block urgente">
+      <div class="title">2. Tutora contacta Ortoderm (Dra. Karina Cantagallo)</div>
+      <div class="meta">Agendar consulta + cultura + citologia + antibiograma ESTA SEMANA.</div>
+      <div class="supporters">Apoiado por: Dra. Karina (conselho), Dr. Bruno, Dr. Rafael</div>
+    </div>
+    <div class="action-block urgente">
+      <div class="title">3. Exames hepáticos completos (17/04)</div>
+      <div class="meta">ALT + AST + FA + GGT + <strong>ácidos biliares pré+pós-prandiais</strong> + albumina + bilirrubina T/D. Local: Dr. Otávio ou HAMA.</div>
+      <div class="supporters">Apoiado por: Dr. Marcelo</div>
+    </div>
+    <div class="action-block urgente">
+      <div class="title">4. Cultura + antibiograma + citologia Gram (17-18/04)</div>
+      <div class="meta">Lesão mais ativa — costela direita. Swab ou biópsia. Resultado 48-72h.</div>
+      <div class="supporters">Apoiado por: Dra. Karina, Dr. Bruno</div>
+    </div>
+    <div class="action-block urgente">
+      <div class="title">5. Omeprazol 1 mg/kg SID VO × 14 dias (iniciar 17/04)</div>
+      <div class="meta">30 min antes da refeição das 7h. Dose ~14 mg (1 cápsula 10 mg + ajuste ou manipulado 14 mg).</div>
+      <div class="supporters">Apoiado por: Dra. Luana, Dra. Camila R.</div>
+    </div>
+    <div class="action-block urgente">
+      <div class="title">6. Arroz japonês cozido 30g às 22h (iniciar 17/04)</div>
+      <div class="meta">Registrar diário: data, quantidade, náusea manhã seguinte (S/N).</div>
+      <div class="supporters">Apoiado por: Dra. Camila R., Dra. Luana</div>
+    </div>
+    <div class="action-block urgente">
+      <div class="title">7. Upgrade omega-3 para 1000 mg EPA+DHA/dia (2 caps OM3 ou produto concentrado)</div>
+      <div class="meta">Dose atual subdosada em ~40% (Bauer JAVMA 2011).</div>
+      <div class="supporters">Apoiado por: Dra. Camila R., Dr. Bruno, Dra. Karina, Dr. Marcelo</div>
+    </div>
+    <div class="action-block urgente">
+      <div class="title">8. Reavaliação com Dr. Otávio (~19/04)</div>
+      <div class="meta"><strong>NÃO retomar Baytril</strong> — trocar por antibiograma. <strong>NÃO Simparic</strong> — fígado não estabilizado.</div>
+      <div class="supporters">Apoiado por: Dr. Rafael, Dr. Marcelo, Dra. Karina</div>
+    </div>
+    <div class="action-block urgente">
+      <div class="title">9. Monitoramento Cushing iatrogênico SEMANAL até 09/05</div>
+      <div class="meta">PU/PD, polifagia, distensão abdominal, cicatrização, PA, alopecia tronco, fraqueza posterior. Diário escrito.</div>
+      <div class="supporters">Apoiado por: Dr. Henrique, Dr. Bruno</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="badge badge-yellow">🟡 IMPORTANTE</span> Este mês (23/04 — 15/05)</h2>
+    <div class="action-block importante">
+      <div class="title">10. Cytopoint (lokivetmab) 1ª dose em 25/04</div>
+      <div class="meta">~30 mg SC (conforme peso 14 kg). Início 1-8 dias. Mensal.</div>
+      <div class="supporters">Apoiado por: Dra. Karina Cantagallo, Dra. Karina (conselho), Dr. Bruno</div>
+    </div>
+    <div class="action-block importante">
+      <div class="title">11. Teste sorológico IgE alergeno-específico (25/04)</div>
+      <div class="meta">Heska Allercept ou Greer. Cytopoint não interfere.</div>
+      <div class="supporters">Apoiado por: Dr. Bruno, Dra. Karina</div>
+    </div>
+    <div class="action-block importante">
+      <div class="title">12. Re-exame pioderma 30/04-07/05</div>
+      <div class="meta">Avaliar resolução com antibiótico dirigido + Cytopoint.</div>
+      <div class="supporters">Apoiado por: Dra. Karina, Dr. Bruno</div>
+    </div>
+    <div class="action-block importante">
+      <div class="title">13. Desescalonamento omeprazol (01-07/05)</div>
+      <div class="meta">Se náusea zerada 14 dias → pausar omeprazol, manter arroz. Se retornar → omeprazol era necessário.</div>
+      <div class="supporters">Apoiado por: Dra. Luana, Dra. Camila R.</div>
+    </div>
+    <div class="action-block importante">
+      <div class="title">14. Retomar Simparic 10-15/05</div>
+      <div class="meta">Após enzimas hepáticas normais × 7 dias consecutivos.</div>
+      <div class="supporters">Apoiado por: Dr. Marcelo, Dr. Rafael</div>
+    </div>
+    <div class="action-block importante">
+      <div class="title">15. Re-US abdominal ~15/05</div>
+      <div class="meta">Fígado (progressão esteatose pós-Depo), VB, baço, linfonodos.</div>
+      <div class="supporters">Apoiado por: Dr. Marcelo, Dra. Amanda Fonseca</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="badge badge-green">🟢 PREVENTIVO</span> Este trimestre (maio-julho)</h2>
+    <div class="action-block preventivo">
+      <div class="title">16. Painel endócrino completo pós-janela Depo (23-30/05)</div>
+      <div class="meta">T4L diálise + TSH + Anti-TG + LDDS + insulina basal + glicose jejum + HOMA-IR + cortisol basal.</div>
+      <div class="supporters">Apoiado por: Dr. Henrique</div>
+    </div>
+    <div class="action-block preventivo">
+      <div class="title">17. Endocrinologia presencial — Dra. Raquel Fukumori (CVAL Alto da Lapa)</div>
+      <div class="meta">Junho, após resultados do painel.</div>
+      <div class="supporters">Apoiado por: Dr. Henrique, Dr. Rafael</div>
+    </div>
+    <div class="action-block preventivo">
+      <div class="title">18. ASIT se teste IgE positivo (jun-jul)</div>
+      <div class="meta">Ortoderm. Modificador de doença — 60-80% resposta em 6-12 meses.</div>
+      <div class="supporters">Apoiado por: Dr. Bruno, Dra. Karina</div>
+    </div>
+    <div class="action-block preventivo">
+      <div class="title">19. Banho medicado Douxo S3 Pyo 1-2×/semana + Allermil mantido</div>
+      <div class="meta">Clorexidina + miconazol — reduz carga bacteriana de superfície.</div>
+      <div class="supporters">Apoiado por: Dra. Karina</div>
+    </div>
+    <div class="action-block preventivo">
+      <div class="title">20. Reavaliação AN com Endoscopet (julho)</div>
+      <div class="meta">90-120 dias — adequação micronutricional em AN prolongada.</div>
+      <div class="supporters">Apoiado por: Dra. Camila R.</div>
+    </div>
+    <div class="action-block preventivo">
+      <div class="title">21. Ecocardiograma controle (dez/2026)</div>
+      <div class="meta">Rotina 18-24 meses. Eco Jun/2025 normal.</div>
+      <div class="supporters">Apoiado por: Dra. Amanda Fonseca</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Prescrições Consolidadas</h2>
+    <h3>Medicamentos</h3>
+    <table>
+      <thead><tr><th>Medicamento</th><th>Dose</th><th>Urgência</th></tr></thead>
+      <tbody>
+        <tr><td>Omeprazol</td><td>1 mg/kg SID × 14d</td><td><span class="badge badge-red">17/04</span></td></tr>
+        <tr><td>Cytopoint (lokivetmab)</td><td>~30 mg SC / mês</td><td><span class="badge badge-yellow">25/04</span></td></tr>
+        <tr><td>Cefalexina (se antibiograma Gram+)</td><td>22-30 mg/kg q12h × 3 sem</td><td><span class="badge badge-yellow">~19/04</span></td></tr>
+        <tr><td>Silimarina (Legalon Vet) se Xantinon suspenso</td><td>50-100 mg/kg/dia</td><td><span class="badge badge-red">Condicional</span></td></tr>
+        <tr><td>Ursodesoxicólico (se ALT &gt; 3×)</td><td>10-15 mg/kg/dia</td><td>Condicional</td></tr>
+      </tbody>
+    </table>
+    <h3>Encaminhamentos</h3>
+    <table>
+      <thead><tr><th>Especialidade</th><th>Urgência</th><th>Profissional indicado</th></tr></thead>
+      <tbody>
+        <tr><td>Dermato presencial</td><td><span class="badge badge-red">Esta semana</span></td><td>Dra. Karina Lourenço Cantagallo (Ortoderm — equipe ativa)</td></tr>
+        <tr><td>Clínico Geral</td><td><span class="badge badge-red">19/04</span></td><td>Dr. Otávio Yamaoka (equipe ativa)</td></tr>
+        <tr><td>Endocrinologia</td><td><span class="badge badge-yellow">Junho</span></td><td>Dra. Raquel Fukumori (CVAL Alto da Lapa)</td></tr>
+        <tr><td>Gastro (se falhar omeprazol)</td><td><span class="badge badge-yellow">Condicional maio</span></td><td>Dra. Lylian Sodré ou GAP</td></tr>
+        <tr><td>Nutrologia reavaliação</td><td><span class="badge badge-green">Julho</span></td><td>Dra. Fernanda Yamamoto (Endoscopet — equipe ativa)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ TAB 5 — DESASTRE TOTAL ============ -->
+<section id="tab5" class="panel">
+
+  <div class="card">
+    <h2>Simulação "6 meses à frente — tudo falhou"</h2>
+    <p>Cenário: outubro/2026. Plano fielmente executado. Nenhuma recomendação produziu resultado. Wally piorou em todos os indicadores. Cada especialista propõe uma recomendação nuclear.</p>
+  </div>
+
+  <div class="disaster-row">
+    <div class="spec">Dr. Rafael (clínico) — Falência hepática fulminante pós-Baytril</div>
+    <div class="block"><strong>Sinal ignorado agora</strong>Ureia 43 persistente há 6 anos — injúria renal subclínica; SDMA não foi dosada por equipe HAMA</div>
+    <div class="block"><strong>Recomendação nuclear</strong>SDMA + painel nefro/hepático COMPLETO + uroanálise com cilindros + biópsia hepática guiada por US. Escalar para HOVET-USP Pirassununga. Considerar transplante hepático canino.</div>
+  </div>
+
+  <div class="disaster-row">
+    <div class="spec">Dra. Karina (dermato) — Pioderma MRSP refratário + Cytopoint+ASIT falharam</div>
+    <div class="block"><strong>Sinal ignorado agora</strong>Múltiplos cursos de antibiótico + imunossupressão crônica = risco de resistência</div>
+    <div class="block"><strong>Recomendação nuclear</strong>Internação hospitalar + biópsia cutânea profunda + cultura anaeróbia + ciclosporina A 5 mg/kg SID + banho diário clorexidina 4% + enilconazol tópico. Último recurso: MSC autóloga experimental.</div>
+  </div>
+
+  <div class="disaster-row">
+    <div class="spec">Dr. Marcelo (hepato) — Esteatohepatite fibrosante</div>
+    <div class="block"><strong>Sinal ignorado agora</strong>Refratariedade ao emagrecimento — Wally nunca chegou a 10 kg</div>
+    <div class="block"><strong>Recomendação nuclear</strong>SAMe 20 mg/kg/d + L-carnitina 250-500 mg/d + taurina 500 mg/d + UDC contínuo. Biópsia + paracentese se ascite. Investigar shunt portossistêmico.</div>
+  </div>
+
+  <div class="disaster-row">
+    <div class="spec">Dra. Luana (gastro) — GERD refratário, esofagite grau C</div>
+    <div class="block"><strong>Sinal ignorado agora</strong>Refluxo persistente apesar de IBP = falha de esfíncter esofagiano inferior</div>
+    <div class="block"><strong>Recomendação nuclear</strong>Fundoplicatura laparoscópica (Nissen veterinária — HOVET-USP) + sucralfato crônico + omeprazol dobrado + elevar cama + dieta fracionada 5×/dia.</div>
+  </div>
+
+  <div class="disaster-row">
+    <div class="spec">Dr. Henrique (endocrino) — Hipo primário + resistência insulínica + Cushing iatrogênico sequelar</div>
+    <div class="block"><strong>Sinal ignorado agora</strong>Não foi feito LDDS antes de Depo-Medrol</div>
+    <div class="block"><strong>Recomendação nuclear</strong>Levotiroxina 0.02 mg/kg q12h + metformina 10 mg/kg q12h (off-label) + endocrinologista USP-FMVZ + tomografia adrenal. Considerar tireoidectomia se carcinoma.</div>
+  </div>
+
+  <div class="disaster-row">
+    <div class="spec">Dra. Camila R. (nutri) — Obesidade refratária absoluta</div>
+    <div class="block"><strong>Sinal ignorado agora</strong>Creche "Bosque do Cão" pode oferecer petiscos/sobras sem informar tutora</div>
+    <div class="block"><strong>Recomendação nuclear</strong>Dieta comercial hipocalórica (Royal Canin Satiety ou Hill's Metabolic) pesada em gramas + termo com creche "zero petisco" + balança semanal + considerar GLP-1 análogo (exenatide) experimental.</div>
+  </div>
+
+  <div class="disaster-row">
+    <div class="spec">Dr. Bruno (alergia) — DAC evolui para eritroderma generalizado; MSC inefetivo</div>
+    <div class="block"><strong>Sinal ignorado agora</strong>Talvez componente autoimune (pênfigo foliáceo, lúpus cutâneo) mascarado como DAC</div>
+    <div class="block"><strong>Recomendação nuclear</strong>Biópsia cutânea incisional + histopatologia + DIF (imunofluorescência direta). Ciclosporina + azatioprina combo. Janus kinase inhibitor 2ª geração (experimental). MSC alogênica repetida.</div>
+  </div>
+
+  <div class="card" style="margin-top:24px">
+    <h2>Síntese do Presidente — Dr. Lucas Braga</h2>
+    <p>Se o plano falhar em 6 meses, as cinco decisões imediatas:</p>
+    <ol>
+      <li><strong>Biópsia hepática + SDMA + painel nefro completo</strong> — assumir dano estrutural não capturado em rotina. Escalar para hospital universitário (HOVET-USP Pirassununga ou FMVZ).</li>
+      <li><strong>Dieta comercial hipocalórica</strong> (Royal Canin Satiety / Hill's Metabolic) imediatamente + balança semanal + termo com creche. AN prolongada pode ter limites.</li>
+      <li><strong>Biópsia cutânea</strong> para descartar componente autoimune — em 6 meses refratários, atopia pura é improvável.</li>
+      <li><strong>Endocrinologia acadêmica</strong> (USP-FMVZ) — painéis específicos (TRH estimulação, IGF-1, leptina, adiponectina) + RM hipofisária se Cushing central.</li>
+      <li><strong>Cirurgia GI</strong> (Nissen laparoscópica) se GERD refratário — opção em centros especializados SP.</li>
+    </ol>
+    <p><strong>Assimetria do cenário nuclear:</strong> todas as 5 ações são escalonáveis para hospitais universitários de São Paulo/interior (USP-FMVZ Pirassununga/Botucatu, UNESP Jaboticabal). Prioridade #1 é <strong>não aceitar diagnóstico funcional como final</strong> — reabrir investigação estrutural com biópsias.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div>Conselho Clínico Multidisciplinar Wally | 16/04/2026 | 7 especialistas + consultor cardiologia | 5 rounds | 88% fontes Tier 1</div>
+  <div style="margin-top:8px">Arquivos relacionados: <code>conselho-canal-2026-04-16.md</code> · <code>conselho-sources-2026-04-16.md</code> · <code>dashboard-saude-wally.html</code></div>
+</footer>
+
+<script>
+// ===== Data dos posts =====
+const POSTS = [
+  // ROUND 1
+  {round:1, spec:'rafael', name:'Dr. Rafael Moura', role:'Clínico Geral', content:`Quadro sistêmico em abril mostra <strong>três choques superpostos</strong> em paciente já frágil:<br/>(1) <strong>Sobredosagem enrofloxacina</strong> 21.4 mg/kg/d × 3d em cão com esteatose + GGT em alta. Injúria hepática potencial (Trepanier J Vet Intern Med 2004;18:463).<br/>(2) <strong>Depo-Medrol</strong> foi a pior escolha — depot irreversível, eleva TG (Gallay 2016), piora esteatose (Ling 2012), suprime HPA e invalida T4L/TSH/LDDS por 4-6 sem. ICADA 2015 recomenda prednisolona oral ajustável.<br/>(3) <strong>Pioderma bilateral</strong> + Simparic atrasado — bilateralidade sugere flare DAC + pioderma secundário; cultura obrigatória (Hillier ISCAID 2014).`, status:'DIVERGÊNCIA ABERTA — Depo deve ser compensado com monitoramento; cultura + antibiograma esta semana'},
+  {round:1, spec:'karina', name:'Dra. Karina Santos', role:'Dermatologia', content:`Diagnóstico de "infecção bacteriana" VISUAL sem citologia é inaceitável em paciente com DAC crônica. Favrot 2010: Wally preenche ≥6/8 critérios. Padrão atual (peito + costela bilateral + axila + coxas + perianal) = expansão típica de flare DAC. Pioderma é secundário.<br/><br/><strong>Depo-Medrol:</strong> ICADA 2015 (Olivry BMC Vet Res 2015;11:210) preferir prednisolona oral 0.5-1 mg/kg/d ajustável.<br/><strong>Baytril:</strong> 1ª linha é cefalexina 22-30 mg/kg q12h OU amoxi+clav (ISCAID 2014). Fluoroquinolona é reserva.<br/><br/><strong>Plano:</strong> cultura HOJE (Ortoderm tem parceiro). Banho clorexidina 3%+miconazol 2× sem. Cytopoint/Apoquel como alternativa ao corticoide (Cosgrove 2013; Michels 2016).`, status:'DIVERGÊNCIA ABERTA — Depo foi erro. Ação imediata = cultura + citologia + banho. Dermato presencial esta semana'},
+  {round:1, spec:'marcelo', name:'Dr. Marcelo Tavares', role:'Hepatologia', content:`<strong>Pré-abril:</strong> GGT 6 (↑5× vs Ago/2024), esteatose US Dez/2025, lama biliar persistente, albumina 4.2 (hemoconcentração?). ALT 22 pode estar falsamente normal em esteatose não-aguda (Center 2007).<br/><br/><strong>Insulto de abril:</strong><br/>1. Baytril 21.4 mg/kg/d × 3d — elevação transitória ALT/FA documentada (Trepanier).<br/>2. Depo-Medrol induz FA esteroidal + eleva TG + piora esteatose (Ling AJVR 2012).<br/>3. <strong>Xantinon B12</strong> — off-label humano. <strong>Verificar xilitol em excipientes URGENTE</strong> (Dunayer JAVMA 2006 — falência hepática fulminante).<br/>4. Silimarina (Legalon Vet) tem evidência mais robusta (Twedt 2004; Filburn 2007).<br/><br/>Plano: exames hepáticos COMPLETOS + ácidos biliares pré/pós-prandiais (equipe HAMA recusou — erro).`, status:'DIVERGÊNCIA ABERTA — checar xilitol no Xantinon hoje; silimarina > Xantinon em cão'},
+  {round:1, spec:'luana', name:'Dra. Luana Castilho', role:'Gastroenterologia', content:`Náusea matinal em 4+ tentativas (ovo, filé, mandioquinha+abobrinha, chuchu+mandioquinha) + <strong>única tentativa bem-sucedida com arroz japonês 17-18/03</strong>.<br/><br/><strong>Fisiopatologia:</strong> GERD biliar + hipersecreção noturna. Jejum &gt;12h → refluxo biliar matinal (Lobetti 2019). Arroz = baixo CCK, tampão sem gatilho secretor.<br/><br/><strong>Teste terapêutico:</strong> omeprazol 1 mg/kg SID 14d (Marks ACVIM 2018) é 1ª escolha em cão (Tolbert 2015 — famotidina menos eficaz). Se refratário → endoscopia.<br/><br/><strong>Arroz japonês:</strong> n=1 insuficiente. Protocolo 3 testes em noites alternadas. Consistente com Lobetti 2019 (redução BVS 70-80%).`, status:'CONCORDO — omeprazol 14d + arroz 3× + endoscopia se refratário'},
+  {round:1, spec:'henrique', name:'Dr. Henrique Azevedo', role:'Endocrinologia', content:`O Depo-Medrol <strong>embarga o diagnóstico endócrino</strong> por 4-6 semanas. 11/04 + 6 sem = 23/05.<br/><br/><strong>Janela de interferência (Moore JAVMA 1993; Peterson JVIM 2015):</strong><br/>• T4L, TSH, Anti-TG não confiáveis<br/>• LDDS invalidado (cortisol exógeno)<br/>• Insulina + glicose afetadas<br/><br/><strong>T4L 1.03 + TSH 0.22 pré-abril:</strong> <em>NÃO é hipotireoidismo primário clássico</em>. Compatível com NTIS (non-thyroidal illness syndrome) em esteatose + DAC + obesidade (Kantrowitz JVIM 2001).<br/><br/>Monitorar Cushing iatrogênico semanal até 09/05: PU/PD, polifagia, distensão abdominal, alopecia tronco, cicatrização retardada, fraqueza, hipertensão.<br/><br/><strong>Painel completo em 23-30/05.</strong> Não iniciar levotiroxina até lá.`, status:'DIVERGÊNCIA ABERTA — Rafael (hipo subclínico) vs eu (NTIS) — resolvível em maio'},
+  {round:1, spec:'camilar', name:'Dra. Camila Rezende', role:'Nutricionista', content:`Dieta ~335 kcal está na faixa de emagrecimento (RER 0.8× = 315 para 10 kg). Não há perda de peso → (a) ingestão subestimada (creche?) OU (b) gasto reduzido (hipo/NTIS/síndrome metabólica).<br/><br/><strong>Adequação AN:</strong> Stockman JAVMA 2013 — 95% de receitas caseiras inadequadas. Nutroplus cobre mas não omega-3.<br/><br/><strong>OM3 1000 (1 cáp = 0.55g EPA+DHA):</strong> dose-alvo 50-75 mg/kg/d EPA+DHA (Bauer JAVMA 2011) = 700-1050 mg para 14 kg. <strong>Subdosado em ~40%</strong>. Subir para 2 cáps/dia.<br/><br/><strong>Arroz japonês 22h:</strong> compatível com (a) reduzir jejum 15h→10-12h (Lobetti 2019), (b) tampão gástrico sem estímulo biliar (Raditic 2015). Dose: 30g (~40 kcal).`, status:'CONCORDO — subir omega-3 + arroz 22h + se não emagrecer em 30d reavaliar gasto energético'},
+  {round:1, spec:'bruno', name:'Dr. Bruno Meirelles', role:'Alergologia', content:`Pioderma + bilateralidade = flare DAC, não infecção primária.<br/><br/><strong>Hierarquia alérgica Wally:</strong> frango ✅, boi ✅, canola ✅. <strong>Faltante: ambientais</strong> (ácaros, pólens) — nunca testados. 5+ anos DAC não respondendo à dieta = ambiente dominante.<br/><br/><strong>Depo-Medrol preocupa alergologicamente:</strong><br/>1. Mascara progressão pioderma<br/>2. Impossibilita intradermal 4-8 sem (Olivry 2015)<br/>3. Sorológico IgE afetado 7-14d só<br/><br/><strong>Alternativas preferíveis:</strong> Cytopoint (lokivetmab, mensal) — <em>ideal para Wally (sem impacto hepato/metabólico)</em>. Apoquel (oclacitinib) 0.4-0.6 mg/kg q12h. ASIT se teste positivo (60-80% resposta, Mueller 2018). MSC como 3ª linha.<br/><br/>Proteína novel: cross-reativ suíno×bovino &lt;20%. Manter suíno.`, status:'DIVERGÊNCIA ABERTA — teste sorológico IgE em 25/04 + Cytopoint + ASIT'},
+
+  // ROUND 2
+  {round:2, spec:'rafael', name:'Dr. Rafael Moura', role:'Clínico Geral', shift:'<strong>R1 → R2:</strong> MUDOU — Depo de "compensável" para "escolha clinicamente inadequada, política nunca mais". Convencido por Dra. Karina (ICADA) + Dr. Bruno (janela perdida) + Scott-Moncrieff.', content:`@Karina: concordo em escalar cultura para esta semana. Bilateralidade é argumento dermatológico forte que subvalorizei.<br/>@Henrique: acepto NTIS como hipótese mais parcimoniosa. Hipo subclínico cai para 2ª opção.<br/><br/>Política: <strong>nunca mais Depo-Medrol em Wally</strong>. Oral ajustável apenas.<br/>Xilitol: tutora verifica hoje.`, status:'CONCORDO — cultura esta semana + nunca mais Depo + checar xilitol'},
+  {round:2, spec:'karina', name:'Dra. Karina Santos', role:'Dermatologia', shift:'<strong>R1 → R2:</strong> MANTEVE cultura esta semana. AJUSTOU imunomodulador: Cytopoint como preferência (convencida pelo Dr. Bruno sobre perfil metabólico preservado + anti-IL31).', content:`@Rafael: obrigada pelo shift. Ortoderm tem laboratório parceiro — 48-72h resultado.<br/>@Bruno: Cytopoint é preferível em Wally. Sequência:<br/>1) Aguardar 14d pós-Depo<br/>2) Cytopoint 1ª dose ~25/04<br/>3) Teste sorológico IgE paralelo<br/><br/><strong>Cultura 17-18/04</strong>, não esperar 19/04. Swab/biópsia lesão mais ativa (costela direita). Cultura+antibiograma+citologia Gram.<br/>• Cocos Gram+ → cefalexina 25 mg/kg q12h × 3 sem+7d pós.<br/>• Bacilos Gram− → antibiograma.<br/>• Malassezia → antifúngico tópico.<br/><br/>Beco Vet Rec 2013 — cultura+antibiograma é gold-standard em pioderma recorrente.`, status:'CONCORDO — cultura 17-18/04 + Cytopoint a partir de 25/04 + ASIT se positivo'},
+  {round:2, spec:'marcelo', name:'Dr. Marcelo Tavares', role:'Hepatologia', shift:'<strong>R1 → R2:</strong> MANTEVE preferência silimarina MAS ajustou para "checagem de lote" vs "suspensão cega". Convencido por Rafael.', content:`@Rafael: aguardo resposta tutora sobre xilitol — prioridade absoluta.<br/>@Luana: omeprazol em lama biliar — evidência mista (Katz 2013 humano), mas benefício de controle ácido &gt; risco em uso &lt;30d. <strong>Omeprazol 1 mg/kg SID é seguro</strong> em teste 14d.<br/><br/>Xantinon B12 (MSD/Galena/União Química) liquído 5 ml habitualmente contém aspartame, sorbitol, metilparabeno, sacarina — <strong>nenhuma apresentação BR atual lista xilitol</strong>. Lote pode variar — verificar é mandatório.<br/><br/>Plano:<br/>• 17/04: ALT, AST, FA, GGT, <strong>ácidos biliares pré+pós-prandiais</strong>, albumina, bilirrubina T/D.<br/>• Se ALT &gt;2× limite → silimarina Legalon Vet 50-100 mg/kg/d + UDC 10-15 mg/kg/d (Wingfield 2001).<br/>• Se estáveis → manter Xantinon 30d.<br/>• Re-US abdominal maio (pós-Depo).`, status:'CONCORDO — exames 17/04 + verificar lote Xantinon + re-US maio'},
+  {round:2, spec:'luana', name:'Dra. Luana Castilho', role:'Gastroenterologia', shift:'<strong>R1 → R2:</strong> MUDOU — de "3 testes sequenciais arroz" para "protocolo paralelo omeprazol+arroz simultâneos + desescalonamento". Convencida pela Dra. Camila R.', content:`@Camila R.: posso comprometer — implementar arroz 30g às 22h já + diário (data, quantidade, náusea S/N). Meta: 7 noites consecutivas.<br/>@Marcelo: obrigada — 14d omeprazol + re-US é aceitável.<br/><br/><strong>Protocolo paralelo:</strong><br/>• Sem 1-2: omeprazol 1 mg/kg SID + arroz 22h (combinação)<br/>• Sem 3-4: desescalar omeprazol (pausa). Se náusea retorna → omeprazol era necessário. Se não → arroz suficiente.<br/><br/><strong>Endoscopia:</strong> reservar pós-Depo (sedação com corticoide ativo exige ajuste — ASA III). Aguardar maio.`, status:'CONCORDO — omeprazol 14d + arroz 22h + endoscopia pós-Depo se falha'},
+  {round:2, spec:'henrique', name:'Dr. Henrique Azevedo', role:'Endocrinologia', shift:'<strong>R1 → R2:</strong> MANTEVE NTIS como mais provável + adicionou monitoramento Cushing iatrogênico explícito.', content:`@Rafael: obrigado — NTIS é parcimônia útil; subclínico não excluído.<br/>@Camila R.: gasto energético reduzido é plausível. Síndrome metabólica canina (Tvarijonaviciute 2016) → termogênese adaptativa ↓10-15% = 30-50 kcal/d para 10 kg.<br/><br/><strong>Maio pós-23/05:</strong> T4L diálise + TSH + Anti-TG. Se T4L &lt;0.8 + TSH &gt;0.5 + Anti-TG+ = hipo primário. Se T4L 0.8-1.5 + TSH normal + sem sinais = NTIS confirmado.<br/><br/><strong>LDDS:</strong> só em junho.<br/><strong>Insulina basal + glicose jejum + HOMA-IR</strong> simultâneo.<br/><br/><strong>Cushing iatrogênico a monitorar SEMANAL até 09/05:</strong><br/>• PU/PD • Polifagia • Distensão abdominal (pot-belly) • Fraqueza posterior • Alopecia tronco bilateral • Cicatrização retardada (pioderma não resolve = sinal!) • Hipertensão`, status:'CONCORDO — checklist semanal Cushing iatrogênico + painel 23-30/05'},
+  {round:2, spec:'camilar', name:'Dra. Camila Rezende', role:'Nutricionista', shift:'<strong>R1 → R2:</strong> MANTEVE arroz + omega-3 subido. Especificou protocolo nutricional + arroz integrado.', content:`@Luana: aceito protocolo paralelo.<br/>@Bruno: proteína novel — concordo que ambiental é driver; manter suíno.<br/><br/><strong>Ajuste de dieta:</strong><br/>• R1 (7h creche): 60g filé + 20g carbo + 25g chuchu + Nutroplus 1g + glutamina 1ml — ~115 kcal<br/>• R2 (12h): 60g + 20g + 25g + glutamina 1ml — ~115 kcal<br/>• R3 (16h): 60g + 15g + 30g + Fiber Mais 3g + Nutroplus 2g + glutamina 1ml — ~105 kcal<br/>• <strong>Mini 22h em casa:</strong> arroz japonês 30g (~40 kcal)<br/>Total ~375 kcal. Para manter 335 → reduzir filé 180→170g.<br/><br/><strong>Omega-3:</strong> 2 cáps OM3/d = 1000 mg EPA+DHA. Alternativa: Nutracean ou Nordic Naturals Vet (mais concentrado).`, status:'CONCORDO — protocolo dieta + omega-3 1000 mg + arroz 22h'},
+  {round:2, spec:'bruno', name:'Dr. Bruno Meirelles', role:'Alergologia', shift:'<strong>R1 → R2:</strong> MANTEVE cronograma Cytopoint+ASIT+MSC. Adicionou controle ambiental paralelo.', content:`@Karina: sequência R2 excelente — cultura 17-18/04 + Cytopoint 25/04 + teste IgE 25/04 + ASIT jun-jul.<br/>@Henrique: concordo — teste IgE sorológico é viável pós-14d Depo; já teremos passado janela intensa em 25/04.<br/><br/><strong>Controle ambiental (custo zero):</strong><br/>• Lavar cama Wally 2×/sem 60°C (ácaros)<br/>• Aspirar 2×/sem<br/>• Manter Allermil semanal<br/>• Douxo S3 Calm em áreas atingidas<br/><br/><strong>MSC:</strong> não antes de Cytopoint+ASIT falharem. CFMV 1.363/2020, R$ 2-5k/sessão, 3 sessões. <strong>Reavaliar dez/2026</strong> se resposta insatisfatória.`, status:'CONCORDO — cultura + Cytopoint 25/04 + IgE + ASIT jun-jul + MSC só dez/2026 se falha'},
+  {round:2, spec:'amanda', name:'Dra. Amanda Fonseca', role:'Cardiologia (Consultora R2)', content:`<strong>Risco tromboembólico em Wally (TG 250 + Depo + eritrocitose racial + eco contraste esplênico out/2025):</strong><br/>• TEP em cães é raro vs humanos (Mahony ACVIM 2019)<br/>• Thresholds: TG &gt;500 ou colesterol &gt;750 → Wally TG 250, col 144 → abaixo<br/>• Hipercoagulabilidade por corticoide documentada (Romão JVIM 2013) mas clinicamente relevante em prednisolona alta prolongada ou Depo com doença crônica<br/>• Ht 55.6% no topo racial, não patológico verdadeiro<br/><br/><strong>Recomendação:</strong> NÃO iniciar antiagregante profilático (benefício&lt;risco GI). Monitorar PA, FC, dispneia. Se sinais novos → eco + D-dímero + gasometria urgente.<br/><br/>Eco rotina 18-24 meses — dez/2026. Re-US maio pode correlacionar eco contraste esplênico.`, status:'CONCORDO — risco baixo-moderado; monitoramento sintomático sem profilaxia'},
+
+  // ROUND 3
+  {round:3, spec:'rafael', name:'Dr. Rafael Moura', role:'Clínico Geral', shift:'<strong>R2 → R3:</strong> MANTEVE posição "nunca mais Depo" + adicionou cronograma 8-semanas explícito.', content:`Cronograma consolidado:<br/><strong>Hoje 16/04:</strong> tutora checa xilitol + contacta Ortoderm. Baytril pausado mantido.<br/><strong>17-18/04:</strong> cultura+antibiograma+citologia + exames hepáticos completos + iniciar omeprazol + arroz 22h + upgrade omega-3.<br/><strong>19/04 Dr. Otávio:</strong> NÃO retomar Baytril; NÃO Simparic.<br/><strong>25/04:</strong> Cytopoint 1ª + IgE sorológico.<br/><strong>Maio (~09-15/05):</strong> Simparic retomado + re-US + painel endócrino.<br/><strong>Junho:</strong> cardiologia (dez/2026); ASIT se IgE+.`, status:'CONCORDO'},
+  {round:3, spec:'karina', name:'Dra. Karina Santos', role:'Dermatologia', shift:'<strong>R2 → R3:</strong> MANTEVE + plano para MRSP + banho medicado 2×/sem. Refinamento operacional.', content:`<strong>Stress-test: cultura identifica MRSP + resistência a cefalexina?</strong><br/>MRSP em pioderma recorrente canino: 10-20% prevalência (Morris Vet Dermatol 2017). Se Wally MRSP:<br/>• Antibiograma dirige: clindamicina, doxiciclina, cloranfenicol, mupirocina tópica<br/>• Evitar amoxi+clav (cross-resistência com cefalexina)<br/>• Tópicos primeiro: clorexidina 3% 2×/sem + mupirocina focal<br/><br/><strong>Banho medicado IMEDIATO</strong> independente cultura: Allermil 1→2×/sem + Douxo S3 Pyo intercalado. Baixo risco, alto benefício.`, status:'CONCORDO'},
+  {round:3, spec:'marcelo', name:'Dr. Marcelo Tavares', role:'Hepatologia', shift:'<strong>R2 → R3:</strong> MANTEVE exames 17/04 + protocolo escalonado por gravidade de ALT.', content:`<strong>Stress-test: ALT &gt;3× limite em 17-18/04?</strong><br/>Hepatite medicamentosa aguda. Conduta:<br/>• Silimarina Legalon Vet 100 mg/kg/d + UDC 10-15 mg/kg/d<br/>• Suspender Xantinon (substituir por silimarina)<br/>• ALT &gt;5× ou bilirrubina &gt;2 → internação + SAMe IV + fluidoterapia (Center JVIM 2004)<br/>• Biópsia hepática US-guided se ALT &gt;10× ou sinais falência<br/><br/>Probabilidade: baixa-moderada. Enrofloxacina supra-terapêutica em curso curto é geralmente reversível (Hooper 1991). Vigilância, não pânico.`, status:'CONCORDO'},
+  {round:3, spec:'luana', name:'Dra. Luana Castilho', role:'Gastroenterologia', shift:'<strong>R2 → R3:</strong> MANTEVE protocolo paralelo + plano B (metoclopramida+maropitant) + plano C (endoscopia+sucralfato).', content:`<strong>Stress-test: omeprazol+arroz sem melhora em 14d?</strong><br/>• Plano B: adicionar metoclopramida 0.2-0.5 mg/kg SID 30min pré-refeição (pró-cinético) OU maropitant 2 mg/kg SID × 5-7d (antiemético central, Koivisto 2019)<br/>• Plano C: endoscopia maio pós-Depo — gastrite erosiva, H. pylori canino, motilidade, refluxo<br/>• Se gastrite erosiva → sucralfato 0.5-1g PO q8h 30min pré + omeprazol + suspender AINE/corticoide`, status:'CONCORDO'},
+  {round:3, spec:'henrique', name:'Dr. Henrique Azevedo', role:'Endocrinologia', shift:'<strong>R2 → R3:</strong> MANTEVE monitoramento Cushing + adicionou protocolo de resposta para Cushing iatrogênico + plano hipo confirmado.', content:`<strong>Stress-test 1: Cushing iatrogênico antes 09/05?</strong><br/>PU/PD+polifagia+cicatrização retardada+pioderma não resolve. Conduta: PACIÊNCIA — Depo irreversível.<br/>• Água ad libitum (não restringir)<br/>• Glicemia &gt;180 persistente → risco diabetes esteroide (insulina temporária)<br/>• PA semanal &lt;160/100<br/>• Suspender todo AINE/corticoide adicional<br/><br/><strong>Stress-test 2: Painel 30/05 com TSH↑ + T4L&lt;0.7 + Anti-TG+?</strong><br/>Hipo autoimune (tireoidite linfocítica). Levotiroxina 0.02 mg/kg q12h (Scott-Moncrieff). Shiba tem predisposição (Aniolek 2017). Re-dosar 6-8 sem pós-início.`, status:'CONCORDO'},
+  {round:3, spec:'camilar', name:'Dra. Camila Rezende', role:'Nutricionista', shift:'<strong>R2 → R3:</strong> MANTEVE + contingências para recusa e ganho de peso.', content:`<strong>Stress-test: Wally recusa arroz às 22h?</strong><br/>• Tentar arroz + 5g filé suíno (atratividade)<br/>• Mandioquinha+arroz (30g total)<br/>• Recusa persistente após 3× → suspender, confirmar sucesso só com omeprazol<br/><br/><strong>Stress-test: Ganho de peso com 335→375 kcal?</strong><br/>• Reduzir arroz 30→15g (20 kcal) OU<br/>• Reduzir filé 180→160g (macro mantido, kcal↓)`, status:'CONCORDO'},
+  {round:3, spec:'bruno', name:'Dr. Bruno Meirelles', role:'Alergologia', shift:'<strong>R2 → R3:</strong> MANTEVE Cytopoint+ASIT+MSC + plano escalonado para refratariedade.', content:`<strong>Stress-test: Cytopoint sem redução prurido em 14d?</strong><br/>• Trocar para Apoquel 0.4-0.6 mg/kg q12h × 14d depois SID (início em horas vs 1-8d Cytopoint)<br/>• Ambos recuperáveis, não acumulam<br/>• Se Apoquel falhar 2 sem → ciclosporina (Atopica) 5 mg/kg SID 6 sem depois ajustar (Olivry 2015)`, status:'CONCORDO'},
+
+  // ROUND 4
+  {round:4, spec:'rafael', name:'Dr. Rafael Moura', role:'Clínico Geral', content:`<strong>Integrações cruzadas:</strong><br/>1. Omeprazol + omega-3: sem interação<br/>2. Omeprazol + B12 (Xantinon): IBP reduzem absorção B12 só em uso crônico &gt;2a (MacFarlane 2018). Seguro 14-28d<br/>3. Cytopoint + Depo ativo: compatível, mas melhora de prurido pós-Cytopoint mascarada pelo corticoide — avaliar eficácia só pós-09/05<br/>4. Cytopoint + cefalexina: OK<br/>5. Omega-3 + Simparic: sem interação. 1000 mg/d = 71 mg/kg, limite aceitável<br/>6. Silimarina + omeprazol: sem interação<br/><br/><strong>Política:</strong> tutora mantém diário de sinais — Cushing, pele, fezes, apetite.`, status:'CONCORDO'},
+  {round:4, spec:'marcelo', name:'Dr. Marcelo Tavares', role:'Hepatologia', content:`<strong>Omeprazol 14-28d em esteatose + sobredosagem:</strong> OK, IBP não hepatotóxicos em dose terapêutica. Monitorar ALT se &gt;28d.<br/><strong>Silimarina + omeprazol + Cytopoint + omega-3:</strong> compatíveis. Silimarina pode elevar AST levemente (hepatoprotetor ativo, não lesão).<br/><strong>Depo-Medrol + esteatose:</strong> piora documentada (Ling AJVR 2012). Re-US em maio (4 sem pós-Depo).`, status:'CONCORDO'},
+  {round:4, spec:'karina', name:'Dra. Karina Santos', role:'Dermatologia', content:`<strong>Depo + cultura:</strong> corticoide ativo reduz crescimento bacteriano ~10-20%, falso-negativos possíveis. Mitigar com <strong>citologia Gram</strong> simultânea — visual direto, não afetado.<br/><strong>Cytopoint + teste IgE sorológico:</strong> Cytopoint liga IL31, não IgE. Paralelo válido.<br/><strong>Apoquel (plano B):</strong> interfere com intradermal; menos com IgE sorológico (72h washout).`, status:'CONCORDO'},
+  {round:4, spec:'luana', name:'Dra. Luana Castilho', role:'Gastroenterologia', content:`Omeprazol + Simparic maio: sem interação.<br/>Omeprazol + Nutroplus/glutamina: complementares.<br/>Omeprazol 7h (30min pré R1) + arroz 22h (tampão): mecânicas distintas, compatíveis.`, status:'CONCORDO'},
+  {round:4, spec:'henrique', name:'Dr. Henrique Azevedo', role:'Endocrinologia', content:`Cytopoint (anticorpo monoclonal anti-IL31) ≠ corticoide — sem potencialização de Cushing.<br/>Omeprazol + LDDS pós-maio: IBP não afeta HPA. Seguro.<br/>Arroz 22h + insulina basal pós-maio: 9h intervalo, adequado para jejum.`, status:'CONCORDO'},
+  {round:4, spec:'camilar', name:'Dra. Camila Rezende', role:'Nutricionista', content:`Omega-3 + Nutroplus + Fiber Mais + glutamina: compatíveis; mesma refeição OK.<br/>Arroz 22h + refeição 16h: 6h intervalo, adequado esvaziamento.`, status:'CONCORDO'},
+  {round:4, spec:'bruno', name:'Dr. Bruno Meirelles', role:'Alergologia', content:`Cytopoint + ASIT: concomitante OK — sintomático + modificador. Benefício aditivo.<br/>Cytopoint + teste IgE 25/04: sem problema.<br/><strong>Cytopoint + cicatrização retardada (Depo):</strong> preocupação real. Se pioderma não melhora em 14d pós-cefalexina+Cytopoint → cultura de controle + alternativa antibiótica.`, status:'CONCORDO'},
+
+  // ROUND 5 — fechamento via Lucas
+  {round:5, spec:'lucas', name:'Dr. Lucas Braga', role:'Presidente (Safety Net — Fechamento)', content:`<strong>Round 5 = Diagnóstico Final.</strong> Synthesis Pipeline aplicado (Extract → Redundancy → Plausibility → N&amp;S → Classify → Self-check). Todas as recomendações eliminadas estão na Aba 3. Todos os consensos robustos têm Position Shift testado em R1→R2. Plano integrado: 21 ações (9 🔴 + 6 🟡 + 6 🟢). Score: <strong>4.8/10</strong>. Próxima revisão: <strong>30/05/2026</strong>.`, status:'FECHAMENTO — ver Abas 1, 3, 4, 5'}
+];
+
+// Render posts
+function renderPosts(){
+  const roundF = document.getElementById('filter-round').value;
+  const specF = document.getElementById('filter-spec').value;
+  const container = document.getElementById('posts-container');
+  container.innerHTML = '';
+  let currentRound = 0;
+  POSTS.filter(p=>{
+    if(roundF!=='all' && String(p.round)!==roundF) return false;
+    if(specF!=='all' && p.spec!==specF) return false;
+    return true;
+  }).forEach(p=>{
+    if(p.round !== currentRound){
+      currentRound = p.round;
+      const h = document.createElement('h2');
+      h.style.margin = '24px 0 10px';
+      h.style.fontSize = '16px';
+      h.style.color = 'var(--accent)';
+      h.textContent = p.round === 5 ? 'Round 5 — Fechamento (safety net)' : `Round ${p.round}`;
+      container.appendChild(h);
+    }
+    const div = document.createElement('div');
+    div.className = `specialist-post hoverable ${p.spec}`;
+    div.innerHTML = `
+      <div class="header">
+        <div><span class="name">${p.name}</span> <span class="role">— ${p.role}</span></div>
+        <div class="round">Round ${p.round}</div>
+      </div>
+      <div class="content">${p.content}</div>
+      ${p.shift ? `<div class="shift">${p.shift}</div>` : ''}
+      ${p.status ? `<div class="status-line">STATUS: ${p.status}</div>` : ''}
+    `;
+    container.appendChild(div);
+  });
+}
+
+// Tabs
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+  });
+});
+
+document.getElementById('filter-round').addEventListener('change', renderPosts);
+document.getElementById('filter-spec').addEventListener('change', renderPosts);
+renderPosts();
+
+// Score chart
+const scoreCtx = document.getElementById('scoreChart');
+if(scoreCtx){
+  new Chart(scoreCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Score atual', 'Déficit'],
+      datasets: [{
+        data: [4.8, 5.2],
+        backgroundColor: ['#d4860a', '#e2e8f0'],
+        borderWidth: 0,
+        cutout: '75%'
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: {
+        legend: { display:false },
+        tooltip: {
+          callbacks: {
+            label: (ctx)=> ctx.label==='Score atual' ? `Score: ${ctx.parsed.toFixed(1)}/10` : `Déficit: ${ctx.parsed.toFixed(1)}`
+          }
+        }
+      }
+    },
+    plugins: [{
+      id: 'centertext',
+      afterDraw(chart){
+        const {ctx, chartArea:{left,right,top,bottom}} = chart;
+        const cx = (left+right)/2, cy = (top+bottom)/2;
+        ctx.save();
+        ctx.font = '700 32px "DM Sans"';
+        ctx.fillStyle = '#d4860a';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('4.8', cx, cy - 10);
+        ctx.font = '500 12px "DM Sans"';
+        ctx.fillStyle = '#64748b';
+        ctx.fillText('/10', cx, cy + 18);
+        ctx.restore();
+      }
+    }]
+  });
+}
+</script>
+
+</body>
+</html>

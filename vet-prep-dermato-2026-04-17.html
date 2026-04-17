@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Wally — Preparo Consulta Dermato (17/04/2026)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f8f9fb;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --text-sub: #64748b;
+    --text-muted: #94a3b8;
+    --accent: #6366f1;
+    --accent-text: #4338ca;
+    --accent-dim: rgba(99,102,241,0.08);
+    --success: #059669;
+    --success-bg: #ecfdf5;
+    --warning: #d4860a;
+    --warning-bg: #fffbeb;
+    --danger: #dc2626;
+    --danger-bg: #fef2f2;
+    --info: #2563eb;
+    --info-bg: #eff6ff;
+    --radius: 10px;
+    --radius-sm: 6px;
+    --font: 'DM Sans', system-ui, -apple-system, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    font-size: 10.5pt;
+    padding: 18px 26px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 780px; margin: 0 auto; }
+  header {
+    border-bottom: 2px solid var(--text);
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  header .sub {
+    color: var(--text-sub);
+    font-size: 0.85rem;
+  }
+  header .id-line {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: var(--text-sub);
+  }
+  h2 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--accent-text);
+    margin: 14px 0 8px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 {
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin: 8px 0 4px;
+    color: var(--text);
+  }
+  p, li { font-size: 0.88rem; line-height: 1.55; }
+  ul, ol { padding-left: 20px; }
+  ul li, ol li { margin-bottom: 3px; }
+  strong { font-weight: 600; }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+  }
+  .callout {
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    border-left: 4px solid;
+    margin: 8px 0;
+    font-size: 0.88rem;
+  }
+  .callout-danger { background: var(--danger-bg); border-color: var(--danger); }
+  .callout-warning { background: var(--warning-bg); border-color: var(--warning); }
+  .callout-info { background: var(--info-bg); border-color: var(--info); }
+  .callout-success { background: var(--success-bg); border-color: var(--success); }
+  .callout-title {
+    font-weight: 700;
+    margin-bottom: 3px;
+    font-size: 0.85rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin: 6px 0;
+  }
+  th {
+    text-align: left;
+    padding: 6px 8px;
+    background: #f1f4f8;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  td {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .badge {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 99px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge-danger { background: rgba(220,38,38,0.1); color: var(--danger); }
+  .badge-warning { background: rgba(212,134,10,0.1); color: var(--warning); }
+  .badge-success { background: rgba(5,150,105,0.1); color: var(--success); }
+  .badge-info { background: rgba(37,99,235,0.1); color: var(--info); }
+  .q {
+    background: var(--accent-dim);
+    border-left: 3px solid var(--accent);
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    font-style: italic;
+    margin: 6px 0;
+    font-size: 0.88rem;
+    color: var(--text);
+  }
+  .tag-list { display: flex; flex-wrap: wrap; gap: 4px; }
+  .no-break { page-break-inside: avoid; }
+  footer {
+    margin-top: 16px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    text-align: center;
+  }
+  @media print {
+    body { background: white; padding: 12mm 10mm; font-size: 10pt; }
+    .page { max-width: 100%; }
+    .box, .callout { break-inside: avoid; }
+    h2, h3 { break-after: avoid; }
+    .no-print { display: none; }
+  }
+  @page { size: A4; margin: 12mm; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <h1>Wally — Preparo para Consulta Dermato</h1>
+    <div class="sub">Dr. Douglas Bessa · PetDerma Campo Belo · 17/04/2026</div>
+    <div class="id-line">
+      Shiba Inu macho · castrado · nasc. 13/01/2019 (7a) · 14 kg (sobrepeso, ideal 10-11 kg) · tutora: Mayra Koyama
+    </div>
+  </header>
+
+  <!-- CRITICAL ALERTS -->
+  <div class="callout callout-danger no-break">
+    <div class="callout-title">🚫 Linha dura — Consenso unânime do Conselho Clínico (16/04/2026)</div>
+    <strong>NUNCA MAIS Depo-Medrol (metilprednisolona depot) em Wally.</strong>
+    Base: ICADA 2015 (Olivry et al.), Scott-Moncrieff 2015, Ling AJVR 2012 — risco de supressão HPA prolongada + Cushing iatrogênico + descompensação metabólica. Se corticoide for necessário, <strong>apenas oral desmamável</strong> (prednisolona em dose baixa e curso curto).
+  </div>
+
+  <div class="callout callout-warning no-break">
+    <div class="callout-title">⚠️ Janela de interferência em exames — até ~23/05/2026</div>
+    Depo-Medrol injetado em 11/04/2026 invalida: T4L, TSH, Anti-TG, LDDS, cortisol/ACTH, insulina jejum. Painel endócrino agendado para <strong>23-30/05/2026</strong>.
+  </div>
+
+  <!-- CONDIÇÕES ATIVAS -->
+  <section class="no-break">
+    <h2>Condições ativas (Score Conselho 4.8/10 em 16/04/2026)</h2>
+    <ul>
+      <li><strong>DAC multifocal</strong> com pioderma bilateral em expansão (axila, perianal, costela — DAC crônica + flare abril)</li>
+      <li><strong>Síndrome metabólica emergente</strong>: TG 250 mg/dL (Dez/2025), esteatose hepática, obesidade refratária</li>
+      <li><strong>Hipotireoidismo subclínico suspeito</strong>: T4L 1.03 em queda (confirmação adiada para maio)</li>
+      <li><strong>Gastrite crônica com GERD biliar</strong>: náusea matinal, protocolo omeprazol + arroz japonês 22h em curso</li>
+      <li><strong>Eritrocitose parcialmente racial</strong> (Shiba — hemácias menores, compensação fisiológica — Dra. Camila 24/03)</li>
+    </ul>
+  </section>
+
+  <!-- ALERGIAS -->
+  <section class="no-break">
+    <h2>Alergias — confirmação por método</h2>
+    <table>
+      <thead>
+        <tr><th>Alérgeno</th><th>Status</th><th>Método</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Frango</strong></td>
+          <td><span class="badge badge-danger">CONFIRMADO</span></td>
+          <td>Provocação acidental (~2022-2023): coceira severa incessante, escondia para coçar. Padrão-ouro (Mueller &amp; Olivry 2017)</td>
+        </tr>
+        <tr>
+          <td><strong>Boi</strong></td>
+          <td><span class="badge badge-danger">CONFIRMADO</span></td>
+          <td>Dieta de eliminação (Dez/2025, Dra. Fernanda): fezes melhoraram ao remover</td>
+        </tr>
+        <tr>
+          <td><strong>Óleo de canola</strong></td>
+          <td><span class="badge badge-danger">CONFIRMADO</span></td>
+          <td>Correlação temporal direta (Jan-Fev/2026): dermatite axilar + perianal</td>
+        </tr>
+        <tr>
+          <td><strong>Anestésico (?)</strong></td>
+          <td><span class="badge badge-warning">SUSPEITO</span></td>
+          <td>Reação alérgica pós-cirurgia dental 2025; dermatos descartaram 15d depois (avaliação tardia). <em>Investigar antes de qualquer sedação/teste sob anestesia.</em></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.82rem;color:var(--text-sub);margin-top:4px;">Dieta atual: AN suíno (file mignon) + batata-doce/mandioquinha + chuchu + Fiber Mais 3g + Nutroplus 3g + Glutamina 3ml + OM3 Omega Top 1000mg/dia.</p>
+  </section>
+
+  <!-- MEDICAMENTOS -->
+  <section class="no-break">
+    <h2>Medicamentos e eventos recentes</h2>
+    <table>
+      <thead>
+        <tr><th>Data</th><th>Evento / Medicamento</th><th>Status hoje</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>11/04</td>
+          <td><strong>Depo-Medrol injetável</strong> (metilprednisolona depot, 2-4 sem ação)</td>
+          <td><span class="badge badge-danger">ATIVO — linha dura acima</span></td>
+        </tr>
+        <tr>
+          <td>11/04</td>
+          <td><strong>Baytril 150mg</strong> prescrito: 1/2 comp q12h por 5 dias (+5 se persistir)</td>
+          <td><span class="badge badge-info">Ativo</span></td>
+        </tr>
+        <tr>
+          <td>11-13/04</td>
+          <td>⚠️ Sobredosagem: 1 comp inteiro em vez de 1/2 por 3 dias (21.4 mg/kg/dia; ~900mg total vs. 750mg prescritos). Inapetência + náusea</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>13/04 (noite)</td>
+          <td>Pausa Baytril (orientação Dr. Otávio: pausar 5 dias)</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>14/04</td>
+          <td><strong>Baytril RETOMADO</strong> na dose correta (1/2 comp q12h). Dr. Otávio: "se sem náusea, dar conforme prescrição"</td>
+          <td><span class="badge badge-warning">Ativo há ~3 dias na dose correta</span></td>
+        </tr>
+        <tr>
+          <td>14/04</td>
+          <td>Xantinon B12 5ml 2x/dia (hepatoprotetor pós-sobredosagem)</td>
+          <td><span class="badge badge-info">Ativo</span></td>
+        </tr>
+        <tr>
+          <td>11/04</td>
+          <td>OM3 Omega Top 1000mg — 1 cáp/dia (Dr. Otávio)</td>
+          <td><span class="badge badge-info">Ativo</span></td>
+        </tr>
+        <tr>
+          <td>Semanal</td>
+          <td>Banho com Allermil (Viafarc) — sexta-feira</td>
+          <td><span class="badge badge-info">Ativo</span></td>
+        </tr>
+        <tr>
+          <td>Abril</td>
+          <td>Simparic (antipulgas) — <strong>ATRASADO</strong> até fígado estabilizar</td>
+          <td><span class="badge badge-warning">Pausado</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- PERGUNTA-CHAVE -->
+  <section class="no-break">
+    <h2>Pergunta decisiva para o Dr. Douglas</h2>
+    <div class="q">
+      "O Baytril está ativo há ~3 dias (retomado após sobredosagem, sem antibiograma). Vale pausar 72h pra coletar cultura com mais sensibilidade, ou você prefere coletar citologia + cultura mesmo em uso?"
+    </div>
+    <p style="font-size:0.85rem;">ISCAID 2014 (Hillier et al., <em>Vet Dermatol</em>): cultura ideal <strong>antes</strong> do antibiótico. Em curso, 3-7 dias de washout melhoram sensibilidade; <strong>citologia</strong> é menos afetada. Baytril foi empírico — o conselho recomenda troca por antibiótico dirigido após antibiograma, com 1ª linha ISCAID sendo cefalexina ou amoxi+clav (fluoroquinolonas só em infecções graves/resistentes).</p>
+    <p style="font-size:0.85rem;"><strong>3 caminhos para decidir com o Dr. Douglas:</strong></p>
+    <ol>
+      <li>Pausar Baytril 72h → coletar cultura com maior sensibilidade</li>
+      <li>Coletar citologia hoje + cultura mesmo sob Baytril (interpretar com cautela)</li>
+      <li>Aguardar fim do curso atual e coletar se não melhorar</li>
+    </ol>
+  </section>
+
+  <!-- OBJETIVOS -->
+  <section class="no-break">
+    <h2>Objetivos desta consulta</h2>
+    <ol>
+      <li><strong>Cultura + antibiograma + citologia</strong> do pioderma bilateral (decidir timing conforme pergunta acima)</li>
+      <li><strong>Cytopoint (lokivetmab)</strong> — agendado 25/04 como imunomodulador substituto do Depo-Medrol. Validar dose e timing</li>
+      <li><strong>Teste IgE sorológico</strong> para avaliar ASIT (imunoterapia específica) — PetDerma oferece</li>
+      <li><strong>Monitoramento Cushing iatrogênico</strong> (15d pós-Depo): PU/PD, polifagia, cicatrização lenta, distensão abdominal, alopecia tronco, PA</li>
+      <li><strong>Registrar em prontuário</strong>: suspeita de reação a anestésico (dental 2025) — para qualquer sedação futura</li>
+      <li>Opinião sobre <strong>shampoo Allermil</strong> (frequência, substituição)</li>
+    </ol>
+  </section>
+
+  <!-- O QUE LEVAR ALÉM DESTE DOC -->
+  <section class="no-break">
+    <h2>Material adicional para levar</h2>
+    <ul>
+      <li><strong>Fotos cronológicas</strong> das lesões — axilas, perianal, costela, flanco (tirar antes de sair)</li>
+      <li>PDFs de exames recentes (hemograma, bioquímica, US se disponíveis)</li>
+      <li>Dashboard de saúde do Wally (celular)</li>
+    </ul>
+  </section>
+
+  <footer>
+    Preparado a partir de: Conselho Clínico 16/04/2026 · comunicacoes-vets.md · perfil-pet.md · Fontes: ICADA 2015, ISCAID 2014, Scott-Moncrieff 2015, Mueller &amp; Olivry 2017 · Documento gerado 16/04/2026
+  </footer>
+
+</div>
+</body>
+</html>

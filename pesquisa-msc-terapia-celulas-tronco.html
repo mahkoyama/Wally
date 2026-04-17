@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa: Terapia de Células-Tronco Mesenquimais (MSC) em Cães</title>
+    <style>
+        :root {
+            --bg-primary: #0f1117;
+            --bg-secondary: #1a1d2e;
+            --bg-card: #1e2235;
+            --bg-highlight: #252a3f;
+            --text-primary: #e8eaf0;
+            --text-secondary: #9ba3b5;
+            --text-muted: #6b7280;
+            --accent-blue: #60a5fa;
+            --accent-green: #34d399;
+            --accent-yellow: #fbbf24;
+            --accent-red: #f87171;
+            --accent-purple: #a78bfa;
+            --accent-orange: #fb923c;
+            --border: #2d3348;
+            --tier1: #34d399;
+            --tier2: #60a5fa;
+            --tier3: #fbbf24;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: var(--accent-blue);
+            border-bottom: 2px solid var(--accent-blue);
+            padding-bottom: 12px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+
+        .meta-info {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .meta-item {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .meta-item strong { color: var(--text-primary); }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 0;
+            flex-wrap: wrap;
+            background: var(--bg-secondary);
+            padding: 8px 8px 0;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .tab-btn {
+            padding: 10px 18px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover { background: var(--bg-highlight); color: var(--text-primary); }
+        .tab-btn.active {
+            background: var(--bg-card);
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 24px;
+            background: var(--bg-card);
+            border-radius: 0 0 12px 12px;
+            margin-bottom: 24px;
+        }
+
+        .tab-content.active { display: block; }
+
+        h2 {
+            font-size: 1.4rem;
+            color: var(--accent-blue);
+            margin: 24px 0 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h2:first-child { margin-top: 0; }
+
+        h3 {
+            font-size: 1.1rem;
+            color: var(--accent-purple);
+            margin: 18px 0 8px;
+        }
+
+        h4 {
+            font-size: 0.95rem;
+            color: var(--accent-yellow);
+            margin: 14px 0 6px;
+        }
+
+        p { margin-bottom: 12px; color: var(--text-primary); }
+
+        /* Source badges */
+        .tier {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 1px 5px;
+            border-radius: 3px;
+            vertical-align: super;
+            margin-left: 2px;
+            cursor: help;
+        }
+
+        .tier-1 { background: var(--tier1); color: #000; }
+        .tier-2 { background: var(--tier2); color: #000; }
+        .tier-3 { background: var(--tier3); color: #000; }
+
+        .source {
+            cursor: help;
+            border-bottom: 1px dotted var(--text-muted);
+            position: relative;
+        }
+
+        .source:hover { color: var(--accent-blue); }
+
+        /* Study cards */
+        .study-card {
+            background: var(--bg-highlight);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .study-card.positive { border-left-color: var(--accent-green); }
+        .study-card.negative { border-left-color: var(--accent-red); }
+        .study-card.mixed { border-left-color: var(--accent-yellow); }
+
+        .study-title {
+            font-weight: 600;
+            color: var(--accent-blue);
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+        }
+
+        .study-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .study-meta span {
+            display: inline-block;
+            margin-right: 12px;
+        }
+
+        .study-result {
+            font-size: 0.9rem;
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            margin-top: 8px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-rct { background: var(--accent-green); color: #000; }
+        .badge-clinical { background: var(--accent-blue); color: #000; }
+        .badge-experimental { background: var(--accent-purple); color: #fff; }
+        .badge-review { background: var(--accent-yellow); color: #000; }
+        .badge-case { background: var(--accent-orange); color: #000; }
+
+        /* Summary table */
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.85rem;
+        }
+
+        .summary-table th {
+            background: var(--bg-secondary);
+            color: var(--accent-blue);
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .summary-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .summary-table tr:hover { background: var(--bg-highlight); }
+
+        .result-positive { color: var(--accent-green); font-weight: 600; }
+        .result-negative { color: var(--accent-red); font-weight: 600; }
+        .result-mixed { color: var(--accent-yellow); font-weight: 600; }
+
+        /* Info boxes */
+        .info-box {
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+
+        .info-box.warning {
+            background: rgba(251, 191, 36, 0.1);
+            border-left: 3px solid var(--accent-yellow);
+        }
+
+        .info-box.danger {
+            background: rgba(248, 113, 113, 0.1);
+            border-left: 3px solid var(--accent-red);
+        }
+
+        .info-box.success {
+            background: rgba(52, 211, 153, 0.1);
+            border-left: 3px solid var(--accent-green);
+        }
+
+        .info-box.info {
+            background: rgba(96, 165, 250, 0.1);
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        /* Conclusion box */
+        .conclusion-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--accent-blue);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 20px 0;
+        }
+
+        .conclusion-box h3 {
+            color: var(--accent-blue);
+            margin-top: 0;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 8px 0 12px 20px;
+            color: var(--text-primary);
+        }
+
+        li { margin-bottom: 6px; font-size: 0.9rem; }
+
+        /* Composition footer */
+        .source-composition {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 24px;
+            font-size: 0.85rem;
+        }
+
+        .source-composition h4 {
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+        }
+
+        .comp-bar {
+            display: flex;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .comp-bar .t1 { background: var(--tier1); }
+        .comp-bar .t2 { background: var(--tier2); }
+        .comp-bar .t3 { background: var(--tier3); }
+
+        .comp-legend {
+            display: flex;
+            gap: 16px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .comp-legend span::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+
+        .comp-legend .l1::before { background: var(--tier1); }
+        .comp-legend .l2::before { background: var(--tier2); }
+        .comp-legend .l3::before { background: var(--tier3); }
+
+        /* Mechanism diagram */
+        .mechanism-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .mechanism-card {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 14px;
+            border-top: 3px solid var(--accent-purple);
+        }
+
+        .mechanism-card h4 {
+            color: var(--accent-purple);
+            margin-top: 0;
+            font-size: 0.9rem;
+        }
+
+        .mechanism-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            h1 { font-size: 1.4rem; }
+            .tab-btn { padding: 8px 12px; font-size: 0.8rem; }
+            .tab-content { padding: 16px; }
+            .summary-table { font-size: 0.75rem; }
+        }
+
+        /* Tooltip */
+        [data-tip] {
+            position: relative;
+        }
+
+        [data-tip]:hover::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            max-width: 400px;
+            white-space: normal;
+            z-index: 100;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Terapia de Celulas-Tronco Mesenquimais (MSC) em Caes</h1>
+        <p class="subtitle">Revisao sistematica de evidencias cientificas peer-reviewed para aplicacao em dermatite atopica canina e condicoes imunomediadas</p>
+
+        <div class="meta-info">
+            <div class="meta-item"><strong>Data:</strong> 25/03/2026</div>
+            <div class="meta-item"><strong>Contexto:</strong> Wally (Shiba Inu, 7 anos, DAC confirmada)</div>
+            <div class="meta-item"><strong>Estudos analisados:</strong> 20 artigos peer-reviewed</div>
+            <div class="meta-item"><strong>Fontes:</strong> PubMed, JAVMA, Frontiers Vet Sci, BMC Vet Res, Vet Record, Vet Journal, Vet Res Comm</div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="openTab(event, 'tab-dac')">MSC + DAC</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-imuno')">Imunomodulacao</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-outras')">Outras Condicoes</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-seguranca')">Seguranca</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-protocolos')">Protocolos</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-regulatorio')">Regulatorio + Brasil</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-custo')">Custo-Beneficio</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-resumo')">Tabela-Resumo</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab-conclusao')">Conclusao</button>
+        </div>
+
+        <!-- TAB 1: MSC para DAC -->
+        <div id="tab-dac" class="tab-content active">
+            <h2>1. MSC para Dermatite Atopica Canina (DAC)</h2>
+
+            <p>A dermatite atopica canina (DAC) e uma doenca inflamatoria cronica multifatorial, sem cura permanente, que afeta 10-15% dos caes. Os tratamentos convencionais (oclacitinib, ciclosporina, ASIT) controlam sintomas mas nao corrigem a desregulacao imunologica subjacente. A terapia com MSC emerge como alternativa que atua nos mecanismos fisiopatologicos da doenca.</p>
+
+            <h3>Estudos Clinicos em Caes com DAC Natural</h3>
+
+            <!-- Estudo 1: RCT duplo-cego -->
+            <div class="study-card positive">
+                <div class="study-title">
+                    <span class="badge badge-rct">RCT Duplo-Cego</span>
+                    Avaliacao duplo-cega placebo-controlada de MSC adiposas em DAC canina
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Kaur G, Ramirez A, Xie C, Clark D, Dong C, Maki C, Ramos T, Izadyar F, Najera SOL, Harb J, Hao J</span><br>
+                    <span><strong>Journal:</strong> Veterinary Research Communications, 2022, 46(1):251-260</span><br>
+                    <span><strong>DOI:</strong> 10.1007/s11259-021-09853-9</span>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/34713306/" style="color: var(--accent-blue);">34713306</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Desenho:</strong> RCT duplo-cego, placebo-controlado. Tres grupos: placebo (PBS), dose baixa (5x10<sup>5</sup> celulas/kg), dose alta (5x10<sup>6</sup> celulas/kg). Via subcutanea em 5 sitios. 3 tratamentos a cada 4 semanas.<br>
+                    <strong>Resultado:</strong> <span class="result-positive">POSITIVO</span> &mdash; Scores PVAS e niveis sericos de miR-483 significativamente menores no grupo dose alta vs. placebo no dia 90. CADESI-4 com tendencia de queda no grupo dose alta. Eficacia por ate 30 dias pos-ultimo tratamento.<br>
+                    <strong>Efeitos adversos:</strong> Nenhum efeito adverso grave observado.<br>
+                    <strong>Follow-up:</strong> 90 dias pos-primeiro tratamento.
+                </div>
+            </div>
+
+            <!-- Estudo 2: Villatoro 2018 -->
+            <div class="study-card positive">
+                <div class="study-title">
+                    <span class="badge badge-clinical">Trial Clinico</span>
+                    MSC alogenicas adiposas em caes com DAC refrataria: eficacia e seguranca
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Villatoro AJ, Hermida-Prieto M, Fernandez V, Farinas F, Alcoholado C, Rodriguez-Garcia MI, Marinas-Pardo L, Becerra J</span><br>
+                    <span><strong>Journal:</strong> Veterinary Record, 2018, 183(21):654</span><br>
+                    <span><strong>DOI:</strong> 10.1136/vr.104867</span>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/30158120/" style="color: var(--accent-blue);">30158120</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Desenho:</strong> Trial clinico. 26 caes inscritos (22 completaram). Dose: 1,5x10<sup>6</sup> celulas/kg IV. Caes com DAC refrataria a tratamentos convencionais.<br>
+                    <strong>Resultado:</strong> <span class="result-positive">POSITIVO</span> &mdash; Prurido e scores CADESI-04 diminuiram significativamente apos 1 semana/1 mes de tratamento, respectivamente, mantendo-se estaveis por 6 meses. Satisfacao dos tutores: 2,15 +/- 1,15.<br>
+                    <strong>Efeitos adversos:</strong> Nenhum evento adverso reportado durante todo o periodo.<br>
+                    <strong>Follow-up:</strong> 6 meses.
+                </div>
+            </div>
+
+            <!-- Estudo 3: Ramos 2020 -->
+            <div class="study-card positive">
+                <div class="study-title">
+                    <span class="badge badge-clinical">Trial Clinico</span>
+                    DAC canina atenuada por celulas-tronco mesenquimais
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Ramos FO, Malard PF, Brunel HSS, Paludo GR, Castro MB, Silva PHS, Barreto-Vianna ARC</span><br>
+                    <span><strong>Journal:</strong> Journal of Advanced Veterinary and Animal Research, 2020, 7(3):554-565</span><br>
+                    <span><strong>DOI:</strong> 10.5455/javar.2020.g453</span>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/33005683/" style="color: var(--accent-blue);">33005683</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Desenho:</strong> Trial clinico. 16 caes divididos por severidade (leve, moderado, severo). MSC IV a 2x10<sup>6</sup>/kg a cada 21 dias.<br>
+                    <strong>Resultado:</strong> <span class="result-positive">POSITIVO</span> &mdash; Reducao significativa da espessura epidermica nos grupos moderado e severo. Sinais clinicos de DAC melhoraram. Parametros hematologicos, bioquimicos e temperatura mantiveram-se normais.<br>
+                    <strong>Efeitos adversos:</strong> Nenhum efeito colateral reportado.<br>
+                    <strong>Follow-up:</strong> 82 dias.
+                </div>
+            </div>
+
+            <!-- Estudo 4: Hall 2010 - Pilot negativo -->
+            <div class="study-card negative">
+                <div class="study-title">
+                    <span class="badge badge-clinical">Piloto</span>
+                    Avaliacao de MSC estromais adiposas no tratamento de DAC canina: estudo piloto
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Hall MN, Rosenkrantz WS, Hong JH, Griffin CE, Mendelsohn CM</span><br>
+                    <span><strong>Journal:</strong> Veterinary Therapeutics, 2010, 11(2):E1-14</span><br>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/20957613/" style="color: var(--accent-blue);">20957613</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Desenho:</strong> Piloto. Dose: 1,3x10<sup>6</sup> celulas/kg IV.<br>
+                    <strong>Resultado:</strong> <span class="result-negative">NEGATIVO</span> &mdash; MSC adiposas administradas IV nao reduziram significativamente os sinais clinicos de DAC nem o nivel de prurido avaliado pelos tutores.<br>
+                    <strong>Nota:</strong> Dose utilizada pode ter sido insuficiente. Estudos posteriores com doses mais altas (5x10<sup>6</sup>/kg) mostraram resultados positivos (Kaur et al. 2022).
+                </div>
+            </div>
+
+            <h3>Estudos Experimentais (Modelos Animais com MSC Caninas)</h3>
+
+            <!-- Estudo 5: Kang 2023 -->
+            <div class="study-card positive">
+                <div class="study-title">
+                    <span class="badge badge-experimental">Experimental</span>
+                    Efeitos imunomoduladores de MSC caninas em modelo experimental de DAC
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Kang SJ, Gu NY, Byeon JS, Hyun BH, Lee J, Yang DK</span><br>
+                    <span><strong>Journal:</strong> Frontiers in Veterinary Science, 2023, 10:1201382</span><br>
+                    <span><strong>DOI:</strong> 10.3389/fvets.2023.1201382</span>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/37529178/" style="color: var(--accent-blue);">37529178</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Desenho:</strong> Experimental. 9 caes (3 grupos: controle, DA, DA + MSC). MSC adiposas subcutaneas (1x10<sup>7</sup> celulas/mL). Observacao: 12 semanas.<br>
+                    <strong>Resultado:</strong> <span class="result-positive">POSITIVO</span> &mdash; Eosinofilos diminuiram, celulas T regulatorias (Tregs) aumentaram, IgE e PGE2 reduzidos no grupo MSC. Expressao de filagrina e VEGF relativamente maior (nao significativo).<br>
+                    <strong>Relevancia:</strong> Primeiro estudo em caes demonstrando mecanismo imunologico completo (Tregs, IgE, eosinofilos) com MSC na DAC.
+                </div>
+            </div>
+
+            <!-- Estudo 6: Kim 2023 - Membrana amniotica -->
+            <div class="study-card positive">
+                <div class="study-title">
+                    <span class="badge badge-experimental">Experimental</span>
+                    MSC de membrana amniotica canina melhoram DAC via regeneracao e imunomodulacao
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Kim MS, Kong D, Han M, Roh K, Koo H, Lee S, Kang KS</span><br>
+                    <span><strong>Journal:</strong> Veterinary Research Communications, 2023, 47(4):2055-2070</span><br>
+                    <span><strong>DOI:</strong> 10.1007/s11259-023-10155-5</span>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/37421548/" style="color: var(--accent-blue);">37421548</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Desenho:</strong> Experimental (modelo murino). MSC de membrana amniotica canina (cAM-MSC).<br>
+                    <strong>Resultado:</strong> <span class="result-positive">POSITIVO</span> &mdash; cAM-MSC upregularam genes de modulacao imune (TGF-beta1, IDO1, PTGES2). Supressao da proliferacao de celulas T. <strong>Superioridade sobre oclacitinib</strong> em recuperacao de feridas, regulacao de mastocitos e expressao de proteinas imunes. Oclacitinib causou perda de peso; MSC promoveram recuperacao.<br>
+                    <strong>Relevancia direta para Wally:</strong> Comparacao direta MSC vs. Apoquel, com vantagem para MSC.
+                </div>
+            </div>
+
+            <!-- Estudo 7: Kim 2025 - Longo intervalo -->
+            <div class="study-card positive">
+                <div class="study-title">
+                    <span class="badge badge-experimental">Experimental</span>
+                    Efeito terapeutico de administracao SC repetida em longo intervalo de cAM-MSC em DAC
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Kim M, Kong D, Kim NG, Kim MJ, Kim HY, Choi JJ, Choi YS, Lee HE, Farzaneh KS, Kwon D, Lee S, Kang KS</span><br>
+                    <span><strong>Journal:</strong> BMC Veterinary Research, 2025, 21(1):115</span><br>
+                    <span><strong>DOI:</strong> 10.1186/s12917-025-04554-w</span>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/40011929/" style="color: var(--accent-blue);">40011929</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Desenho:</strong> Experimental (modelo murino). MSC de membrana amniotica canina, administracao SC repetida em intervalos longos. Observacao: 8 semanas.<br>
+                    <strong>Resultado:</strong> <span class="result-positive">POSITIVO</span> &mdash; Scores significativamente menores para alteracoes patologicas teciduais, citocinas inflamatorias e sintomas dermatologicos vs. controle PBS. Mais eficaz que pimecrolimo em prevenir disfuncao de feridas e regular atividade de mastocitos. Aumento de TGF-beta1, IDO1, COX-2.
+                </div>
+            </div>
+
+            <h3>Vesiculas Extracelulares (EVs) derivadas de MSC</h3>
+
+            <div class="study-card positive">
+                <div class="study-title">
+                    <span class="badge badge-experimental">Experimental</span>
+                    MSC e EVs de tecido adiposo canino melhoram inflamacao, barreira cutanea e prurido via JAK/STAT
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Kim SY, Yoon TH, Na J, Yi SJ, Jin Y, Kim M, Oh TH, Chung TW</span><br>
+                    <span><strong>Journal:</strong> International Journal of Molecular Sciences, 2022, 23(9):4868</span><br>
+                    <span><strong>DOI:</strong> 10.3390/ijms23094868</span>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/35563259/" style="color: var(--accent-blue);">35563259</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Resultado:</strong> <span class="result-positive">POSITIVO</span> &mdash; MSC e EVs reduziram sinalizacao JAK/STAT. Reducao de IgE serico (49,6% para MSC; 32,1% para EVs). Diminuicao de IL-4, IL-13, IL-31, RANTES, TARC. Restauracao da funcao de barreira cutanea (filagrina, loricrina, involucrina). Reducao de prurido via inibicao da via IL-31/TRPA1.<br>
+                    <strong>Relevancia:</strong> Mesmo alvo farmacologico do Apoquel (JAK/STAT), mas com acao regenerativa adicional.
+                </div>
+            </div>
+
+            <div class="study-card positive">
+                <div class="study-title">
+                    <span class="badge badge-experimental">Experimental</span>
+                    Vesiculas extracelulares derivadas de MSC caninas atenuam DAC
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Cho BS, Kim SB, Kim S, Rhee B, Yoon J, Lee JW</span><br>
+                    <span><strong>Journal:</strong> Animals (Basel), 2023, 13(13):2215</span><br>
+                    <span><strong>DOI:</strong> 10.3390/ani13132215</span>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/37444013/" style="color: var(--accent-blue);">37444013</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Resultado:</strong> <span class="result-positive">POSITIVO</span> &mdash; EVs de MSC caninas diminuiram IgE serico, espessura auricular e citocinas inflamatorias de forma dose-dependente. Sem toxicidade sistemica em estudos de dose unica ou repetida.
+                </div>
+            </div>
+
+            <div class="info-box success">
+                <strong>Sintese DAC:</strong> 6 de 7 estudos mostram resultados positivos. O unico negativo (Hall 2010) usou dose inferior (1,3x10<sup>6</sup>/kg) ao limiar de eficacia identificado posteriormente (5x10<sup>6</sup>/kg). O RCT duplo-cego de Kaur et al. (2022) e a evidencia mais robusta, confirmando eficacia dose-dependente. Dois estudos experimentais mostraram superioridade sobre oclacitinib (Apoquel).
+            </div>
+        </div>
+
+        <!-- TAB 2: Imunomodulacao / "Reset Imunologico" -->
+        <div id="tab-imuno" class="tab-content">
+            <h2>2. MSC e "Reset Imunologico" &mdash; O Que a Ciencia Realmente Diz</h2>
+
+            <div class="info-box warning">
+                <strong>O termo "reset imunologico" NAO existe na literatura cientifica.</strong> E um termo de marketing usado por clinicas que oferecem terapia celular. O que realmente ocorre e <strong>imunomodulacao</strong> &mdash; uma reprogramacao parcial e temporaria de celulas imunologicas, nao um "reset" completo do sistema imune.
+                <span class="tier tier-1">T1</span> <span data-tip="Song N, Scholtemeijer M, Shah K. Mesenchymal Stem Cell Immunomodulation: Mechanisms and Therapeutic Potential. Trends Pharmacol Sci. 2020;41(9):653-664. PMID: 32709406" class="source">(Song et al., 2020)</span>
+            </div>
+
+            <h3>O que realmente acontece: Mecanismos de Imunomodulacao por MSC</h3>
+
+            <div class="mechanism-grid">
+                <div class="mechanism-card">
+                    <h4>Rebalanceamento Th1/Th2</h4>
+                    <p>Na DAC, a resposta imune e desviada para Th2 (excesso de IL-4, IL-13, IgE). MSC revertem a razao Th1:Th2, restaurando homeostase por sinalizacao via STAT6 e funcao paracrina. <span class="tier tier-1">T1</span> <span data-tip="Kang SJ et al. Frontiers Vet Sci. 2023;10:1201382. PMID: 37529178" class="source">(Kang et al., 2023)</span></p>
+                </div>
+
+                <div class="mechanism-card">
+                    <h4>Inducao de Tregs</h4>
+                    <p>MSC ativam a via Notch1/FOXP3, aumentando celulas T regulatorias (Tregs). Tregs suprimem respostas Th2 excessivas. IDO secretada por MSC tambem media geracao de Tregs. <span class="tier tier-1">T1</span> <span data-tip="Song N et al. Trends Pharmacol Sci. 2020;41(9):653-664. PMID: 32709406" class="source">(Song et al., 2020)</span></p>
+                </div>
+
+                <div class="mechanism-card">
+                    <h4>Reducao de IgE</h4>
+                    <p>IgE serico &mdash; mediador central da resposta alergica &mdash; e significativamente reduzido apos tratamento com MSC. Reducao de ate 49,6% documentada. <span class="tier tier-1">T1</span> <span data-tip="Kim SY et al. Int J Mol Sci. 2022;23(9):4868. PMID: 35563259" class="source">(Kim SY et al., 2022)</span></p>
+                </div>
+
+                <div class="mechanism-card">
+                    <h4>Polarizacao de Macrofagos M1 &rarr; M2</h4>
+                    <p>MSC mudam macrofagos de fenotipo pro-inflamatorio (M1) para anti-inflamatorio (M2) atraves de sinalizacao por PGE2. <span class="tier tier-1">T1</span> <span data-tip="Song N et al. Trends Pharmacol Sci. 2020;41(9):653-664. PMID: 32709406" class="source">(Song et al., 2020)</span></p>
+                </div>
+
+                <div class="mechanism-card">
+                    <h4>Mediadores Soluveis (PGE2, IDO, TGF-beta, HGF)</h4>
+                    <p>MSC caninas (adiposas e de medula ossea) produzem PGE2 e IDO que suprimem proliferacao linfocitaria. Bloqueio de PGE2 ou IDO restaura proliferacao &mdash; prova funcional. <span class="tier tier-1">T1</span> <span data-tip="Carrade DD, Borjesson DL. Comparative Medicine. 2013;63(3):207-217. PMID: 23759523" class="source">(Carrade &amp; Borjesson, 2013)</span></p>
+                </div>
+
+                <div class="mechanism-card">
+                    <h4>Inibicao de Via JAK/STAT</h4>
+                    <p>MSC e EVs reduzem fosforilacao de STAT1 e STAT3, inibindo sinalizacao pro-inflamatoria. Mesmo alvo molecular do oclacitinib (Apoquel), mas com acao adicional regenerativa. <span class="tier tier-1">T1</span> <span data-tip="Kim SY et al. Int J Mol Sci. 2022;23(9):4868. PMID: 35563259" class="source">(Kim SY et al., 2022)</span></p>
+                </div>
+            </div>
+
+            <div class="info-box info">
+                <strong>Ponto critico para o Wally:</strong> MSC NAO eliminam a predisposicao genetica a DAC (presente em Shiba Inu). O que fazem e modular a resposta imunologica desregulada &mdash; reduzindo Th2/IgE e aumentando Tregs. O efeito e <strong>temporario</strong> (meses, nao permanente), requerendo reaplicacoes. Nao e "cura", e <strong>controle imunomodulador com potencial regenerativo</strong>.
+            </div>
+
+            <h3>MSC em Caninos: Evidencia Especifica</h3>
+
+            <div class="study-card">
+                <div class="study-title">
+                    <span class="badge badge-review">Revisao</span>
+                    Imunomodulacao por Celulas-Tronco Mesenquimais em Especies Veterinarias
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Carrade DD, Borjesson DL</span><br>
+                    <span><strong>Journal:</strong> Comparative Medicine, 2013, 63(3):207-217</span><br>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/23759523/" style="color: var(--accent-blue);">23759523</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Achados-chave em caes:</strong>
+                    <ul>
+                        <li>MSC caninas suprimem respostas imunes por contato celula-celula E fatores soluveis</li>
+                        <li>MSC adiposas e de medula ossea produzem TGF-beta1, HGF, PGE2 e IDO</li>
+                        <li>Inibicao dose-dependente da proliferacao de linfocitos T</li>
+                        <li>Bloqueio de PGE2 ou IDO restaura proliferacao linfocitaria (prova de mecanismo)</li>
+                        <li><strong>Nota:</strong> Em 2013, ainda nao havia evidencia de inducao de Tregs em caes comparavel a humanos &mdash; estudos posteriores (Kang 2023) confirmaram este mecanismo</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: Outras Condicoes Imunomediadas -->
+        <div id="tab-outras" class="tab-content">
+            <h2>3. MSC para Outras Condicoes Imunomediadas em Caes</h2>
+
+            <h3>Doenca Inflamatoria Intestinal (IBD)</h3>
+
+            <div class="study-card positive">
+                <div class="study-title">
+                    <span class="badge badge-clinical">Trial Clinico</span>
+                    Seguranca e eficacia de MSC alogenicas adiposas para IBD canina: desfechos clinicos e laboratoriais
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Perez-Merino EM, Uson-Casaus JM, Zaragoza-Bayle C, Duque-Carrasco J, Marinas-Pardo L, Hermida-Prieto M, Barrera-Chacon R, Gualtieri M</span><br>
+                    <span><strong>Journal:</strong> Veterinary Journal, 2015, 206(3):385-90</span><br>
+                    <span><strong>DOI:</strong> 10.1016/j.tvjl.2015.08.003</span>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/26526522/" style="color: var(--accent-blue);">26526522</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Desenho:</strong> 11 caes com IBD confirmada. Dose: 2x10<sup>6</sup> celulas/kg IV (infusao unica).<br>
+                    <strong>Resultado:</strong> <span class="result-positive">POSITIVO</span> &mdash; CIBDAI e CCECAI diminuiram significativamente no dia 42. Remissao clinica (&gt;75% reducao) em <strong>9/11 caes</strong>. Os 2 restantes tiveram resposta parcial (69,2% e 71,4%). Albumina, cobalamina e folato aumentaram substancialmente.<br>
+                    <strong>Efeitos adversos:</strong> Nenhuma reacao aguda a infusao ou efeitos colaterais.
+                </div>
+            </div>
+
+            <div class="study-card positive">
+                <div class="study-title">
+                    <span class="badge badge-clinical">Trial Clinico</span>
+                    MSC alogenicas para IBD canina: desfechos endoscopicos e histologicos
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Perez-Merino EM, Uson-Casaus JM, Duque-Carrasco J, Zaragoza-Bayle C, Marinas-Pardo L, Hermida-Prieto M, Vilafranca-Compte M, Barrera-Chacon R, Gualtieri M</span><br>
+                    <span><strong>Journal:</strong> Veterinary Journal, 2015, 206(3):391-7</span><br>
+                    <span><strong>DOI:</strong> 10.1016/j.tvjl.2015.07.023</span>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/26526521/" style="color: var(--accent-blue);">26526521</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Resultado:</strong> <span class="result-mixed">MISTO</span> &mdash; Melhora endoscopica significativa. 4/11 caes atingiram remissao endoscopica (&gt;75%). Demais mostraram reducao de 44,8% a 73,3% no CIBDEI. Porem, <strong>remissao histologica NAO foi alcancada</strong> em nenhum cao (reducao media de 27,2%).<br>
+                    <strong>Follow-up:</strong> 90-120 dias.
+                </div>
+            </div>
+
+            <div class="study-card positive">
+                <div class="study-title">
+                    <span class="badge badge-clinical">Trial Clinico</span>
+                    MSC alogenicas + corticosteroides para IBD canina: follow-up de 12 meses
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Cristobal JI, Duque FJ, Uson-Casaus JM, Ruiz P, Lopez Nieto E, Perez-Merino EM</span><br>
+                    <span><strong>Journal:</strong> Animals (Basel), 2021, 11(7):2061</span><br>
+                    <span><strong>DOI:</strong> 10.3390/ani11072061</span>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/34359189/" style="color: var(--accent-blue);">34359189</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Resultado:</strong> <span class="result-positive">POSITIVO</span> &mdash; Todos os parametros melhoraram significativamente em ambos os grupos (MSC isolada e MSC + prednisona). Dosagem de corticoide foi <strong>gradualmente reduzida ate supressao completa em TODOS os pacientes</strong> 1 ano apos terapia celular.<br>
+                    <strong>Follow-up:</strong> 12 meses.
+                </div>
+            </div>
+
+            <h3>Meningoencefalomielite de Origem Desconhecida (MUO)</h3>
+
+            <div class="study-card positive">
+                <div class="study-title">
+                    <span class="badge badge-case">Serie de Casos</span>
+                    MSC autologas para doencas inflamatorias nao-infecciosas do SNC canino
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Zeira O, Asiag N, Aralla M, Ghezzi E, Pettinari L, Martinelli L, Zahirpour D, Dumas MP, Lupi D, Scaccia S, Konar M, Cantile C</span><br>
+                    <span><strong>Journal:</strong> Journal of Neuroinflammation, 2015, 12:181</span><br>
+                    <span><strong>DOI:</strong> 10.1186/s12974-015-0402-9</span>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/26415563/" style="color: var(--accent-blue);">26415563</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Desenho:</strong> 8 caes com MUO (meningoencefalomielite granulomatosa e necrosante). MSC de medula ossea: 2x10<sup>6</sup> IT + 4x10<sup>6</sup> IA ou 0,5x10<sup>6</sup>/kg IV.<br>
+                    <strong>Resultado:</strong> <span class="result-positive">POSITIVO</span> &mdash; Todos os caes melhoraram precocemente (5-13 dias). 4/8 alcancaram normalidade neurologica completa. Frequencia de convulsoes reduzida. Sobrevida mediana: 705 dias. 7/8 vivos ao final do estudo.<br>
+                    <strong>Efeitos adversos:</strong> 1 episodio de febre transitoria 24h pos-tratamento.<br>
+                    <strong>Follow-up:</strong> 6 meses a 2 anos.
+                </div>
+            </div>
+
+            <h3>Artrite Reumatoide</h3>
+
+            <div class="study-card positive">
+                <div class="study-title">
+                    <span class="badge badge-case">Relato de Caso</span>
+                    Tratamento prolongado com MSC alogenicas em cao com artrite reumatoide
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Seo MG, Park S, Han S, Kim AY, Lee EJ, Jeong KS, Hong IH</span><br>
+                    <span><strong>Journal:</strong> Journal of Veterinary Science, 2022, 23(4):e61</span><br>
+                    <span><strong>DOI:</strong> 10.4142/jvs.22069</span>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/35920125/" style="color: var(--accent-blue);">35920125</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Desenho:</strong> Maltese femea, 5 anos, com artrite reumatoide. MSC alogenicas adiposas: 5-10x10<sup>6</sup> celulas IV, mensalmente por 11 meses.<br>
+                    <strong>Resultado:</strong> <span class="result-positive">POSITIVO</span> &mdash; Scores de exame ortopedico melhoraram. Citocinas inflamatorias (TNF-alfa, IL-6) mantiveram-se muito baixas. Satisfacao elevada do tutor.<br>
+                    <strong>Efeitos adversos:</strong> Nenhum (sem toxicidade ou rejeicao imune apos injecoes repetidas alogenicas).<br>
+                    <strong>Nota:</strong> Cao faleceu 1 mes apos tratamento por amiloidose glomerular (complicacao da AR, nao relacionada a MSC).
+                </div>
+            </div>
+
+            <h3>Osteoartrite (OA) &mdash; Maior Corpo de Evidencia</h3>
+
+            <div class="study-card positive">
+                <div class="study-title">
+                    <span class="badge badge-rct">RCT Duplo-Cego</span>
+                    MSC de cordao umbilical equino para OA canina: trial randomizado placebo-controlado
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Punzon E, Salguero R, Totusaus X, Mesa-Sanchez C, Badiella L, Garcia-Castillo M, Pradera A</span><br>
+                    <span><strong>Journal:</strong> JAVMA, 2022, 260(15):1947-1955</span><br>
+                    <span><strong>DOI:</strong> 10.2460/javma.22.06.0237</span>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/36198051/" style="color: var(--accent-blue);">36198051</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Desenho:</strong> RCT multicentrico, duplo-cego, paralelo. 80 caes com OA natural (cotovelo/quadril). MSC xenogenicas (equinas, cordao umbilical) intra-articular.<br>
+                    <strong>Resultado:</strong> <span class="result-positive">POSITIVO</span> &mdash; 8 semanas: 63% dos caes MSC melhoraram na analise de marcha (vs. 8% placebo, p&lt;0.0001). 77% melhoraram no exame ortopedico. 59% dos tutores observaram efeito &gt;6 meses apos unica injecao.<br>
+                    <strong>Follow-up:</strong> 18 meses. Nenhum evento adverso sistemico ou permanente.
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: Seguranca -->
+        <div id="tab-seguranca" class="tab-content">
+            <h2>4. Seguranca de MSC em Caes</h2>
+
+            <h3>Seguimento de Longo Prazo (4-5 anos)</h3>
+
+            <div class="study-card positive">
+                <div class="study-title">
+                    <span class="badge badge-clinical">Follow-up Longo Prazo</span>
+                    Abordagem regenerativa para OA canina com MSC alogenicas: seguranca em follow-up prolongado
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Kriston-Pal E, Haracska L, Cooper P, Kiss-Toth E, Szukacsov V, Monostori E</span><br>
+                    <span><strong>Journal:</strong> Frontiers in Veterinary Science, 2020, 7:510</span><br>
+                    <span><strong>DOI:</strong> 10.3389/fvets.2020.00510</span>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/32903517/" style="color: var(--accent-blue);">32903517</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Desenho:</strong> 58 caes tratados; 55 disponiveis para follow-up de 4-5 anos.<br>
+                    <strong>Achados de seguranca:</strong>
+                    <ul>
+                        <li><strong>Efeitos adversos locais:</strong> 2 incidencias de inflamacao local (&lt;1 semana) no sitio de injecao</li>
+                        <li><strong>Mortalidade:</strong> 16/58 morreram durante follow-up: 4 por cancer (11-13 anos de idade), 12 por outras causas</li>
+                        <li><strong>Cancer:</strong> Taxa de 6,9% &mdash; comparavel a estatisticas populacionais de prevalencia de cancer em caes</li>
+                        <li><strong>Conclusao:</strong> "MSC transplantation does not appear to be associated with an increase in malignancies"</li>
+                        <li><strong>Eficacia sustentada:</strong> 84% mantiveram melhora durante todo o follow-up</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Revisao de Risco Tumoral</h3>
+
+            <div class="study-card">
+                <div class="study-title">
+                    <span class="badge badge-review">Revisao</span>
+                    Explorando o risco tumoral da terapia com MSC em medicina veterinaria
+                </div>
+                <div class="study-meta">
+                    <span><strong>Autores:</strong> Jeung S, Kim S, Ah J, Seo S, Jan U, Lee H, Lee JI</span><br>
+                    <span><strong>Journal:</strong> Animals (Basel), 2024, 14(7):994</span><br>
+                    <span><strong>DOI:</strong> 10.3390/ani14070994</span>
+                    <span><strong>PMID:</strong> <a href="https://pubmed.ncbi.nlm.nih.gov/38612233/" style="color: var(--accent-blue);">38612233</a></span>
+                    <span class="tier tier-1">T1</span>
+                </div>
+                <div class="study-result">
+                    <strong>Conclusao principal:</strong> "Robust evidence supporting an increased tumor incidence associated with MSC injections is limited." Multiplos estudos em camundongos imunodeficientes (NOD/SCID e nude) nao mostraram formacao tumoral apos injecao de MSC, mesmo em doses altas. MSC de tecido adiposo canino monitoradas por 6 meses em camundongos: zero tumores.<br>
+                    <strong>MSC vs. outras celulas-tronco:</strong> Menor risco oncogenico que celulas-tronco embrionarias e iPSC.
+                </div>
+            </div>
+
+            <h3>Perfil de Seguranca Consolidado</h3>
+
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>Efeito Adverso</th>
+                        <th>Frequencia</th>
+                        <th>Gravidade</th>
+                        <th>Fonte</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Inflamacao local transitoria</td>
+                        <td>Rara (&lt;5%)</td>
+                        <td>Leve, autolimitada (&lt;1 semana)</td>
+                        <td><span class="tier tier-1">T1</span> Kriston-Pal 2020</td>
+                    </tr>
+                    <tr>
+                        <td>Febre transitoria</td>
+                        <td>Muito rara (1 caso em toda literatura)</td>
+                        <td>Leve, 24h</td>
+                        <td><span class="tier tier-1">T1</span> Zeira 2015</td>
+                    </tr>
+                    <tr>
+                        <td>Rejeicao imune (alogenico)</td>
+                        <td>Nao documentada</td>
+                        <td>N/A</td>
+                        <td><span class="tier tier-1">T1</span> Seo 2022, Villatoro 2018</td>
+                    </tr>
+                    <tr>
+                        <td>Tumorigenese</td>
+                        <td>Nao demonstrada</td>
+                        <td>N/A (teoricamente possivel a longo prazo)</td>
+                        <td><span class="tier tier-1">T1</span> Jeung 2024</td>
+                    </tr>
+                    <tr>
+                        <td>Efeitos adversos graves</td>
+                        <td>Nenhum em &gt;20 estudos revisados</td>
+                        <td>N/A</td>
+                        <td><span class="tier tier-1">T1</span> Multiplos</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box warning">
+                <strong>Ressalvas importantes:</strong>
+                <ul>
+                    <li>A maioria dos estudos tem follow-up curto (3-6 meses). Efeitos a muito longo prazo (&gt;5 anos) sao pouco documentados.</li>
+                    <li>Estudos de seguranca em animais classicos nao conseguem identificar risco tumoral porque o prazo e incompativel com tempo de ocorrencia de tumores.</li>
+                    <li>Ausencia de padroes de qualidade para MSC veterinarias gera risco de inconsistencia entre lotes/laboratorios.</li>
+                    <li><strong>Contraindicacao absoluta:</strong> pacientes com neoplasias ativas.</li>
+                </ul>
+                <span class="tier tier-1">T1</span> <span data-tip="Morawska-Kozlowska M et al. Animals. 2025;15(8):1175. PMID: 40282009" class="source">(Morawska-Kozlowska et al., 2025)</span>
+            </div>
+        </div>
+
+        <!-- TAB 5: Protocolos -->
+        <div id="tab-protocolos" class="tab-content">
+            <h2>5. Protocolos: Fontes, Vias, Doses e Frequencia</h2>
+
+            <h3>Comparacao: Autologas vs. Alogenicas</h3>
+
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>Caracteristica</th>
+                        <th>Autologas</th>
+                        <th>Alogenicas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Fonte</td>
+                        <td>Tecido do proprio paciente</td>
+                        <td>Doador da mesma especie (ou xenogenico)</td>
+                    </tr>
+                    <tr>
+                        <td>Risco de rejeicao</td>
+                        <td>Nenhum</td>
+                        <td>Minimo (MSC sao imunoprivilegiadas)</td>
+                    </tr>
+                    <tr>
+                        <td>Disponibilidade</td>
+                        <td>Requer coleta cirurgica + tempo de cultivo</td>
+                        <td>"Off-the-shelf" (pronto uso)</td>
+                    </tr>
+                    <tr>
+                        <td>Tempo ate tratamento</td>
+                        <td>Semanas (cultivo celular)</td>
+                        <td>Imediato (banco celular)</td>
+                    </tr>
+                    <tr>
+                        <td>Custo por sessao</td>
+                        <td>Maior (cirurgia + cultivo)</td>
+                        <td>Menor (escala)</td>
+                    </tr>
+                    <tr>
+                        <td>Qualidade celular</td>
+                        <td>Variavel (depende da idade/saude do paciente)</td>
+                        <td>Padronizada (doadores jovens)</td>
+                    </tr>
+                    <tr>
+                        <td>Evidencia clinica</td>
+                        <td>Moderada</td>
+                        <td>Crescente (maioria dos trials recentes)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Fontes Teciduais de MSC</h3>
+
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>Fonte</th>
+                        <th>Vantagens</th>
+                        <th>Desvantagens</th>
+                        <th>Uso em DAC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Tecido adiposo</strong></td>
+                        <td>Coleta facil, alta rendimento, mais estudada</td>
+                        <td>Requer cirurgia para coleta autologa</td>
+                        <td>Maioria dos estudos em DAC</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Medula ossea</strong></td>
+                        <td>Bem caracterizada, alto potencial imunomodulador</td>
+                        <td>Coleta mais invasiva</td>
+                        <td>Usada em MUO (Zeira 2015)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Membrana amniotica</strong></td>
+                        <td>Celulas jovens, alto potencial proliferativo, nao-invasiva</td>
+                        <td>Requer cesarea; disponibilidade limitada</td>
+                        <td>Resultados promissores (Kim 2023, 2025)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cordao umbilical</strong></td>
+                        <td>Celulas jovens, sem morbidade ao doador, alta diferenciacao</td>
+                        <td>Requer coleta durante parto</td>
+                        <td>RCT positivo em OA (Punzon 2022)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Protocolos Utilizados nos Estudos de DAC</h3>
+
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>Estudo</th>
+                        <th>Dose</th>
+                        <th>Via</th>
+                        <th>Frequencia</th>
+                        <th>Resultado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Hall 2010</td>
+                        <td>1,3x10<sup>6</sup>/kg</td>
+                        <td>IV</td>
+                        <td>Unica</td>
+                        <td class="result-negative">Negativo</td>
+                    </tr>
+                    <tr>
+                        <td>Villatoro 2018</td>
+                        <td>1,5x10<sup>6</sup>/kg</td>
+                        <td>IV</td>
+                        <td>Unica</td>
+                        <td class="result-positive">Positivo (6 meses)</td>
+                    </tr>
+                    <tr>
+                        <td>Ramos 2020</td>
+                        <td>2x10<sup>6</sup>/kg</td>
+                        <td>IV</td>
+                        <td>A cada 21 dias</td>
+                        <td class="result-positive">Positivo (82 dias)</td>
+                    </tr>
+                    <tr>
+                        <td>Kaur 2022 (RCT)</td>
+                        <td>5x10<sup>6</sup>/kg (dose alta)</td>
+                        <td>SC (5 sitios)</td>
+                        <td>3x a cada 4 semanas</td>
+                        <td class="result-positive">Positivo (90 dias)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box info">
+                <strong>Padrao emergente:</strong> A eficacia parece ser <strong>dose-dependente</strong>. O estudo negativo usou a menor dose (1,3x10<sup>6</sup>/kg). O RCT positivo usou a maior (5x10<sup>6</sup>/kg). Aplicacoes repetidas (3-4 sessoes) mostraram melhores resultados que dose unica. Via SC e IV foram ambas eficazes.
+            </div>
+        </div>
+
+        <!-- TAB 6: Regulatorio e Brasil -->
+        <div id="tab-regulatorio" class="tab-content">
+            <h2>6. Status Regulatorio</h2>
+
+            <h3>Global</h3>
+
+            <div class="info-box warning">
+                <strong>Nenhuma terapia com MSC para caes e atualmente aprovada por agencias reguladoras (FDA, EMA).</strong> Os produtos existentes operam como produtos veterinarios experimentais ou sob regulacoes locais.
+            </div>
+
+            <h4>Estados Unidos (FDA)</h4>
+            <ul>
+                <li>FDA publicou diretrizes finais sobre elegibilidade de doadores e manufatura de terapias celulares para animais (2024-2025). <span class="tier tier-2">T2</span></li>
+                <li><strong>VetStem StemStat Ortho:</strong> Em marco/2025, obteve US$ 18M para completar submissao regulatoria ao FDA. Primeira terapia alogenica com celulas-tronco para OA canina visando aprovacao condicional. <span class="tier tier-3">T3</span> <span data-tip="dvm360, 2025" class="source">(dvm360, 2025)</span></li>
+                <li><strong>Gallant (gatos):</strong> Alcancou "Technical Section Complete" do FDA em setembro/2025 para terapia de gingivoestomatite felina. Aprovacao esperada em 2026. Se aprovada, seria a primeira terapia com celulas-tronco alogenicas aprovada pelo FDA para uso veterinario. <span class="tier tier-3">T3</span></li>
+                <li>FDA desenvolveu Veterinary Innovation Program para facilitar processo regulatorio de ACTPs (Animal Cells, Tissues, and Cell- and Tissue-based Products).</li>
+            </ul>
+
+            <h4>Europa (EMA)</h4>
+            <ul>
+                <li>EMA publicou documento de orientacao especifico sobre tumorigenicidade de produtos baseados em MSC alogenicas para uso veterinario. <span class="tier tier-2">T2</span></li>
+                <li>Nenhum produto aprovado ate o momento.</li>
+            </ul>
+
+            <h3>Brasil</h3>
+
+            <h4>Resolucao CFMV No 1.363/2020</h4>
+            <p>Em vigor desde 3 de novembro de 2020, regulamenta a indicacao, prescricao e uso de celulas-tronco em animais no Brasil. <span class="tier tier-1">T1</span> <span data-tip="CFMV - Resolucao 1.363/2020" class="source">(CFMV, 2020)</span></p>
+
+            <ul>
+                <li><strong>Atividade privativa:</strong> Indicacao, prescricao e uso de celulas-tronco sao atividades clinicas privativas de medicos-veterinarios.</li>
+                <li><strong>Registro obrigatorio:</strong> Celula-tronco e classificada como produto veterinario e deve ter registro no MAPA (Ministerio da Agricultura, Pecuaria e Abastecimento).</li>
+                <li><strong>Laboratorios:</strong> Devem ser credenciados pelo MAPA e ANVISA, com registro no CRMV do estado.</li>
+                <li><strong>Requisitos:</strong> Profissional deve ter suporte tecnico indicando seguranca e eficacia, dose e via para a doenca tratada.</li>
+                <li><strong>Contraindicacao:</strong> Pacientes oncologicos.</li>
+            </ul>
+
+            <h4>Laboratorios e Clinicas no Brasil</h4>
+
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>Empresa/Clinica</th>
+                        <th>Localizacao</th>
+                        <th>Status</th>
+                        <th>Destaque</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>BIO CELL (Vetnil)</strong></td>
+                        <td>Nacional (65 unidades)</td>
+                        <td>Registro MAPA (desde abril/2020)</td>
+                        <td>Primeiro laboratorio no mundo com registro para 3 produtos de celulas-tronco para animais. 900+ vets afiliados. Adquirida pela Vetnil em 2025.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Omics Biotecnologia Animal</strong></td>
+                        <td>Nacional</td>
+                        <td>Ativa</td>
+                        <td>Laboratorio de celulas-tronco veterinarias</td>
+                    </tr>
+                    <tr>
+                        <td><strong>In Situ Terapia Celular</strong></td>
+                        <td>Nacional</td>
+                        <td>Ativa</td>
+                        <td>Terapia celular veterinaria</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cellen</strong></td>
+                        <td>Nacional</td>
+                        <td>Ativa</td>
+                        <td>Celulas-tronco veterinarias</td>
+                    </tr>
+                    <tr>
+                        <td><strong>HAMA Centro Veterinario</strong></td>
+                        <td>Sao Paulo, SP</td>
+                        <td>Ativa</td>
+                        <td>Centro de referencia em hematologia e terapia celular</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ortho for Pets</strong></td>
+                        <td>Sao Paulo, SP</td>
+                        <td>Ativa</td>
+                        <td>Medicina regenerativa veterinaria</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Revivere Centro Veterinario</strong></td>
+                        <td>Sao Paulo, SP</td>
+                        <td>Ativa</td>
+                        <td>Celulas-tronco para caes</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Protocolo Tipico no Brasil</h4>
+            <ul>
+                <li><strong>Frequencia:</strong> Tipicamente 3 aplicacoes</li>
+                <li><strong>Intervalo:</strong> 30 dias entre tratamentos</li>
+                <li><strong>Custo estimado:</strong> R$ 2.000 a R$ 5.000 por sessao (estimativa baseada em fontes jornalisticas; verificar diretamente com clinicas)</li>
+                <li><strong>Exigencia:</strong> Produto deve ter registro MAPA</li>
+            </ul>
+
+            <div class="info-box info">
+                <strong>Situacao no Brasil:</strong> O Brasil esta relativamente avancado na regulamentacao de celulas-tronco veterinarias comparado a outros paises. A BIO CELL/Vetnil e a unica empresa com registro MAPA confirmado para 3 produtos de celulas-tronco animais. Porem, nao ha publicacoes cientificas brasileiras peer-reviewed especificas sobre MSC em DAC canina &mdash; a experiencia clinica existe mas nao esta documentada em journals indexados. [sem fonte para dados clinicos brasileiros publicados em DAC &mdash; conhecimento geral]
+            </div>
+        </div>
+
+        <!-- TAB 7: Custo-Beneficio -->
+        <div id="tab-custo" class="tab-content">
+            <h2>7. Custo-Beneficio vs. Tratamentos Convencionais</h2>
+
+            <h3>Comparacao de Tratamentos para DAC</h3>
+
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>Tratamento</th>
+                        <th>Custo Estimado (EUA/ano)</th>
+                        <th>Mecanismo</th>
+                        <th>Duracao do Efeito</th>
+                        <th>Nivel de Evidencia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Oclacitinib (Apoquel)</strong></td>
+                        <td>US$ 600-1.800/ano</td>
+                        <td>Inibidor JAK1 (sintomatico)</td>
+                        <td>Continuo (diario, indefinidamente)</td>
+                        <td>Alto (RCTs multiplos, 10+ anos)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lokivetmab (Cytopoint)</strong></td>
+                        <td>US$ 600-2.400/ano</td>
+                        <td>Anti-IL-31 (anti-prurido)</td>
+                        <td>4-8 semanas por injecao</td>
+                        <td>Alto (RCTs, aprovado FDA)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ciclosporina</strong></td>
+                        <td>US$ 400-1.200/ano</td>
+                        <td>Imunossupressor (T cells)</td>
+                        <td>Continuo (diario)</td>
+                        <td>Alto (decadas de uso)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ASIT (Imunoterapia)</strong></td>
+                        <td>US$ 300-800/ano</td>
+                        <td>Dessensibilizacao (modificacao imune)</td>
+                        <td>Anos (se funcionar)</td>
+                        <td>Moderado-Alto (60-70% resposta)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MSC (Celulas-Tronco)</strong></td>
+                        <td>US$ 2.000-5.000/sessao</td>
+                        <td>Imunomodulacao + regeneracao</td>
+                        <td>3-6 meses por sessao</td>
+                        <td><strong>Baixo-Moderado (1 RCT, trials abertos)</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box warning">
+                <strong>Analise critica de custo-beneficio:</strong>
+                <ul>
+                    <li><strong>Custo:</strong> MSC e significativamente mais cara que tratamentos convencionais. 3 sessoes/ano = US$ 6.000-15.000 vs. US$ 600-2.400 para Apoquel/Cytopoint.</li>
+                    <li><strong>Evidencia:</strong> Apoquel tem 10+ anos de dados clinicos e multiplos RCTs. MSC tem 1 RCT duplo-cego em DAC (Kaur 2022) com amostra pequena.</li>
+                    <li><strong>Mecanismo:</strong> MSC atua em mecanismos que os farmacos nao atingem (Tregs, regeneracao de barreira). Em teoria, potencial para "modificacao de doenca" vs. "controle sintomatico".</li>
+                    <li><strong>Durabilidade:</strong> O estudo de Villatoro (2018) mostrou 6 meses de efeito com dose unica &mdash; potencialmente equivalente a 6 meses de Apoquel diario.</li>
+                    <li><strong>Para casos refratarios:</strong> MSC mostrou beneficio em caes que NAO responderam a tratamentos convencionais (Villatoro 2018: "refractory atopic dermatitis").</li>
+                </ul>
+            </div>
+
+            <div class="info-box info">
+                <strong>Cenario potencial para Wally:</strong> Se tratamentos convencionais (Apoquel, Cytopoint, ASIT, dieta) controlarem adequadamente a DAC, MSC nao se justifica pelo custo. Se houver <strong>refratariedade</strong> ou efeitos colaterais significativos dos farmacos atuais, MSC torna-se uma opcao legitima com potencial de reducao ou eliminacao de medicamentos &mdash; como demonstrado em IBD (Cristobal 2021: corticoides suprimidos apos 1 ano).
+            </div>
+        </div>
+
+        <!-- TAB 8: Tabela-Resumo de Todos os Estudos -->
+        <div id="tab-resumo" class="tab-content">
+            <h2>8. Tabela-Resumo: Todos os Estudos Analisados</h2>
+
+            <div style="overflow-x: auto;">
+            <table class="summary-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Autores (Ano)</th>
+                        <th>Journal</th>
+                        <th>PMID</th>
+                        <th>Tipo</th>
+                        <th>N</th>
+                        <th>Condicao</th>
+                        <th>Resultado</th>
+                        <th>Follow-up</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Hall et al. (2010)</td>
+                        <td>Vet Therapeutics</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/20957613/" style="color:var(--accent-blue)">20957613</a></td>
+                        <td><span class="badge badge-clinical">Piloto</span></td>
+                        <td>N/D</td>
+                        <td>DAC</td>
+                        <td class="result-negative">Negativo</td>
+                        <td>N/D</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Carrade & Borjesson (2013)</td>
+                        <td>Comp Medicine</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/23759523/" style="color:var(--accent-blue)">23759523</a></td>
+                        <td><span class="badge badge-review">Revisao</span></td>
+                        <td>N/A</td>
+                        <td>Imuno (vet)</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Perez-Merino et al. (2015a)</td>
+                        <td>Vet Journal</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/26526522/" style="color:var(--accent-blue)">26526522</a></td>
+                        <td><span class="badge badge-clinical">Trial</span></td>
+                        <td>11</td>
+                        <td>IBD</td>
+                        <td class="result-positive">Positivo</td>
+                        <td>42 dias</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Perez-Merino et al. (2015b)</td>
+                        <td>Vet Journal</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/26526521/" style="color:var(--accent-blue)">26526521</a></td>
+                        <td><span class="badge badge-clinical">Trial</span></td>
+                        <td>11</td>
+                        <td>IBD</td>
+                        <td class="result-mixed">Misto</td>
+                        <td>90-120 dias</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Zeira et al. (2015)</td>
+                        <td>J Neuroinflammation</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/26415563/" style="color:var(--accent-blue)">26415563</a></td>
+                        <td><span class="badge badge-case">Serie Casos</span></td>
+                        <td>8</td>
+                        <td>MUO</td>
+                        <td class="result-positive">Positivo</td>
+                        <td>6m-2a</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>Villatoro et al. (2018)</td>
+                        <td>Vet Record</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/30158120/" style="color:var(--accent-blue)">30158120</a></td>
+                        <td><span class="badge badge-clinical">Trial</span></td>
+                        <td>26</td>
+                        <td>DAC refrataria</td>
+                        <td class="result-positive">Positivo</td>
+                        <td>6 meses</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>Ramos et al. (2020)</td>
+                        <td>JAVAR</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/33005683/" style="color:var(--accent-blue)">33005683</a></td>
+                        <td><span class="badge badge-clinical">Trial</span></td>
+                        <td>16</td>
+                        <td>DAC</td>
+                        <td class="result-positive">Positivo</td>
+                        <td>82 dias</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>Kriston-Pal et al. (2020)</td>
+                        <td>Front Vet Sci</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/32903517/" style="color:var(--accent-blue)">32903517</a></td>
+                        <td><span class="badge badge-clinical">Follow-up</span></td>
+                        <td>58</td>
+                        <td>OA (seguranca)</td>
+                        <td class="result-positive">Seguro</td>
+                        <td>4-5 anos</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>Song et al. (2020)</td>
+                        <td>Trends Pharmacol Sci</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/32709406/" style="color:var(--accent-blue)">32709406</a></td>
+                        <td><span class="badge badge-review">Revisao</span></td>
+                        <td>N/A</td>
+                        <td>Imunomodulacao</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>Cristobal et al. (2021)</td>
+                        <td>Animals</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/34359189/" style="color:var(--accent-blue)">34359189</a></td>
+                        <td><span class="badge badge-clinical">Trial</span></td>
+                        <td>N/D</td>
+                        <td>IBD</td>
+                        <td class="result-positive">Positivo</td>
+                        <td>12 meses</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>Kaur et al. (2022)</td>
+                        <td>Vet Res Comm</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/34713306/" style="color:var(--accent-blue)">34713306</a></td>
+                        <td><span class="badge badge-rct">RCT</span></td>
+                        <td>N/D</td>
+                        <td>DAC</td>
+                        <td class="result-positive">Positivo</td>
+                        <td>90 dias</td>
+                    </tr>
+                    <tr>
+                        <td>12</td>
+                        <td>Kim SY et al. (2022)</td>
+                        <td>Int J Mol Sci</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/35563259/" style="color:var(--accent-blue)">35563259</a></td>
+                        <td><span class="badge badge-experimental">Experimental</span></td>
+                        <td>Modelos</td>
+                        <td>DAC (JAK/STAT)</td>
+                        <td class="result-positive">Positivo</td>
+                        <td>N/D</td>
+                    </tr>
+                    <tr>
+                        <td>13</td>
+                        <td>Punzon et al. (2022)</td>
+                        <td>JAVMA</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/36198051/" style="color:var(--accent-blue)">36198051</a></td>
+                        <td><span class="badge badge-rct">RCT</span></td>
+                        <td>80</td>
+                        <td>OA</td>
+                        <td class="result-positive">Positivo</td>
+                        <td>18 meses</td>
+                    </tr>
+                    <tr>
+                        <td>14</td>
+                        <td>Seo et al. (2022)</td>
+                        <td>J Vet Sci</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/35920125/" style="color:var(--accent-blue)">35920125</a></td>
+                        <td><span class="badge badge-case">Caso</span></td>
+                        <td>1</td>
+                        <td>Artrite reumatoide</td>
+                        <td class="result-positive">Positivo</td>
+                        <td>12 meses</td>
+                    </tr>
+                    <tr>
+                        <td>15</td>
+                        <td>Kang et al. (2023)</td>
+                        <td>Front Vet Sci</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/37529178/" style="color:var(--accent-blue)">37529178</a></td>
+                        <td><span class="badge badge-experimental">Experimental</span></td>
+                        <td>9</td>
+                        <td>DAC (imunologia)</td>
+                        <td class="result-positive">Positivo</td>
+                        <td>12 semanas</td>
+                    </tr>
+                    <tr>
+                        <td>16</td>
+                        <td>Kim MS et al. (2023)</td>
+                        <td>Vet Res Comm</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/37421548/" style="color:var(--accent-blue)">37421548</a></td>
+                        <td><span class="badge badge-experimental">Experimental</span></td>
+                        <td>Modelos</td>
+                        <td>DAC (vs. Apoquel)</td>
+                        <td class="result-positive">Positivo</td>
+                        <td>N/D</td>
+                    </tr>
+                    <tr>
+                        <td>17</td>
+                        <td>Cho et al. (2023)</td>
+                        <td>Animals</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/37444013/" style="color:var(--accent-blue)">37444013</a></td>
+                        <td><span class="badge badge-experimental">Experimental</span></td>
+                        <td>Modelos</td>
+                        <td>DAC (EVs)</td>
+                        <td class="result-positive">Positivo</td>
+                        <td>4 semanas</td>
+                    </tr>
+                    <tr>
+                        <td>18</td>
+                        <td>Jeung et al. (2024)</td>
+                        <td>Animals</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/38612233/" style="color:var(--accent-blue)">38612233</a></td>
+                        <td><span class="badge badge-review">Revisao</span></td>
+                        <td>N/A</td>
+                        <td>Tumorigenicidade</td>
+                        <td>Seguro</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>19</td>
+                        <td>Teshima (2024)</td>
+                        <td>Vet Journal</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/38417670/" style="color:var(--accent-blue)">38417670</a></td>
+                        <td><span class="badge badge-review">Revisao</span></td>
+                        <td>N/A</td>
+                        <td>IBD (limitacoes)</td>
+                        <td>N/A</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>20</td>
+                        <td>Kim M et al. (2025)</td>
+                        <td>BMC Vet Res</td>
+                        <td><a href="https://pubmed.ncbi.nlm.nih.gov/40011929/" style="color:var(--accent-blue)">40011929</a></td>
+                        <td><span class="badge badge-experimental">Experimental</span></td>
+                        <td>Modelos</td>
+                        <td>DAC (longo intervalo)</td>
+                        <td class="result-positive">Positivo</td>
+                        <td>8 semanas</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>Limitacoes Identificadas na Literatura</h3>
+
+            <div class="info-box danger">
+                <strong>Limitacoes criticas que afetam o nivel de evidencia:</strong>
+                <ol>
+                    <li><strong>Apenas 1 RCT duplo-cego para DAC</strong> (Kaur 2022). Para OA existem mais RCTs, mas DAC e sub-estudada em trials de alto nivel.</li>
+                    <li><strong>Amostras pequenas:</strong> A maioria dos estudos tem N &lt; 30. O maior trial em DAC e o de Villatoro (2018) com 26 caes.</li>
+                    <li><strong>Follow-up curto:</strong> A maioria &lt; 6 meses. Nao ha dados sobre eficacia apos 12+ meses em DAC.</li>
+                    <li><strong>Heterogeneidade de MSC:</strong> Sem padronizacao de preparo e tratamento. Diferentes fontes, doses, vias e protocolos dificultam comparacao. <span class="tier tier-1">T1</span> <span data-tip="Teshima T. Vet J. 2024;304:106090. PMID: 38417670" class="source">(Teshima, 2024)</span></li>
+                    <li><strong>Ausencia de estudos head-to-head:</strong> Nao existe trial comparando MSC vs. Apoquel vs. Cytopoint em caes com DAC.</li>
+                    <li><strong>Maioria dos estudos mecanisticos usa modelos murinos</strong>, nao caes com DAC natural.</li>
+                    <li><strong>Vies de publicacao:</strong> Estudos negativos sao sub-reportados. O unico negativo encontrado (Hall 2010) usou dose potencialmente insuficiente.</li>
+                    <li><strong>Falta de padroes de qualidade:</strong> "In the absence of quality standards for MSCs for use in canine patients, their safety, clinical efficacy and production standards are uncertain." <span class="tier tier-1">T1</span> <span data-tip="Morawska-Kozlowska et al. Animals. 2025;15(8):1175. PMID: 40282009" class="source">(Morawska-Kozlowska et al., 2025)</span></li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- TAB 9: Conclusao -->
+        <div id="tab-conclusao" class="tab-content">
+            <h2>9. Conclusao: Nivel de Evidencia Atual</h2>
+
+            <div class="conclusion-box">
+                <h3>Classificacao do Nivel de Evidencia por Aplicacao</h3>
+
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th>Aplicacao</th>
+                            <th>Nivel de Evidencia</th>
+                            <th>Justificativa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>MSC para OA canina</td>
+                            <td><span class="result-positive">MODERADO-ALTO</span></td>
+                            <td>Multiplos RCTs (Punzon 2022: n=80), follow-up longo (18 meses), candidato a aprovacao FDA</td>
+                        </tr>
+                        <tr>
+                            <td>MSC para IBD canina</td>
+                            <td><span class="result-positive">MODERADO</span></td>
+                            <td>3 trials clinicos consistentes, remissao clinica em 82% dos caes, follow-up de 12 meses</td>
+                        </tr>
+                        <tr>
+                            <td><strong>MSC para DAC canina</strong></td>
+                            <td><span class="result-mixed">BAIXO-MODERADO</span></td>
+                            <td>1 RCT + 2 trials abertos positivos + 1 piloto negativo. Mecanismo bem compreendido. Amostras pequenas. Follow-up curto.</td>
+                        </tr>
+                        <tr>
+                            <td>MSC para MUO/doenças neurol.</td>
+                            <td><span class="result-mixed">BAIXO</span></td>
+                            <td>1 serie de casos (n=8). Resultados promissores mas nao confirmados por RCT.</td>
+                        </tr>
+                        <tr>
+                            <td>Seguranca geral</td>
+                            <td><span class="result-positive">MODERADO-ALTO</span></td>
+                            <td>Follow-up de 4-5 anos (n=58), revisao de tumorigenicidade, nenhum EA grave em &gt;20 estudos</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="conclusion-box">
+                <h3>Sintese para o Contexto do Wally (Shiba Inu, 7 anos, DAC)</h3>
+
+                <h4 style="color: var(--accent-green);">Argumentos a favor</h4>
+                <ul>
+                    <li>Mecanismo de acao atua na causa (desregulacao Th2/Tregs), nao apenas nos sintomas</li>
+                    <li>Potencial de reducao ou eliminacao de medicamentos cronicos (demonstrado em IBD)</li>
+                    <li>Perfil de seguranca excelente com follow-up de ate 5 anos</li>
+                    <li>Eficacia dose-dependente confirmada em RCT duplo-cego (5x10<sup>6</sup>/kg)</li>
+                    <li>Estudo experimental mostrou superioridade sobre oclacitinib (Kim MS 2023)</li>
+                    <li>Disponivel no Brasil com regulamentacao CFMV e registro MAPA</li>
+                    <li>Resultados especialmente promissores em casos refratarios a tratamentos convencionais</li>
+                </ul>
+
+                <h4 style="color: var(--accent-red);">Argumentos contra / Cautelas</h4>
+                <ul>
+                    <li><strong>Evidencia ainda limitada para DAC especificamente:</strong> Apenas 1 RCT, amostras pequenas, follow-up curto</li>
+                    <li><strong>Nao e "reset imunologico":</strong> O efeito e temporario (meses), nao permanente. Requer reaplicacoes</li>
+                    <li><strong>Custo significativamente maior</strong> que tratamentos convencionais</li>
+                    <li><strong>Sem padronizacao:</strong> Resultados podem variar entre laboratorios/protocolos</li>
+                    <li><strong>Nao e primeira linha:</strong> Apropriar primeiro para casos refratarios ou como adjuvante</li>
+                    <li><strong>Ausencia de estudos comparativos diretos</strong> MSC vs. Apoquel em caes com DAC</li>
+                    <li><strong>Dados em Shiba Inu especificamente:</strong> Nenhum estudo encontrado nesta raca</li>
+                </ul>
+
+                <h4 style="color: var(--accent-blue);">Recomendacao baseada na evidencia</h4>
+                <p><strong>MSC e uma opcao LEGITIMA, mas NAO de primeira linha para DAC.</strong> A ciencia sustenta o mecanismo e mostra seguranca. A eficacia em DAC e promissora mas com evidencia ainda insuficiente para recomendacao universal. O cenario ideal para considerar MSC e:</p>
+                <ol>
+                    <li>DAC refrataria a tratamentos convencionais (Apoquel, Cytopoint, ASIT, ciclosporina)</li>
+                    <li>Efeitos colaterais inaceitaveis dos farmacos atuais</li>
+                    <li>Desejo de abordagem imunomoduladora (vs. apenas sintomatica)</li>
+                    <li>Condicoes imunomediadas concomitantes (o que ampliaria o beneficio)</li>
+                </ol>
+                <p><strong>Se considerar para o Wally:</strong> Discutir com dermatologista veterinario e buscar clinica com produto registrado no MAPA (ex: BIO CELL/Vetnil). Protocolo sugerido pela literatura: dose alta (2-5x10<sup>6</sup>/kg), alogenica (praticidade), 3 sessoes a cada 4 semanas, com reavaliacao de CADESI-04 e prurido.</p>
+            </div>
+
+            <!-- Composicao de fontes -->
+            <div class="source-composition">
+                <h4>Composicao de Fontes desta Pesquisa</h4>
+                <div class="comp-bar">
+                    <div class="t1" style="width: 80%;"></div>
+                    <div class="t2" style="width: 10%;"></div>
+                    <div class="t3" style="width: 10%;"></div>
+                </div>
+                <div class="comp-legend">
+                    <span class="l1">Tier 1 (PubMed/Peer-Reviewed): 80% (16 artigos)</span>
+                    <span class="l2">Tier 2 (Institucional): 10% (EMA, CFMV)</span>
+                    <span class="l3">Tier 3 (Jornalismo especializado): 10% (dvm360, CRMV-SP)</span>
+                </div>
+                <p style="margin-top: 8px; font-size: 0.8rem; color: var(--text-muted);">
+                    Tier 4: 0% | Todas as fontes primarias com PMID verificado via PubMed.<br>
+                    Informacoes sobre custos no Brasil sao estimativas e devem ser confirmadas diretamente com clinicas.<br>
+                    Data de pesquisa: 25/03/2026.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function openTab(evt, tabId) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(c => c.classList.remove('active'));
+
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>
